@@ -1,8 +1,20 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeftLong } from "@fortawesome/free-solid-svg-icons";
-const Login = ({ setSideBar, setEmail, setPassword, email, password }) =>{
+import { useState } from "react";
+import { useAuth } from "../../context/useAuth";
+import { auth } from "../../lib/initFirebase"
+import { GoogleAuthProvider } from "firebase/auth";
+const Login = ({ setSideBar }) =>{
+    const provider = new GoogleAuthProvider();
+    const { signIn, googleAuth, userCredential} = useAuth();
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
     const handleLogin = () =>{
-        console.log(email,password);
+        console.log(userCredential)
+       signIn(auth, email, password);   
+    }
+    const handleGoogle = () =>{
+        googleAuth(auth, provider);
     }
     return(
         <section className="login">
@@ -10,7 +22,7 @@ const Login = ({ setSideBar, setEmail, setPassword, email, password }) =>{
         <p className="loginText">LOGIN.</p>
         <div className="loginTextBack"></div>
         <p className="loginDetail">Login to Sydney's largest rental platform</p>
-        <button className="flex flex-row items-center justify-center w-full text-white rounded-lg" style={{ fontSize: "15px", fontFamily: "poppins-light", border: "solid 1px #ffffff4d", height: "45px" }} ><img src="https://uploads-ssl.webflow.com/5efdc8a4340de947404995b4/638da718ba38ef5f02dcb35a_google.svg" style={{ marginRight: "10px" }} />Login With Google</button>
+        <button className="flex flex-row items-center justify-center w-full text-white rounded-lg" style={{ fontSize: "15px", fontFamily: "poppins-light", border: "solid 1px #ffffff4d", height: "45px" }} onClick={ ()=>{ handleGoogle()}}><img src="https://uploads-ssl.webflow.com/5efdc8a4340de947404995b4/638da718ba38ef5f02dcb35a_google.svg" style={{ marginRight: "10px" }} />Login With Google</button>
         <div className="flex flex-row items-center justify-between my-5 mb-5">
             <div style={{ width: "100px", height: "1px", background: "#ffffff4d" }}></div>
             <p style={{ fontSize: "15px", fontFamily: "poppins-light", color: "white" }}>OR</p>

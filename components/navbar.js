@@ -13,15 +13,13 @@ import Notification from "./notification/notification";
 import { auth } from "../lib/initFirebase";
 
 export default function Header() {
-  const { authenticated, signIn, googleAuth} = useAuth();
+  const { authenticated, userCredential} = useAuth();
   const [sideBar, setSideBar] = useState(0);
   const [ drawbackground, setDrawbackground] = useState(false);
   const [ drawSidebar, setDrawSidebar] = useState([]);
-  const [ email, setEmail] = useState('');
-  const [ password, setPassword] = useState('');
   console.log(authenticated)
   useEffect(()=>{
-    console.log(sideBar)
+    console.log(sideBar, userCredential)
     let temp = [];
     if( sideBar == 0){
       setDrawbackground(false);
@@ -30,7 +28,7 @@ export default function Header() {
     }
     if( sideBar == 1){
       setDrawbackground(true);
-      temp.push(<Login setSideBar={ setSideBar} setEmail = { setEmail } setPassword = {setPassword} email={ email} password={password}/>);
+      temp.push(<Login setSideBar={ setSideBar}/>);
       setDrawSidebar(temp);
     }
     if( sideBar == 2){
@@ -49,9 +47,6 @@ export default function Header() {
       setDrawSidebar(temp);
     }
   },[sideBar]) 
-    useEffect(() =>{
-        console.log( password, email)
-    },[password, email])
   return (
     <>
       {
@@ -82,7 +77,7 @@ export default function Header() {
           </div>
         </div> */}
         {
-          !authenticated? <div className="flex flex-row">
+          authenticated? <div className="flex flex-row">
           <div className="flex flex-row items-center justify-around mr-0 stickyBarSearch">
             <FontAwesomeIcon icon={faSearch} className="mx-3 mr-0 text-xl font-thin text-white" />
             <input type="text" className="w-full p-0.5 mx-2 text-base text-white bg-transparent outline-none mr-0" id="home" placeholder="e.g.SnowBoards" />

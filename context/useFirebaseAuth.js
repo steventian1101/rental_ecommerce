@@ -14,8 +14,10 @@ export default function useFirebaseAuth() {
     const signIn = (auth, email, password) => {
         signInWithEmailAndPassword(auth, email, password).then((userCredential) => {
             console.log(userCredential);
+            setUserCredential(userCredential)
             console.log("okay good !!!!");
-                router.push('/')
+                router.push('/');
+                window.location.reload();   
         }).catch((error) => {
             console.log(error)
         });
@@ -24,6 +26,7 @@ export default function useFirebaseAuth() {
         createUserWithEmailAndPassword(auth, email, password).then((userCredential) => {
             console.log(userCredential.user.uid);
             router.push('/');
+            window.location.reload();
         }).catch((error) => {
             console.log(error.message)
         });
@@ -32,6 +35,7 @@ export default function useFirebaseAuth() {
         signOut(auth).then(() => {
             console.log("you are logout");
             router.push("/");
+            window.location.reload();
         }).catch((error) => {
             console.log(error)
         });
@@ -39,14 +43,12 @@ export default function useFirebaseAuth() {
     const googleAuth = (auth,provider) => {
         signInWithPopup(auth, provider)
             .then((result) => {
-                router.push('/')
+            //    location.href('/');
+            router.push('/');
+            window.location.reload();
                 // ...
             }).catch((error) => {
-                // Handle Errors here.
-                const errorCode = error.code;
-                const errorMessage = error.message;
-                const credential = GoogleAuthProvider.credentialFromError(error);
-                // ...
+               console.log(error.message)
             });
     };
     useEffect(() => {
@@ -83,6 +85,7 @@ export default function useFirebaseAuth() {
         signIn,
         logOut,
         googleAuth,
-        createUser
+        createUser,
+        userCredential
     };
 }
