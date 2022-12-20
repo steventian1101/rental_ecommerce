@@ -1,0 +1,229 @@
+@font-face {
+  font-family: poppins-extrabold;
+  src: url(Poppins-ExtraBold.ttf);
+}
+@font-face {
+  font-family: poppins-bold;
+  src: url(Poppins-Bold.ttf);
+}
+@font-face {
+  font-family: poppins-extralight;
+  src: url(Poppins-ExtraLight.ttf);
+}
+@font-face {
+  font-family: poppins-light;
+  src: url(Poppins-Light.ttf);
+}
+@font-face {
+  font-family: poppins-medium;
+  src: url(Poppins-Medium.ttf);
+}
+@font-face {
+  font-family: poppins-regular;
+  src: url(Poppins-Regular.ttf);
+}
+@font-face {
+  font-family: poppins-semibold;
+  src: url(Poppins-SemiBold.ttf);
+}
+@font-face {
+  font-family: poppins-thin;
+  src: url(Poppins-Thin.ttf);
+}
+@font-face {
+  font-family: poppins-black;
+  src: url(Poppins-Black.ttf);
+}
+.navbar{
+  width: 90vw;
+  max-width: 1315px;
+  height:80px;
+  padding-bottom: 20px;
+  margin: auto;
+  margin-top: 0px;
+}
+.logo-title{
+  font-size: 20px;
+  line-height: 26px;
+  font-family: poppins-bold;
+}
+p{
+  font-size: 16px;
+  line-height: 20px;
+  font-family: poppins-light;
+}
+.login{
+  position: fixed;
+  z-index: 10001;
+  top:0px;
+  right:0px;
+  height: 100vh;
+  background-color: black;
+  width:400px;
+  padding:20px 50px 100px 50px;
+  margin-bottom: 10px;
+}
+.register{
+  position: fixed;
+  z-index: 10001;
+  top:0px;
+  right:0px;
+  height: 100vh;
+  background-color: black;
+  width:400px;
+  padding:20px 50px 100px 50px;
+  margin-bottom: 10px;
+}
+.passwordReset{
+  position: fixed;
+  z-index: 10001;
+  top:0px;
+  right:0px;
+  height: 100vh;
+  background-color: black;
+  width:400px;
+  padding:20px 50px 100px 50px;
+  margin-bottom: 10px;
+}
+.addProfileInfo{
+  position: fixed;
+  z-index: 10001;
+  top:0px;
+  right:0px;
+  height: 100vh;
+  background-color: black;
+  width:400px;
+  padding:20px 50px 100px 50px;
+  margin-bottom: 10px;
+}
+.notification{
+  position: fixed;
+  z-index: 10001;
+  top:0px;
+  right:0px;
+  height: 100vh;
+  background-color: black;
+  width:400px;
+  padding:20px 50px 100px 50px;
+  margin-bottom: 10px;
+}
+.loginText{
+  display: block;
+  margin-top: 0px;
+  margin-bottom: 3px;
+  font-size: 30px;
+  line-height: 36px;
+  font-family: poppins-black;
+  color: white;
+}
+.loginTextBack{
+  margin-top: -25px;
+  width: 45%;
+  height: 25px;
+  background-color: #0052cc;
+  z-index: 10001;
+}
+.registerTextBack{
+  margin-top: -23px;
+  width: 160px;
+  height: 20px;
+  background-color: #b02b4a;
+
+}
+.passwordResetTextBack{
+  margin-top: -57px;
+  width: 100%;
+  height: 60px;
+  background-color: #572bb0;
+}
+.loginDetail{
+  font-size: 15px;
+  margin-bottom: 40px;
+  font-family: poppins-light;
+  color: white;
+}
+.emailInput{
+  height: 38px;
+  padding: 8px 12px 8px 0px;
+  font-size: 14px;
+  border-bottom:1px solid #ffffff4d;
+  background-color: transparent!important;
+  outline: none;
+  color: white;
+  font-family: poppins-regular;
+  margin-bottom: 10px;
+}
+.loginButton{
+  margin-top: 40px;
+  margin-bottom: 15px;
+}
+.loginButton button{
+  width: 100%;
+  height:45px;
+  font-size: 15px;
+  font-family: poppins-medium;
+  background-color: #0052cc;
+  color: white;
+  border-radius: 8px;
+}
+.registerButton{
+  margin-top: 40px;
+  margin-bottom: 15px;
+}
+.registerButton button{
+  width: 100%;
+  height:45px;
+  font-size: 15px;
+  font-family: poppins-medium;
+  background-color: #b02b4a;
+  color: white;
+  border-radius: 8px;
+
+}
+.passwordResetButton{
+  margin-top: 40px;
+  margin-bottom: 15px;
+}
+.passwordResetButton button{
+  width: 100%;
+  height:45px;
+  font-size: 15px;
+  font-family: poppins-medium;
+  background-color: #0052cc;
+  color: white;
+  border-radius: 8px;
+}
+input:focus{
+  border-bottom: solid 1px #005ce7;
+}
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    transition: background-color 5000s ease-in-out 0s;
+    -webkit-text-fill-color: white !important;
+}
+.stickyBarSearch{
+  width: 250px;
+  border:1px solid #333;
+  padding:10px;
+  border-radius: 30px;
+  height: 40px;
+}
+.stickyBarSearch input{
+  border-width: 0px!important;
+}
+.navbarIcon{
+  width: 40px;
+  height: 40px;
+  background-color:transparent;
+  margin-left: 10px;
+  border-radius: 100px;
+  border: solid 1px #ffffff4d;
+  overflow: auto;
+}
+.notificationItem{
+  width: 100%;
+  height: 60px;
+  margin-bottom: 30px;
+}
