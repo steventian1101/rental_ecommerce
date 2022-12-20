@@ -1,6 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faPlus } from "@fortawesome/free-solid-svg-icons"
-const InputProfileInfo = () => {
+const InputProfileInfo = ({setSideBar, email, password}) => {
+    console.log(email,password)
     return (
         <section className="overflow-auto addProfileInfo">
             <p className="loginText" style={{ marginTop: "60px" }}>Add Your Profile Info.</p>
@@ -31,7 +32,7 @@ const InputProfileInfo = () => {
                 <input type="text" className="w-full emailInput focus:bg-transparent" placeholder="E.g.20 Echidna Ave, 2035, Australia" />
             </div>
             <div className="registerButton">
-                <button className="flex items-center justify-center">COMPLETE</button>
+                <button className="flex items-center justify-center" onClick={()=>{ setSideBar(0)}}>COMPLETE</button>
             </div>
         </section>
     )

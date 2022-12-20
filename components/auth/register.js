@@ -2,11 +2,16 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faArrowLeftLong } from "@fortawesome/free-solid-svg-icons"
 import { useState } from "react";
 import { useRouter } from "next/router";
+import InputProfileInfo from "./inputProfileInfo";
 
 const Register = ({ sideBar, setSideBar }) => {
+    const [complete, setComplete] = useState(false);
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
 
     return (
-        <section className="register">
+       <>
+       { complete?<InputProfileInfo setSideBar={setSideBar} email={email} password={password}/>: <section className="register">
             <div style={{ height: "50px", marginBottom: "10px" }} className="flex flex-row items-center cursor-pointer"><FontAwesomeIcon icon={faArrowLeftLong} className="text-2xl text-white" onClick={ () =>setSideBar(0)}/></div>
             <p className="loginText">SIGN UP.</p>
             <div className="registerTextBack"></div>
@@ -19,17 +24,18 @@ const Register = ({ sideBar, setSideBar }) => {
             </div>
             <div className="flex flex-col loginForm">
                 <p style={{ fontSize: "15px", fontFamily: "poppins-light", lineHeight: "20px" }} className="text-white">Email Address</p>
-                <input type="email" className="w-full emailInput focus:bg-transparent" placeholder="E.g.johndoe@gmail.com"/>
+                <input type="email" className="w-full emailInput focus:bg-transparent" placeholder="E.g.johndoe@gmail.com" onChange={(e)=>setEmail(e.target.value)}/>
             </div>
             <div className="flex flex-col loginForm">
                 <p style={{ fontSize: "15px", fontFamily: "poppins-light", lineHeight: "20px" }} className="text-white">Password</p>
-                <input type="password" className="w-full emailInput" placeholder="Min 8 Characters" />
+                <input type="password" className="w-full emailInput" placeholder="Min 8 Characters" onChange={(e)=>{setPassword(e.target.value)}}/>
             </div>
             <div className="registerButton">
-                <button className="flex items-center justify-center">COMPLETE</button>
+                <button className="flex items-center justify-center" onClick={()=>setComplete(true)}>COMPLETE</button>
             </div>
             <div><p className="text-white cursor-pointer hover:underline"  onClick={ () =>setSideBar(1)} style={{ fontFamily: "poppins-light", marginBottom: "3px", fontSize: "15px" }} >Remembered your account? Login here.</p></div>
-        </section>
+        </section>}
+       </>
     )
 }
 export default Register
