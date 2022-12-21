@@ -8,9 +8,6 @@ export default function useFirebaseAuth() {
     const [imageUrl, setImageUrl] = useState('');
     const [userCredential, setUserCredential] = useState([]);
     const router = useRouter();
-
-
-    console.log("one time")
     const signIn = (auth, email, password) => {
         signInWithEmailAndPassword(auth, email, password).then((userCredential) => {
             console.log(userCredential);
