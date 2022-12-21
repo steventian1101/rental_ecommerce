@@ -3,11 +3,17 @@ import { onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndP
 import { auth } from '../lib/initFirebase';
 import { useRouter } from 'next/router';
 import timediff from 'timediff';
+import { db } from '../lib/initFirebase';
+import { collection, addDoc, query, orderBy, where, getDocs } from "firebase/firestore";
 export default function useFirebaseAuth() {
     const [authenticated, setAuthenticated] = useState(false);
     const [imageUrl, setImageUrl] = useState('');
     const [userCredential, setUserCredential] = useState([]);
+    const [confirmationEmail, setConfirmationEmail] = useState('');
+    const [newCredential, setNewCredential] = useState(null);
+    const [error, setError] = useState(null);
     const router = useRouter();
+    const listCollectionRef = collection(db, "users")
     const signIn = (auth, email, password) => {
         signInWithEmailAndPassword(auth, email, password).then((userCredential) => {
             console.log(userCredential);
@@ -16,7 +22,8 @@ export default function useFirebaseAuth() {
                 router.push('/');
                 window.location.reload();   
         }).catch((error) => {
-            console.log(error)
+            setError(error.message)
+            console.log(error.message)
         });
     };
     const createUser = (auth, email, password) => {
@@ -38,16 +45,46 @@ export default function useFirebaseAuth() {
         });
     };
     const googleAuth = (auth,provider) => {
-        signInWithPopup(auth, provider)
+          signInWithPopup(auth, provider)
             .then((result) => {
             //    location.href('/');
-            router.push('/');
-            window.location.reload();
+            // router.push('/');
+            // window.location.reload();
+              setConfirmationEmail(result.user.email)
+              setNewCredential(result.user);
+            
                 // ...
             }).catch((error) => {
                console.log(error.message)
             });
     };
+    const getUserInformation = async (email) =>{
+        let temp = [];
+            let q = query(listCollectionRef, where("user_email", "==", email));
+            const querySnapshot = await getDocs(q) ;
+            querySnapshot.forEach((doc) => {
+                temp.push(doc.data());
+            });
+            if(temp.length != 0){
+                console.log("already")
+                router.push('/');
+                window.location.reload();
+            }
+            else{
+                console.log("new")
+                console.log(newCredential);
+                addDoc(listCollectionRef, { user_email: newCredential.email, first_name: newCredential.displayName.split(" ")[0], profile_img:newCredential.photoURL, last_name:newCredential.displayName.split(" ")[1], nick_name:newCredential.displayName+" Rentals", user_phone:"", user_address:"" }).then(response => {
+                    router.push('/');
+                    window.location.reload();
+                  }).catch(error => {
+                       console.log(error.message)
+                });
+            }
+     }
+    
+    useEffect(()=>{
+       confirmationEmail != "" && getUserInformation(confirmationEmail)
+    },[confirmationEmail])
     useEffect(() => {
         onAuthStateChanged(auth, (user) => {
             if (user) {
@@ -74,6 +111,9 @@ export default function useFirebaseAuth() {
             }
         });
     }, []);
+    const errorRemove = (error) => {
+        setError(error);
+    }
 
     return {
         imageUrl,
@@ -83,6 +123,8 @@ export default function useFirebaseAuth() {
         logOut,
         googleAuth,
         createUser,
-        userCredential
+        userCredential,
+        error,
+        errorRemove
     };
 }

@@ -10,8 +10,10 @@ import { db } from "../../lib/initFirebase";
 import { collection, addDoc, query, orderBy, where, getDocs } from "firebase/firestore";
 import { useAuth } from "../../context/useAuth";
 import { auth } from "../../lib/initFirebase";
+import { GoogleAuthProvider } from "firebase/auth";
 const Register = ({ sideBar, setSideBar }) => {
-    const { createUser } = useAuth();
+    const provider =  new GoogleAuthProvider();
+    const { createUser, googleAuth } = useAuth();
     const [complete, setComplete] = useState(false);
     const [email, setEmail] = useState('');
     const [file, setFile] = useState(null);
@@ -31,6 +33,7 @@ const Register = ({ sideBar, setSideBar }) => {
     const [phonevalidation, setPhonevalidation] = useState(true);
     const [addressvalidation, setAddressvalidation] = useState(true);
     const [previewImage, setPreviewImage] = useState('');
+    const [completeLoading, setCompleteLoading] = useState(false);
     const listCollectionRef = collection(db, "users")
     useEffect(() => {
         console.log(email)
@@ -46,7 +49,7 @@ const Register = ({ sideBar, setSideBar }) => {
         }
     }
     const passwordValidation = (any) => {
-        if (any.length > 8) {
+        if (any.length > 7) {
             setPassword(any)
             setPasswordvalidation(true);
         }
@@ -78,7 +81,7 @@ const Register = ({ sideBar, setSideBar }) => {
         }
     }
     const nicknameValidation = (any) => {
-        if (any.indexOf("Rental") != -1) {
+        if (any.length> 2) {
             setNickname(any)
             setNicknamevalidation(true);
         }
@@ -88,7 +91,7 @@ const Register = ({ sideBar, setSideBar }) => {
         }
     }
     const phoneValidation = (any) => {
-        let str = /^\+?([61]{2})\)?[ ]?([0-9]{3})[ ]?([0-9]{3})[ ]?([0-9]{4})$/;
+        let str = /^\+?([61]{2})\)?[ ]?([0-9]{3})[ ]?([0-9]{3})[ ]?([0-9]{3})$/;
         if (str.test(any)) {
             setPhone(any)
             setPhonevalidation(true);
@@ -107,6 +110,7 @@ const Register = ({ sideBar, setSideBar }) => {
         }
     }
     const handleComplete = async () => {
+        setCompleteLoading(true)
         console.log(emailvalidation, passwordvalidation);
         if (emailvalidation && passwordvalidation) {
             let temp = [];
@@ -117,14 +121,20 @@ const Register = ({ sideBar, setSideBar }) => {
             });
             if(temp.length != 0){
                 setEmailvalidation(false)
+                setCompleteLoading(false)
                 return ;
             }
             else{
                 setComplete(true)
+                setCompleteLoading(false)
             }
+        }
+        else{
+            setCompleteLoading(false)
         }
         if (!emailvalidation || !passwordvalidation) {
             setComplete(false);
+            setCompleteLoading(false)
         }
     }
     const handlefile = (e) => {
@@ -144,25 +154,29 @@ const Register = ({ sideBar, setSideBar }) => {
                 console.log('Uploaded a blob or file!');
                 getDownloadURL(storageRef).then((downloadUrl) => {
                     setImgurl(downloadUrl);
-                    setFile(null);
                     setPreviewImage('');
                     console.log(downloadUrl);
                 });
             })
         }
+        else{
+        }
 
     }
     useEffect(() => {
-        console.log(imgurl);
+       console.log(imgurl);
        if(imgurl != "" && emailvalidation && passwordvalidation && firstnamevalidation && lastnamevalidation && nicknameValidation && phonevalidation && addressvalidation){
-       addDoc(listCollectionRef, { user_email: email, user_password: password, first_name: firstname, profile_img:imgurl, last_name:lastname, nick_name:nickname, user_phone:phone, user_address:address }).then(response => {
+       addDoc(listCollectionRef, { user_email: email, first_name: firstname, profile_img:imgurl, last_name:lastname, nick_name:nickname, user_phone:phone, user_address:address }).then(response => {
          createUser(auth, email, password);
-         setLoading(false);
+         setFile(null);
        }).catch(error => {
             console.log(error.message)
           });
        }
     }, [imgurl])
+    const handleGoogle = () =>{
+        googleAuth(auth, provider)
+    }
     return (
         <>{
             loading?<Loading/>:<></>
@@ -196,7 +210,7 @@ const Register = ({ sideBar, setSideBar }) => {
                 <p className="loginText">SIGN UP.</p>
                 <div className="registerTextBack"></div>
                 <p className="loginDetail">Login to Sydney's largest rental platform</p>
-                <button className="flex flex-row items-center justify-center w-full text-white rounded-lg" style={{ fontSize: "15px", fontFamily: "poppins-light", border: "solid 1px #ffffff4d", height: "45px" }} ><img src="https://uploads-ssl.webflow.com/5efdc8a4340de947404995b4/638da718ba38ef5f02dcb35a_google.svg" style={{ marginRight: "10px" }} />Sign Up With Google</button>
+                <button className="flex flex-row items-center justify-center w-full text-white rounded-lg" style={{ fontSize: "15px", fontFamily: "poppins-light", border: "solid 1px #ffffff4d", height: "45px" }} onClick={()=>{ handleGoogle()}} ><img src="https://uploads-ssl.webflow.com/5efdc8a4340de947404995b4/638da718ba38ef5f02dcb35a_google.svg" style={{ marginRight: "10px" }}  />Sign Up With Google</button>
                 <div className="flex flex-row items-center justify-between my-5 mb-5">
                     <div style={{ width: "100px", height: "1px", background: "#ffffff4d" }}></div>
                     <p style={{ fontSize: "15px", fontFamily: "poppins-light", color: "white" }}>OR</p>
@@ -209,7 +223,9 @@ const Register = ({ sideBar, setSideBar }) => {
                 <input type="email" className="w-full emailInput focus:bg-transparent" placeholder="E.g.johndoe@gmail.com" onChange={(e)=>setEmail(e.target.value)}/>
             </div> */}
                 <div className="registerButton">
-                    <button className="flex items-center justify-center" onClick={() => handleComplete()}>COMPLETE</button>
+                  {
+                    completeLoading?  <button className="flex items-center justify-center cursor-wait">COMPLETE</button>:  <button className="flex items-center justify-center" onClick={() => handleComplete()}>COMPLETE</button>
+                  }
                 </div>
                 <div><p className="text-white cursor-pointer hover:underline" onClick={() => setSideBar(1)} style={{ fontFamily: "poppins-light", marginBottom: "3px", fontSize: "15px" }} >Remembered your account? Login here.</p></div>
             </section>}

@@ -5,10 +5,12 @@ const authUserContext = createContext({
   authenticated:false,
   imageUrl:'',
   userCredential: [],
+  error:'',
   signIn: ()=> {},
   createuser: () => {},
   googleAuth: () => {},
-  logOut: () => {}
+  logOut: () => {},
+  errorRemove:() =>{}
 
 });
 
