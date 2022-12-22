@@ -122,9 +122,9 @@ const Payment = ({setSideBar}) =>{
         <AuthInput title={"Credit Card Number"} status={creditvalidation} placeholder={"Min. 16 characters long"} change={creditValidation} type={"text"}  value={ tempData && tempData.length > 0 ? tempData[0].credit_card_number:''}/>
         <AuthInput title={"Expire Date"} status={expirevalidation} placeholder={"Min. MM/YY"} change={expireValidation} type={"text"} value={ tempData && tempData.length>0 ? tempData[0].expire_date:''}/>
         <AuthInput title={"CVV"} status={cvvvalidation} placeholder={"Back of the card"} change={cvvValidation} type={"text"} value={ tempData && tempData.length > 0 ? tempData[0].cvv:''}/>
-        <div className="registerButton">
+        <div className="loginButton">
         {
-            loading ? <button className="flex items-center justify-center cursor-wait">COMPLETE</button> : <button className="flex items-center justify-center" onClick={() => handleComplete()}>COMPLETE</button>
+            loading ? <button className="flex items-center justify-center cursor-wait">Update</button> : <button className="flex items-center justify-center" onClick={() => handleComplete()}>Update</button>
         }
         </div>
     </section>

@@ -48,7 +48,7 @@ const ResetPassword = ({ setSideBar, sidebar}) =>{
                 <p className="text-white cursor-pointer" style={{ fontSize:"20px"}} onClick={()=>{setWarning(null)}}>&times;</p>
             </div>:<></>
             }
-            <AuthInput title={"Email Address"} status={emailvalidation} placeholder={"E.g.johndoe@gmail.com"} change={emailValidation} type={"text"} />
+            <AuthInput title={"Email Address"} status={emailvalidation} placeholder={"E.g.johndoe@gmail.com"} change={emailValidation} type={"text"} value={""}/>
             <div className="passwordResetButton">
                 {
                     loading?<button className="flex items-center justify-center cursor-wait" style={{background:"#572bb0"}}>COMPLETE</button>:<button className="flex items-center justify-center" style={{background:"#572bb0"}} onClick={()=>{ handlepaswordreset()}}>COMPLETE</button>

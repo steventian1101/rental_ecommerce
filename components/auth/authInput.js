@@ -2,6 +2,7 @@ import { useState, useEffect } from "react"
 const AuthInput = ({ title, placeholder, status, change, type, value}) => {
     const [ stringColor, setStringColor] = useState('');
     const [ inputborder, setInputBorder] = useState('');
+    let currentvalue = 
     useEffect(()=>{
         if(status === false){
             setStringColor("#f66");
@@ -13,6 +14,9 @@ const AuthInput = ({ title, placeholder, status, change, type, value}) => {
 
         }
     },[status])
+    useEffect(()=>{
+     change(value)
+    },[value])
     return (
         <div className="flex flex-col loginForm">
             <p style={{ fontSize: "15px", fontFamily: "poppins-light", lineHeight: "20px" , color:stringColor}} className="text-white">{title}</p>

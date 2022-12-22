@@ -25,6 +25,7 @@ const InputProfileInfo = ({ setSideBar }) => {
     const [loading, setLoading] = useState(false);
     const [email, setEmail] = useState('');
     const [imgurl, setImgurl] = useState('');
+    const [tempData, setTempdata] = useState([]);
     const { userCredential } = useAuth();
     const firstnameValidation = (any) => {
         let str = /([A-Z]{1})\)?([a-z]{1,})$/;
@@ -84,13 +85,14 @@ const InputProfileInfo = ({ setSideBar }) => {
     }
 
     const handleComplete = () => {
+        setLoading(true);
         if (file  && firstnamevalidation && lastnamevalidation && nicknameValidation && phonevalidation && addressvalidation && email!= "") {
             console.log(file)
             const storageRef = ref(storage, `images/${email + ".jpg"}`);
             const metadata = {
                 contentType: 'image/jpeg'
             };
-            setLoading(true);
+            
             uploadBytes(storageRef, file).then((snapshot) => {
                 console.log('Uploaded a blob or file!');
                 getDownloadURL(storageRef).then((downloadUrl) => {
@@ -100,11 +102,13 @@ const InputProfileInfo = ({ setSideBar }) => {
             })
         }
         else {
+            setLoading(false)
         }
 
     }
     useEffect(()=>{
        setEmail(userCredential.email)
+       getDetail(userCredential.email)
     },[userCredential])
     useEffect(() => {
         console.log(imgurl);
@@ -116,6 +120,17 @@ const InputProfileInfo = ({ setSideBar }) => {
         //      console.log(error.message)
         //    });
      }, [imgurl])
+     const getDetail = async (email) =>{
+        let temp = [];
+        const listCollectionRef = collection(db, 'users');
+        let q = query(listCollectionRef, where("user_email", "==", email));
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach((doc) => {
+            temp.push(doc.data());
+        });
+        console.log(temp)
+        setTempdata(temp);
+    }
      const getDetailAndUpdate = async (email) =>{
         console.log(email)
         let docID;
@@ -152,7 +167,7 @@ const InputProfileInfo = ({ setSideBar }) => {
             .then(() => {
                 setLoading(false);
                 setFile(null);
-                window.location.reload();
+                setSideBar(0)
             })
             .catch((error) => {
                 console.log(error);
@@ -176,14 +191,14 @@ const InputProfileInfo = ({ setSideBar }) => {
                 </div> : <></>
             }
             <div style={{ marginTop: "30px", marginBottom: "30px", width: "100%", height: "1px", background: "#ffffff4a" }}></div>
-            <AuthInput title={"First Name"} status={firstnamevalidation} placeholder={"E.g.John"} change={firstnameValidation} type={"text"} />
-            <AuthInput title={"Last Name"} status={lastnamevalidation} placeholder={"E.g.Doe"} change={lastnameValidation} type={"text"} />
-            <AuthInput title={"SDrop Nickname"} status={nicknamevalidation} placeholder={"E.g.John Doe Rentals"} change={nicknameValidation} type={"text"} />
-            <AuthInput title={"Phone Number"} status={phonevalidation} placeholder={"E.g.+61 488 789"} change={phoneValidation} type={"text"} />
-            <AuthInput title={"Address"} status={addressvalidation} placeholder={"E.g.20 Echidna Ave, 2035, Australia"} change={addressValidation} type={"text"} />
-            <div className="registerButton">
+            <AuthInput title={"First Name"} status={firstnamevalidation} placeholder={"E.g.John"} change={firstnameValidation} type={"text"} value={tempData && tempData.length > 0?tempData[0].first_name:''}/>
+            <AuthInput title={"Last Name"} status={lastnamevalidation} placeholder={"E.g.Doe"} change={lastnameValidation} type={"text"} value={tempData && tempData.length > 0?tempData[0].last_name:''}/>
+            <AuthInput title={"SDrop Nickname"} status={nicknamevalidation} placeholder={"E.g.John Doe Rentals"} change={nicknameValidation} type={"text"} value={tempData && tempData.length > 0?tempData[0].nick_name:''}/>
+            <AuthInput title={"Phone Number"} status={phonevalidation} placeholder={"E.g.+61 488 789"} change={phoneValidation} type={"text"} value={tempData && tempData.length > 0?tempData[0].user_phone:''}/>
+            <AuthInput title={"Address"} status={addressvalidation} placeholder={"E.g.20 Echidna Ave, 2035, Australia"} change={addressValidation} type={"text"} value={tempData && tempData.length > 0?tempData[0].user_address:''}/>
+            <div className="loginButton">
             {
-                loading ? <button className="flex items-center justify-center cursor-wait">COMPLETE</button> : <button className="flex items-center justify-center" onClick={() => handleComplete()}>COMPLETE</button>
+                loading ? <button className="flex items-center justify-center cursor-wait">Update</button> : <button className="flex items-center justify-center" onClick={() => handleComplete()}>Update</button>
             }
             </div>
         </section>

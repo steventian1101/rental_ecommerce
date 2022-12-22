@@ -94,8 +94,8 @@ const Login = ({ setSideBar }) => {
                 <p style={{ fontSize: "15px", fontFamily: "poppins-light", color: "white" }}>OR</p>
                 <div style={{ width: "100px", height: "1px", background: "#ffffff4d" }}></div>
             </div>
-            <AuthInput title={"Email Address"} status={emailvalidation} placeholder={"E.g.johndoe@gmail.com"} change={emailValidation} type={"text"} />
-            <AuthInput title={"Password"} status={passwordvalidation} placeholder={"Min 8 Characters"} change={passwordValidation} type={"password"} />
+            <AuthInput title={"Email Address"} status={emailvalidation} placeholder={"E.g.johndoe@gmail.com"} change={emailValidation} type={"text"} value={""}/>
+            <AuthInput title={"Password"} status={passwordvalidation} placeholder={"Min 8 Characters"} change={passwordValidation} type={"password"} value={""}/>
             <div className=" loginButton">
                 {
                     loading?<button className="flex items-center justify-center cursor-wait">LOGIN</button>:<button className="flex items-center justify-center" onClick={() => { handleLogin() }}>LOGIN</button>
