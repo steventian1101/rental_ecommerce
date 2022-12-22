@@ -35,12 +35,14 @@
   src: url(Poppins-Black.ttf);
 }
 .navbar{
+  position:sticky;
   width: 90vw;
   max-width: 1315px;
   height:80px;
   padding-bottom: 20px;
   margin: auto;
   margin-top: 0px;
+  z-index: 40;
 }
 .logo-title{
   font-size: 20px;
@@ -239,3 +241,129 @@ input:-webkit-autofill:active {
   background-size: 200% 100%;
   animation: 1.5s shine linear infinite;
 }
+.dropbox:hover{
+  background: #ffffff33;
+}
+.setting{
+  width: 90vw;
+  max-width: 1315px;
+  margin-top: 30px;
+  padding-bottom: 100px;
+  margin-left: auto;
+  margin-right:auto;
+}
+.setting_box{
+  width: 250px;
+  height: 150px;
+  margin-right: 10px;
+  margin-bottom: 15px;
+  align-items: center;
+  justify-content: center;
+  border:solid 1px #ffffff4d;
+  cursor: pointer;
+  border-radius: 8px;
+}
+@media screen and (max-width: 991px){
+  .setting{
+    padding-right:  48px!important;
+    padding-left: 48px!important;
+  }
+  .login{
+    width: 100%!important;
+    padding-right: 25vw!important;
+    padding-left: 25vw!important;
+  }
+  .register{
+    width: 100%!important;
+    padding-right: 25vw!important;
+    padding-left: 25vw!important;
+  }
+  .passwordReset{
+    width: 100%!important;
+    padding-right: 25vw!important;
+    padding-left: 25vw!important;
+  }
+  .addProfileInfo{
+    width: 100%!important;
+    padding-right: 25vw!important;
+    padding-left: 25vw!important;
+  }
+  .notification{
+    width: 100%!important;
+    padding-right: 25vw!important;
+    padding-left: 25vw!important;
+  }
+
+}
+@media screen and (max-width: 767px){
+  .setting{
+    padding-right: 32px!important;
+    padding-left: 32px!important;
+  }
+  .setting_box_pan{
+    flex-direction: column!important;
+  }
+  .setting_box{
+    width: 100%!important;
+  }
+  .login{
+    width: 100%!important;
+    padding-right: 15vw!important;
+    padding-left: 15vw!important;
+  }
+  .register{
+    width: 100%!important;
+    padding-right: 15vw!important;
+    padding-left: 15vw!important;
+  }
+  .passwordReset{
+    width: 100%!important;
+    padding-right: 15vw!important;
+    padding-left: 15vw!important;
+  }
+  .addProfileInfo{
+    width: 100%!important;
+    padding-right: 15vw!important;
+    padding-left: 15vw!important;
+  }
+  .notification{
+    width: 100%!important;
+    padding-right: 15vw!important;
+    padding-left: 15vw!important;
+  }
+
+}
+@media screen and (max-width: 479px){
+  .setting{
+    width: 100%!important;
+    padding-right: 7vw!important;
+    padding-left: 7vw!important;
+  }
+  .login{
+    width: 100%!important;
+    padding-right: 7vw!important;
+    padding-left: 7vw!important;
+  }
+  .register{
+    width: 100%!important;
+    padding-right: 7vw!important;
+    padding-left: 7vw!important;
+  }
+  .passwordReset{
+    width: 100%!important;
+    padding-right: 7vw!important;
+    padding-left: 7vw!important;
+  }
+  .addProfileInfo{
+    width: 100%!important;
+    padding-right: 7vw!important;
+    padding-left: 7vw!important;
+  }
+  .notification{
+    width: 100%!important;
+    padding-right: 7vw!important;
+    padding-left: 7vw!important;
+  }
+
+}
+

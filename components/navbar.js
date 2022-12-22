@@ -16,6 +16,7 @@ import { auth } from "../lib/initFirebase";
 import { db } from "../lib/initFirebase";
 import { collection, addDoc, query, orderBy, where, getDocs } from "firebase/firestore";
 import { async } from "@firebase/util";
+import Link from "next/link"
 
 export default function Header() {
   const listCollectionRef = collection(db, "users")
@@ -27,7 +28,7 @@ export default function Header() {
   const [credentialEmail, setCredentialEmail] = useState('');
   const [nickname, setNickname] = useState('');
   const [dropbox, setDropbox] = useState(false);
-  const [tempdata, setTempdata] =useState([]);
+  const [tempdata, setTempdata] = useState([]);
   useEffect(() => {
     let temp = [];
     if (sideBar == 0) {
@@ -55,46 +56,51 @@ export default function Header() {
       temp.push(<Notification sideBar={sideBar} setSideBar={setSideBar} />);
       setDrawSidebar(temp);
     }
+    if (sideBar == 5) {
+      setDrawbackground(true);
+      temp.push(<InputProfileInfo sideBar={sideBar} setSideBar={setSideBar} />);
+      setDrawSidebar(temp);
+    }
   }, [sideBar])
   const handleProfileImage = async (email) => {
     let temp = [];
-      let q = query(listCollectionRef, where("user_email", "==", email));
-      const querySnapshot = await getDocs(q);
-      querySnapshot.forEach((doc) => {
-        temp.push(doc.data());
-      });
-      setTempdata(temp)
+    let q = query(listCollectionRef, where("user_email", "==", email));
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      temp.push(doc.data());
+    });
+    setTempdata(temp)
   }
-  useEffect(()=>{
-  userCredential.email && setCredentialEmail(userCredential.email)
-  },[userCredential])
   useEffect(() => {
-    credentialEmail != "" && handleProfileImage(credentialEmail)  
+    userCredential.email && setCredentialEmail(userCredential.email)
+  }, [userCredential])
+  useEffect(() => {
+    credentialEmail != "" && handleProfileImage(credentialEmail)
   }, [credentialEmail])
-  const handleLogout = () =>{
+  const handleLogout = () => {
     logOut(auth);
 
   }
-  const handleEnter = () =>{
-    setDropbox(true);    
+  const handleEnter = () => {
+    setDropbox(true);
   }
-  const handleLeave = () =>{
+  const handleLeave = () => {
     setDropbox(false)
   }
-  useEffect(()=>{
-      console.log(dropbox)
-  },[dropbox])
-  useEffect(()=>{
+  useEffect(() => {
+    console.log(dropbox)
+  }, [dropbox])
+  useEffect(() => {
     tempdata && tempdata.length > 0 && setProfileImg(tempdata[0].profile_img)
     tempdata && tempdata.length > 0 && setNickname(tempdata[0].nick_name)
-  },[tempdata])
+  }, [tempdata])
   return (
     <>
       {
         drawbackground ? <SidebarBack /> : <></>
       }
-      <section className='flex flex-row items-end justify-between navbar'>
-        <div className='flex flex-row'>
+      <section className='z-50 flex flex-row items-end justify-between navbar'>
+        <div className='flex flex-row items-center' style={{height:"40px"}}>
           <img src="/logo/logo.svg" className='mr-2.5 w-full' />
           <p className='text-white logo-title'>Sdrop.</p>
         </div>
@@ -118,7 +124,7 @@ export default function Header() {
           </div>
         </div> */}
         {
-            authenticated ? <div className="flex flex-row">
+          authenticated ? <div className="flex flex-row">
             <div className="flex flex-row items-center justify-around mr-0 stickyBarSearch">
               <FontAwesomeIcon icon={faSearch} className="mx-3 mr-0 text-xl font-thin text-white" />
               <input type="text" className="w-full p-0.5 mx-2 text-base text-white bg-transparent outline-none mr-0" id="home" placeholder="e.g.SnowBoards" />
@@ -132,35 +138,35 @@ export default function Header() {
             {/* <div className="flex items-center justify-center navbarIcon">
               <FontAwesomeIcon icon={faSearch} style={{ color: "white", fontSize: "18px" }}  />
             </div> */}
-            <div className="flex items-center justify-center w-10 h-10 mx-2.5" style={{ position: "relative" }} onMouseEnter={()=>{handleEnter()}}>
+            <div className="flex items-center justify-center w-10 h-10 mx-2.5" style={{ position: "relative" }} onMouseEnter={() => { handleEnter() }}>
               {
-                profileImg != ""?<img src={ profileImg} style={{ width: "100%", objectFit: "cover", borderRadius: "100px" }} className="w-10 h-10 overflow-hidden"/>:
-                <div style={{ width: "100%", objectFit: "cover", borderRadius: "100px" }} className="w-10 h-10 overflow-hidden detail-loading"></div>
+                profileImg != "" ? <img src={profileImg} style={{ width: "100%", objectFit: "cover", borderRadius: "100px" }} className="w-10 h-10 overflow-hidden" /> :
+                  <div style={{ width: "100%", objectFit: "cover", borderRadius: "100px" }} className="w-10 h-10 overflow-hidden detail-loading"></div>
               }
               {
-                dropbox? <div style={{position:"absolute", top:"50px", right:"0px", width:"250px", height:"auto", background:'#131313', borderRadius:"8px", paddingTop:"20px", paddingBottom:"10px"}} className="flex flex-col" onMouseLeave={handleLeave}>
-                <div style={{ paddingLeft:"15px", paddingRight:"15px"}} className="flex flex-row">
-                  <div className="relative">
-                    {
-                      profileImg != ""?<img src={ profileImg } className="object-cover w-10 h-10" style={{ borderRadius:"100px", marginRight:"15px"}}/>:
-                      <div className="object-cover w-10 h-10 detail-loading" style={{ borderRadius:"100px", marginRight:"15px"}}></div>
-                    }
+                dropbox ? <div style={{ position: "absolute", top: "50px", right: "0px", width: "250px", height: "auto", background: '#131313', borderRadius: "8px", paddingTop: "20px", paddingBottom: "10px" }} className="flex flex-col" onMouseLeave={handleLeave}>
+                  <div style={{ paddingLeft: "15px", paddingRight: "15px" }} className="flex flex-row">
+                    <div className="relative">
+                      {
+                        profileImg != "" ? <img src={profileImg} className="object-cover w-10 h-10" style={{ borderRadius: "100px", marginRight: "15px" }} /> :
+                          <div className="object-cover w-10 h-10 detail-loading" style={{ borderRadius: "100px", marginRight: "15px" }}></div>
+                      }
+                    </div>
+                    <div className="flex flex-col">
+                      <p className="text-white" style={{ fontSize: "15px" }}>{nickname}</p>
+                      <p className="text-white underline cursor-pointer" style={{ fontSize: "15px" }} onClick={() => { setSideBar(5) }}>Edit Profile</p>
+                    </div>
                   </div>
-                  <div className="flex flex-col">
-                    <p className="text-white" style={{fontSize:"15px"}}>{ nickname }</p>
-                    <p className="text-white underline"  style={{fontSize:"15px"}}>Edit Profile</p>
+                  <div style={{ width: "100%", height: "1px", marginTop: "15px", marginBottom: "5px", background: "#ffffff33" }}></div>
+                  <Link href='/setting'> <div className="flex flex-row cursor-pointer dropbox" style={{ padding: "10px 15px 10px 20px" }}>
+                    <FontAwesomeIcon icon={faGear} style={{ fontSize: "20px", marginRight: "10px", color: "white" }} />
+                    <p className="text-white" style={{ fontSize: "15px" }}>Settings</p>
+                  </div> </Link>
+                  <div className="flex flex-row cursor-pointer dropbox" style={{ padding: "10px 15px 10px 20px" }} onClick={handleLogout}>
+                    <FontAwesomeIcon icon={faArrowRightFromBracket} style={{ fontSize: "20px", marginRight: "10px", color: "white" }} />
+                    <p className="text-white" style={{ fontSize: "15px" }} >Log Out</p>
                   </div>
-                </div>
-                <div style={{ width:"100%", height:"1px", marginTop:"15px", marginBottom:"5px", background:"#ffffff4a"}}></div>
-                <div className="flex flex-row" style={{padding:"10px 15px 10px 20px"}}>
-                  <FontAwesomeIcon icon={ faGear } style={{ fontSize:"20px", marginRight:"10px", color:"white"}}/>
-                  <p className="text-white" style={{ fontSize:"15px"}}>Settings</p>
-                </div>
-                <div className="flex flex-row cursor-pointer" style={{padding:"10px 15px 10px 20px"}} onClick={ handleLogout }>
-                  <FontAwesomeIcon icon={ faArrowRightFromBracket } style={{ fontSize:"20px", marginRight:"10px", color:"white"}}/>
-                  <p className="text-white" style={{ fontSize:"15px"}} >Log Out</p>
-                </div>
-              </div>:<></>
+                </div> : <></>
               }
             </div>
           </div> : <div className='flex flex-row'>

@@ -8,16 +8,17 @@ const ResetPassword = ({ setSideBar, sidebar}) =>{
     const [emailvalidation, setEmailvalidation] = useState(true);
     const [email, setEmail] = useState('');
     const [loading, setLoading] = useState(false);
+    const [warning, setWarning] = useState(null);
     const handlepaswordreset = () =>{
         setLoading(true)
         sendPasswordResetEmail(auth,email).then(
             (result)=>{
-                console.log("password reset email sent")
+                setWarning("Password reset email sent");
                 console.log(result)
                 setLoading(false)
             }
         ).catch((error) =>{
-            console.log(error)
+            setWarning(error.message)
             setLoading(false)
         });
 
@@ -41,6 +42,12 @@ const ResetPassword = ({ setSideBar, sidebar}) =>{
             <p className="loginText">FORGOT PASSWORD.</p>
             <div className="passwordResetTextBack"></div>
             <p className="loginDetail">Don't worry, we'll send a password resetlink to the email address that was with us.</p>
+            {
+                warning  ?<div style={{ marginTop:"0px", marginBottom:"10px", width:"100%", height:"45px", background:"#572bb0", borderRadius:"8px", padding:"10px"}} className="flex flex-row items-center justify-between">
+                <p className="text-white" style={{ fontSize:"12px"}}>{warning}</p>
+                <p className="text-white cursor-pointer" style={{ fontSize:"20px"}} onClick={()=>{setWarning(null)}}>&times;</p>
+            </div>:<></>
+            }
             <AuthInput title={"Email Address"} status={emailvalidation} placeholder={"E.g.johndoe@gmail.com"} change={emailValidation} type={"text"} />
             <div className="passwordResetButton">
                 {
