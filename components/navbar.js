@@ -124,10 +124,13 @@ export default function Header() {
           </div>
         </div> */}
         {
-          authenticated ? <div className="flex flex-row">
+          authenticated ? <div className="flex flex-row justify-end w-full">
             <div className="flex flex-row items-center justify-around mr-0 stickyBarSearch">
               <FontAwesomeIcon icon={faSearch} className="mx-3 mr-0 text-xl font-thin text-white" />
               <input type="text" className="w-full p-0.5 mx-2 text-base text-white bg-transparent outline-none mr-0" id="home" placeholder="e.g.SnowBoards" />
+            </div>
+            <div className="flex items-center justify-center navbarIcon searchIcon">
+              <FontAwesomeIcon icon={faSearch} style={{ color: "white", fontSize: "18px" }} />
             </div>
             <div className="flex items-center justify-center navbarIcon">
               <FontAwesomeIcon icon={faCalendarCheck} style={{ color: "white", fontSize: "18px" }} />
@@ -140,7 +143,7 @@ export default function Header() {
             </div> */}
             <div className="flex items-center justify-center w-10 h-10 mx-2.5" style={{ position: "relative" }} onMouseEnter={() => { handleEnter() }}>
               {
-                profileImg != "" ? <img src={profileImg} style={{ width: "100%", objectFit: "cover", borderRadius: "100px" }} className="w-10 h-10 overflow-hidden" /> :
+                profileImg != "" ?<Link href="/profile"> <img src={profileImg} style={{ width: "100%", objectFit: "cover", borderRadius: "100px" }} className="w-10 h-10 overflow-hidden" /></Link> :
                   <div style={{ width: "100%", objectFit: "cover", borderRadius: "100px" }} className="w-10 h-10 overflow-hidden detail-loading"></div>
               }
               {
