@@ -10,12 +10,12 @@ const Setting = () => {
     useEffect(()=>{
        if(sideBar == 1){
         let temp = [];
-        temp.push(<InputProfileInfo setSideBar={ setSideBar }/>);
+        temp.push(<InputProfileInfo setSideBar={ setSideBar } key={sideBar}/>);
         setDrawSidebar(temp);
        }
        if(sideBar == 2){
         let temp = [];
-        temp.push(<Payment setSideBar={ setSideBar }/>);
+        temp.push(<Payment setSideBar={ setSideBar } key={sideBar}/>);
         setDrawSidebar(temp);
        }
        if(sideBar == 0){
@@ -37,11 +37,11 @@ const Setting = () => {
             <p className="loginDetail" style={{ marginBottom: "30px" }}>Complete the sections below to add your item to the platform.</p>
             <div className="flex flex-row w-full setting_box_pan">
                 <div className="flex flex-col setting_box" onClick={()=>{ setSideBar(1)}}>
-                    <img src='/logo/person.svg' style={{ height: "35px", marginBottom: "10px" }} />
+                    <img src='/logo/person.svg' className="settingItemImg" />
                     <p className="text-white">Profile Info</p>
                 </div>
                 <div className="flex flex-col setting_box" onClick={()=>{ setSideBar(2)}}>
-                    <img src='/logo/money.svg' style={{ height: "35px", marginBottom: "10px" }} />
+                    <img src='/logo/money.svg' className="settingItemImg" />
                     <p className="text-white">Payment</p>
                 </div>
             </div>

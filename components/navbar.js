@@ -38,27 +38,27 @@ export default function Header() {
     }
     if (sideBar == 1) {
       setDrawbackground(true);
-      temp.push(<Login setSideBar={setSideBar} />);
+      temp.push(<Login setSideBar={setSideBar} key={sideBar}/>);
       setDrawSidebar(temp);
     }
     if (sideBar == 2) {
       setDrawbackground(true);
-      temp.push(<Register sideBar={sideBar} setSideBar={setSideBar} />);
+      temp.push(<Register sideBar={sideBar} setSideBar={setSideBar} key={sideBar}/>);
       setDrawSidebar(temp);
     }
     if (sideBar == 3) {
       setDrawbackground(true);
-      temp.push(<ResetPassword sideBar={sideBar} setSideBar={setSideBar} />);
+      temp.push(<ResetPassword sideBar={sideBar} setSideBar={setSideBar} key={sideBar}/>);
       setDrawSidebar(temp);
     }
     if (sideBar == 4) {
       setDrawbackground(true);
-      temp.push(<Notification sideBar={sideBar} setSideBar={setSideBar} />);
+      temp.push(<Notification sideBar={sideBar} setSideBar={setSideBar} key={sideBar}/>);
       setDrawSidebar(temp);
     }
     if (sideBar == 5) {
       setDrawbackground(true);
-      temp.push(<InputProfileInfo sideBar={sideBar} setSideBar={setSideBar} />);
+      temp.push(<InputProfileInfo sideBar={sideBar} setSideBar={setSideBar} key={sideBar}/>);
       setDrawSidebar(temp);
     }
   }, [sideBar])

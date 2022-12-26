@@ -21,6 +21,8 @@ const InputProfileInfo = ({ setSideBar }) => {
     const [nicknamevalidation, setNicknamevalidation] = useState(true);
     const [phonevalidation, setPhonevalidation] = useState(true);
     const [addressvalidation, setAddressvalidation] = useState(true);
+    const [websitevalidation, setWebsitevalidation] = useState(true);
+    const [website, setWebsite] = useState('');
     const [previewImage, setPreviewImage] = useState('');
     const [loading, setLoading] = useState(false);
     const [email, setEmail] = useState('');
@@ -78,6 +80,17 @@ const InputProfileInfo = ({ setSideBar }) => {
             setAddressvalidation(false);
         }
     }
+    const websiteValidation = (any) =>{
+        // console.log(any);
+        // return;
+        if(any.indexOf(".") > 0){
+            setWebsitevalidation(true);
+            setWebsite(any);
+        }
+        else{
+            setWebsitevalidation(false)
+        }
+    }
     const handlefile = (e) => {
         var src = URL.createObjectURL(e.target.files[0]);
         setPreviewImage(src)
@@ -86,7 +99,7 @@ const InputProfileInfo = ({ setSideBar }) => {
 
     const handleComplete = () => {
         setLoading(true);
-        if (file  && firstnamevalidation && lastnamevalidation && nicknameValidation && phonevalidation && addressvalidation && email!= "") {
+        if (file  && firstnamevalidation && lastnamevalidation && nicknameValidation && phonevalidation && addressvalidation && websitevalidation && email!= "") {
             console.log(file)
             const storageRef = ref(storage, `images/${email + ".jpg"}`);
             const metadata = {
@@ -148,6 +161,7 @@ const InputProfileInfo = ({ setSideBar }) => {
             profile_img: deleteField(),
             user_address: deleteField(),
             user_phone: deleteField(),
+            website:deleteField(),
         };
         const newdata = {
             first_name: firstname,
@@ -156,6 +170,7 @@ const InputProfileInfo = ({ setSideBar }) => {
             profile_img: imgurl,
             user_address: address,
             user_phone: phone,
+            website:website
         };
         updateDoc(docRef, data)
             .then(() => {
@@ -195,6 +210,7 @@ const InputProfileInfo = ({ setSideBar }) => {
             <AuthInput title={"Last Name"} status={lastnamevalidation} placeholder={"E.g.Doe"} change={lastnameValidation} type={"text"} value={tempData && tempData.length > 0?tempData[0].last_name:''}/>
             <AuthInput title={"SDrop Nickname"} status={nicknamevalidation} placeholder={"E.g.John Doe Rentals"} change={nicknameValidation} type={"text"} value={tempData && tempData.length > 0?tempData[0].nick_name:''}/>
             <AuthInput title={"Phone Number"} status={phonevalidation} placeholder={"E.g.+61 488 789"} change={phoneValidation} type={"text"} value={tempData && tempData.length > 0?tempData[0].user_phone:''}/>
+            <AuthInput title={"Website"} status={websitevalidation} placeholder={"E.g.johnrental.com"} change={websiteValidation} type={"text"} value={tempData && tempData.length > 0 && tempData[0].website ?tempData[0].website:''}/>
             <AuthInput title={"Address"} status={addressvalidation} placeholder={"E.g.20 Echidna Ave, 2035, Australia"} change={addressValidation} type={"text"} value={tempData && tempData.length > 0?tempData[0].user_address:''}/>
             <div className="loginButton">
             {
