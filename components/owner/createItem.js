@@ -3,6 +3,7 @@ import { faArrowLeftLong}  from "@fortawesome/free-solid-svg-icons"
 import AddItemImg from "./addItemImg";
 import SidebarBack from "../sidebarBack";
 import { useState,useEffect } from "react";
+import AddItemInfo from "./addItemInfo";
 
 const CreateItem = () => {
 
@@ -22,10 +23,14 @@ const CreateItem = () => {
         temp.push( <AddItemImg setSideBar={setSideBar} setProfileImgs={setProfileImgs}/>);
         setDrawSidebar(temp);
       }
+      if(sideBar == 2){
+        let temp = [];
+        temp.push( <AddItemInfo setSideBar={setSideBar}/>);
+        setDrawSidebar(temp);
+      }
     }, [sideBar]);
     useEffect(()=>{
         console.log(profileImgs);
-
     },[profileImgs.length])
     return (
         <section className="setting">

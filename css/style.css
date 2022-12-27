@@ -342,6 +342,16 @@ input:-webkit-autofill:active {
   border: solid 1px #ffffff33;
   border-radius: 8px;
  }
+ textarea{
+  margin: 10px 0px 20px 0px;
+  border: solid 1px #ffffff4d;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: poppins-light;
+  color:white;
+  padding: 8px 12px;
+
+ }
 @media screen and (max-width: 991px){
   .setting{
     padding-right:  48px!important;

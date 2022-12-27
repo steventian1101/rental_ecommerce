@@ -29,7 +29,9 @@ export default function Header() {
   const [nickname, setNickname] = useState('');
   const [dropbox, setDropbox] = useState(false);
   const [tempdata, setTempdata] = useState([]);
+  let i = 0;
   useEffect(() => {
+    i++;
     let temp = [];
     if (sideBar == 0) {
       setDrawbackground(false);
@@ -38,27 +40,27 @@ export default function Header() {
     }
     if (sideBar == 1) {
       setDrawbackground(true);
-      temp.push(<Login setSideBar={setSideBar} key={sideBar}/>);
+      temp.push(<Login setSideBar={setSideBar} key={i}/>);
       setDrawSidebar(temp);
     }
     if (sideBar == 2) {
       setDrawbackground(true);
-      temp.push(<Register sideBar={sideBar} setSideBar={setSideBar} key={sideBar}/>);
+      temp.push(<Register sideBar={sideBar} setSideBar={setSideBar} key={i}/>);
       setDrawSidebar(temp);
     }
     if (sideBar == 3) {
       setDrawbackground(true);
-      temp.push(<ResetPassword sideBar={sideBar} setSideBar={setSideBar} key={sideBar}/>);
+      temp.push(<ResetPassword sideBar={sideBar} setSideBar={setSideBar} key={i}/>);
       setDrawSidebar(temp);
     }
     if (sideBar == 4) {
       setDrawbackground(true);
-      temp.push(<Notification sideBar={sideBar} setSideBar={setSideBar} key={sideBar}/>);
+      temp.push(<Notification sideBar={sideBar} setSideBar={setSideBar} key={i}/>);
       setDrawSidebar(temp);
     }
     if (sideBar == 5) {
       setDrawbackground(true);
-      temp.push(<InputProfileInfo sideBar={sideBar} setSideBar={setSideBar} key={sideBar}/>);
+      temp.push(<InputProfileInfo sideBar={sideBar} setSideBar={setSideBar} key={i}/>);
       setDrawSidebar(temp);
     }
   }, [sideBar])

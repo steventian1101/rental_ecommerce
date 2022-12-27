@@ -4,7 +4,7 @@ export default function IndexPage() {
   const router = useRouter();
   return (
     <>
-    <Header/>
+      <Header />
     </>
   )
 }
