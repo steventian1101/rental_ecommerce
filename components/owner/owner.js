@@ -4,6 +4,7 @@ import { updateDoc,deleteField,doc,collection, addDoc, query, orderBy, where, ge
 import { db } from "../../lib/initFirebase"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import Link from "next/link";
 const Owner = () =>{
     const { userCredential } = useAuth();
     const [ownerImg, setOwnerImg] = useState('');
@@ -42,10 +43,10 @@ const Owner = () =>{
             </div>
             <div style={{ width:"90vw", background:"#ffffff33", height:"1px", marginRight:"auto", marginLeft:"auto", marginTop:"40px", marginBottom:"70px"}}></div>
             <div className="flex flex-row justify-center ownerItemBoard flex-nowrap">
-                <div className="flex flex-col items-center justify-center addItem">
+                <Link href="/create"><div className="flex flex-col items-center justify-center addItem">
                     <FontAwesomeIcon icon={faPlus} style={{ color:"white", fontSize:"40px"}}/>
                     <p className="text-white">Add a new item</p>
-                </div>
+                </div></Link>
             </div>
         </section>
     )

@@ -60,7 +60,7 @@ p{
   top:0px;
   right:0px;
   height: 100vh;
-  background-color: black;
+  background-color: #0e0e0e;
   width:400px;
   padding:20px 50px 100px 50px;
   margin-bottom: 10px;
@@ -71,7 +71,7 @@ p{
   top:0px;
   right:0px;
   height: 100vh;
-  background-color: black;
+  background-color: #0e0e0e;
   width:400px;
   padding:20px 50px 100px 50px;
   margin-bottom: 10px;
@@ -82,7 +82,7 @@ p{
   top:0px;
   right:0px;
   height: 100vh;
-  background-color: black;
+  background-color: #0e0e0e;
   width:400px;
   padding:20px 50px 100px 50px;
   margin-bottom: 10px;
@@ -93,7 +93,7 @@ p{
   top:0px;
   right:0px;
   height: 100vh;
-  background-color: black;
+  background-color: #0e0e0e;
   width:400px;
   padding:20px 50px 100px 50px;
   margin-bottom: 10px;
@@ -104,10 +104,22 @@ p{
   top:0px;
   right:0px;
   height: 100vh;
-  background-color: black;
+  background-color: #0e0e0e;
   width:400px;
   padding:20px 50px 100px 50px;
   margin-bottom: 10px;
+}
+.addItemImg{
+  position: fixed;
+  z-index: 10001;
+  top:0px;
+  right:0px;
+  height: 100vh;
+  background-color: #0e0e0e;
+  width:400px;
+  padding:20px 50px 100px 50px;
+  margin-bottom: 10px;
+
 }
 .loginText{
   display: block;
@@ -360,6 +372,12 @@ input:-webkit-autofill:active {
     padding-right: 25vw!important;
     padding-left: 25vw!important;
   }
+  .addItemImg{
+    width: 100%!important;
+    padding-right: 25vw!important;
+    padding-left: 25vw!important;
+
+  }
 
 }
 @media screen and (max-width: 767px){
@@ -415,9 +433,18 @@ input:-webkit-autofill:active {
     padding-right: 15vw!important;
     padding-left: 15vw!important;
   }
+  .addItemImg{
+    width: 100%!important;
+    padding-right: 15vw!important;
+    padding-left: 15vw!important;
+
+  }
 
 }
 @media screen and (max-width: 479px){
+  .settingTitle{
+    font-size: 23px!important;
+  }
   .ownerRating{
     display: none;
   }
@@ -466,6 +493,11 @@ input:-webkit-autofill:active {
     padding-left: 7vw!important;
   }
   .notification{
+    width: 100%!important;
+    padding-right: 7vw!important;
+    padding-left: 7vw!important;
+  }
+  .addItemImg{
     width: 100%!important;
     padding-right: 7vw!important;
     padding-left: 7vw!important;

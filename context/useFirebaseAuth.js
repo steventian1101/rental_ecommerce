@@ -12,6 +12,8 @@ export default function useFirebaseAuth() {
     const [confirmationEmail, setConfirmationEmail] = useState('');
     const [newCredential, setNewCredential] = useState(null);
     const [error, setError] = useState(null);
+    const [email, setEmail] = useState(null);
+    const [generalProfile, setGeneralProfile] = useState(null);
     const router = useRouter();
     const listCollectionRef = collection(db, "users")
     const signIn = (auth, email, password) => {
@@ -19,8 +21,8 @@ export default function useFirebaseAuth() {
             console.log(userCredential);
             setUserCredential(userCredential)
             console.log("okay good !!!!");
-                router.push('/');
-                window.location.reload();   
+            router.push('/');
+            window.location.reload();  
         }).catch((error) => {
             setError(error.message)
             console.log(error.message)
@@ -44,51 +46,51 @@ export default function useFirebaseAuth() {
             console.log(error)
         });
     };
-    const googleAuth = (auth,provider) => {
-          signInWithPopup(auth, provider)
+    const googleAuth = (auth, provider) => {
+        signInWithPopup(auth, provider)
             .then((result) => {
-            //    location.href('/');
-            // router.push('/');
-            // window.location.reload();
-              setConfirmationEmail(result.user.email)
-              setNewCredential(result.user);
-            
+                //    location.href('/');
+                // router.push('/');
+                // window.location.reload();
+                setConfirmationEmail(result.user.email)
+                setNewCredential(result.user);
+
                 // ...
             }).catch((error) => {
-               console.log(error.message)
+                console.log(error.message)
             });
     };
-    const getUserInformation = async (email) =>{
+    const getUserInformation = async (email) => {
         let temp = [];
-            let q = query(listCollectionRef, where("user_email", "==", email));
-            const querySnapshot = await getDocs(q) ;
-            querySnapshot.forEach((doc) => {
-                temp.push(doc.data());
-            });
-            if(temp.length != 0){
-                console.log("already")
+        let q = query(listCollectionRef, where("user_email", "==", email));
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach((doc) => {
+            temp.push(doc.data());
+        });
+        if (temp.length != 0) {
+            console.log("already")
+            router.push('/');
+            window.location.reload();
+        }
+        else {
+            console.log("new")
+            console.log(newCredential);
+            addDoc(listCollectionRef, { user_email: newCredential.email, first_name: newCredential.displayName.split(" ")[0], profile_img: newCredential.photoURL, last_name: newCredential.displayName.split(" ")[1], nick_name: newCredential.displayName + " Rentals", user_phone: "", user_address: "" }).then(response => {
                 router.push('/');
                 window.location.reload();
-            }
-            else{
-                console.log("new")
-                console.log(newCredential);
-                addDoc(listCollectionRef, { user_email: newCredential.email, first_name: newCredential.displayName.split(" ")[0], profile_img:newCredential.photoURL, last_name:newCredential.displayName.split(" ")[1], nick_name:newCredential.displayName+" Rentals", user_phone:"", user_address:"" }).then(response => {
-                    router.push('/');
-                    window.location.reload();
-                  }).catch(error => {
-                       console.log(error.message)
-                });
-            }
-     }
-    
-    useEffect(()=>{
-       confirmationEmail != "" && getUserInformation(confirmationEmail)
-    },[confirmationEmail])
+            }).catch(error => {
+                console.log(error.message)
+            });
+        }
+    }
+
+    useEffect(() => {
+        confirmationEmail != "" && getUserInformation(confirmationEmail)
+    }, [confirmationEmail])
     useEffect(() => {
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                const date = new Date(); 
+                const date = new Date();
                 setAuthenticated(true)
                 setUserCredential(user);
                 setImageUrl(user.photoURL);
@@ -96,13 +98,13 @@ export default function useFirebaseAuth() {
                     // Make sure all the times are in milliseconds!
                     const authTime = user.metadata.lastSignInTime;
                     console.log(user)
-                    console.log(date.toUTCString()  , authTime);
-                    const diffrence = timediff( new Date(authTime),new Date(), 's');
+                    console.log(date.toUTCString(), authTime);
+                    const diffrence = timediff(new Date(authTime), new Date(), 's');
                     console.log(diffrence);
                     const sessionDuration = 1200000;
                     const millisecondsUntilExpiration = sessionDuration - diffrence.milliseconds;
                     console.log(millisecondsUntilExpiration)
-                    
+
                     setTimeout(() => logOut(auth), millisecondsUntilExpiration);
                 });
             } else {
@@ -111,6 +113,9 @@ export default function useFirebaseAuth() {
             }
         });
     }, []);
+    useEffect(()=>{
+      console.log(email)
+    },[userCredential])
     const errorRemove = (error) => {
         setError(error);
     }
