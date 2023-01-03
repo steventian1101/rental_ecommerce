@@ -1,10 +1,18 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeftLong}  from "@fortawesome/free-solid-svg-icons"
+import { faArrowRightLong}  from "@fortawesome/free-solid-svg-icons"
+import { faArrowLeftLong}  from "@fortawesome/free-solid-svg-icons";
+import { collection, addDoc, query, orderBy, where, getDocs } from "firebase/firestore";
+import { db } from "../../lib/initFirebase";
 import AddItemImg from "./addItemImg";
 import SidebarBack from "../sidebarBack";
 import { useState,useEffect } from "react";
 import AddItemInfo from "./addItemInfo";
 import AddChargeRate from "./addChargeRate";
+import { storage } from "../../lib/initFirebase";
+import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
+import { useAuth } from "../../context/useAuth";
+import Loading from "../auth/loading";
+import { useRouter } from "next/router";
 
 const CreateItem = () => {
 
@@ -13,6 +21,47 @@ const CreateItem = () => {
     const [profileImgs, setProfileImgs] = useState([]);
     const [itemInfo, setItemInfo] = useState(null);
     const [chargeRate, setChargeRate] = useState(null);
+    const [imgArray, setImgArray] = useState([]);
+    const [last, setLast] = useState(false);
+    const listCollectionRef = collection(db, "rental_items");
+    const { userCredential } = useAuth();
+    const [loading, setLoading] = useState(false);
+    const router = useRouter();
+
+    const handleComplete = () =>{
+        const temp = [];
+        let j = 0;
+        setLoading(true)
+        for(let i in profileImgs){
+            
+            const storageRef = ref(storage, `items/${itemInfo.itemname + i + "(" + profileImgs[i].name + ")" + ".jpg"}`);
+            const metadata = {
+                contentType: 'image/jpeg'
+            };
+            uploadBytes(storageRef, profileImgs[i]).then((snapshot) => {
+                console.log('Uploaded a blob or file!');
+                getDownloadURL(storageRef).then((downloadUrl) => {  
+                    j++;                 
+                    console.log(j);
+                    temp.push(downloadUrl);
+                    setImgArray(temp);
+                    if(j == profileImgs.length){
+                        setLast(true);
+                    }
+                });
+            }); 
+             
+        }   
+    }
+    const handleSave = () =>{
+        addDoc(listCollectionRef, { item_photos:imgArray, item_name:itemInfo.itemname, item_desc:itemInfo.itemDesc,item_location:itemInfo.location, item_search_tags:"", item_charge:chargeRate.price, item_charge_rate:chargeRate.charge_rate_type, item_rating:0, review_number:0, item_reviews:"", item_views:0, insurance:chargeRate.insurance, rental_owner:userCredential.email }).then(response => {
+            console.log(response);
+            router.push("/profile");
+        }).catch(error => {
+               console.log(error.message)
+        });
+          
+    }
 
     useEffect(() => {
       if(sideBar == 0){
@@ -36,11 +85,24 @@ const CreateItem = () => {
         setDrawSidebar(temp);
       }
     }, [sideBar]);
+    
+    useEffect(()=>{
+        console.log(chargeRate);
+    },[chargeRate]);
     useEffect(()=>{
         console.log(profileImgs);
-    },[profileImgs.length])
+    },[profileImgs.length]);
+    useEffect(()=>{
+        console.log(itemInfo);
+    },[itemInfo]);
+    useEffect(()=>{
+         last && handleSave();
+    },[last])
     return (
-        <section className="setting">
+        <section className="relative setting">
+            {
+                loading? <Loading/>:<></>
+            }
             <div className="flex items-center justify-start w-full">
                 <div style={{ height: "70px" }} className="flex flex-row items-center cursor-pointer"><FontAwesomeIcon icon={faArrowLeftLong} className="text-2xl text-white" /></div>
             </div>
@@ -64,7 +126,9 @@ const CreateItem = () => {
                 <div className="relative flex flex-col setting_box" onClick={()=>{ setSideBar(3)}}>
                     <img src='/logo/money.svg' className="settingItemImg" />
                     <p className="text-white">Add Charge Rate</p>
-                    <img src="/logo/checked-circle.svg" className="absolute" style={{ top:"10%", right:"5%"}}/>
+                    {
+                        chargeRate ?<img src="/logo/checked-circle.svg" className="absolute" style={{ top:"10%", right:"5%"}}/>:<></>
+                    }
                 </div>
             </div>
             {
@@ -73,6 +137,16 @@ const CreateItem = () => {
             {
                  drawSidebar
             }
+            <div className="absolute right-0 bottom-40">
+                {
+                    profileImgs !="" && itemInfo && chargeRate?  <div style={{ height:"70px", width:"70px", opacity:"1", background:"#0052cc",borderRadius:"100px"}} className="flex items-center justify-center" onClick={()=>handleComplete()}>
+                    <FontAwesomeIcon icon={ faArrowRightLong } className="text-white fontIcon"/>
+                </div>: <div style={{ height:"70px", width:"70px", opacity:"0.3", background:"#0052cc",borderRadius:"100px"}} className="flex items-center justify-center">
+                    <FontAwesomeIcon icon={ faArrowRightLong } className="text-white fontIcon"/>
+                </div>
+                }
+               
+            </div>
         </section>
     )
 

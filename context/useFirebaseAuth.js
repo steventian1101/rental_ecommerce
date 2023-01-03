@@ -21,7 +21,7 @@ export default function useFirebaseAuth() {
             console.log(userCredential);
             setUserCredential(userCredential)
             console.log("okay good !!!!");
-            router.push('/');
+             router.push('/');
             window.location.reload();  
         }).catch((error) => {
             setError(error.message)
@@ -94,19 +94,19 @@ export default function useFirebaseAuth() {
                 setAuthenticated(true)
                 setUserCredential(user);
                 setImageUrl(user.photoURL);
-                user.getIdTokenResult().then((idTokenResult) => {
-                    // Make sure all the times are in milliseconds!
-                    const authTime = user.metadata.lastSignInTime;
-                    console.log(user)
-                    console.log(date.toUTCString(), authTime);
-                    const diffrence = timediff(new Date(authTime), new Date(), 's');
-                    console.log(diffrence);
-                    const sessionDuration = 1200000;
-                    const millisecondsUntilExpiration = sessionDuration - diffrence.milliseconds;
-                    console.log(millisecondsUntilExpiration)
+                // user.getIdTokenResult().then((idTokenResult) => {
+                //     // Make sure all the times are in milliseconds!
+                //     const authTime = user.metadata.lastSignInTime;
+                //     console.log(user)
+                //     console.log(date.toUTCString(), authTime);
+                //     const diffrence = timediff(new Date(authTime), new Date(), 's');
+                //     console.log(diffrence);
+                //     const sessionDuration = 1200000;
+                //     const millisecondsUntilExpiration = sessionDuration - diffrence.milliseconds;
+                //     console.log(millisecondsUntilExpiration)
 
-                    setTimeout(() => logOut(auth), millisecondsUntilExpiration);
-                });
+                //     setTimeout(() => logOut(auth), millisecondsUntilExpiration);
+                // });
             } else {
                 setAuthenticated(false);
                 router.push('/');
@@ -128,7 +128,6 @@ export default function useFirebaseAuth() {
         logOut,
         googleAuth,
         createUser,
-        userCredential,
         error,
         errorRemove
     };

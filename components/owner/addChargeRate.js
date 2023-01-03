@@ -58,6 +58,39 @@ const AddChargeRate = ({ setSideBar, setChargeRate}) => {
 
     }
     const handleComplete = () =>{
+        if(chargevalidation){
+            let temp;
+            let charge_rate_type;
+            let insurance;
+            if(hour){
+                charge_rate_type = "hour";
+            }
+            if(day){
+                charge_rate_type = "day";
+            }
+            if(week){
+                charge_rate_type = "week";
+            }
+            if(month){
+                charge_rate_type = "month";
+            }
+            if(own){
+                insurance = "own";
+            }
+            if(cover){
+                insurance = "cover";
+            }
+            if(!own && !cover){
+                insurance = "none";
+            }
+            temp = {
+                "charge_rate_type":charge_rate_type,
+                "insurance":insurance,
+                "price":charge
+            }
+            setChargeRate(temp);
+            setSideBar(0);
+        }
        
     }
 

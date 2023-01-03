@@ -269,6 +269,7 @@ input:-webkit-autofill:active {
   padding-bottom: 100px;
   margin-left: auto;
   margin-right:auto;
+  height: 100vh;
 }
 .setting_box{
   width: 250px;

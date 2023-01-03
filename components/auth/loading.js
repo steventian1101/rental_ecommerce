@@ -1,6 +1,6 @@
 const Loading = () => {
     return (
-        <div className="fixed top-0 flex items-center justify-center w-full bg-black opacity-60" style={{ zIndex:"100000000", height:"100vh"}}>
+        <div className="fixed top-0 left-0 flex items-center justify-center w-full bg-black opacity-60" style={{ zIndex:"100000000", height:"100vh"}}>
             <div>
                 <svg version="1.1" id="L7" x="0px" y="0px"
                     viewBox="0 0 100 100" enableBackground="new 0 0 100 100" style={{ width: "50px", margin: "auto" }}>
