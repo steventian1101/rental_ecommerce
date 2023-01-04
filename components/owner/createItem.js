@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRightLong}  from "@fortawesome/free-solid-svg-icons"
 import { faArrowLeftLong}  from "@fortawesome/free-solid-svg-icons";
-import { collection, addDoc, query, orderBy, where, getDocs } from "firebase/firestore";
+import { collection, addDoc, query, orderBy, where, getDocs, serverTimestamp } from "firebase/firestore";
 import { db } from "../../lib/initFirebase";
 import AddItemImg from "./addItemImg";
 import SidebarBack from "../sidebarBack";
@@ -26,10 +26,12 @@ const CreateItem = () => {
     const listCollectionRef = collection(db, "rental_items");
     const { userCredential } = useAuth();
     const [loading, setLoading] = useState(false);
+    const [time, setTime] = useState(null);
     const router = useRouter();
 
     const handleComplete = () =>{
         const temp = [];
+        setTime(serverTimestamp());
         let j = 0;
         setLoading(true)
         for(let i in profileImgs){
@@ -54,7 +56,7 @@ const CreateItem = () => {
         }   
     }
     const handleSave = () =>{
-        addDoc(listCollectionRef, { item_photos:imgArray, item_name:itemInfo.itemname, item_desc:itemInfo.itemDesc,item_location:itemInfo.location, item_search_tags:"", item_charge:chargeRate.price, item_charge_rate:chargeRate.charge_rate_type, item_rating:0, review_number:0, item_reviews:"", item_views:0, insurance:chargeRate.insurance, rental_owner:userCredential.email }).then(response => {
+        addDoc(listCollectionRef, { item_photos:imgArray, item_name:itemInfo.itemname, item_desc:itemInfo.itemDesc,item_location:itemInfo.location, item_search_tags:"", item_charge:chargeRate.price, item_charge_rate:chargeRate.charge_rate_type, item_rating:0, review_number:0, item_reviews:"", item_views:0, insurance:chargeRate.insurance, rental_owner:userCredential.email, createdTime:time }).then(response => {
             console.log(response);
             router.push("/profile");
         }).catch(error => {
@@ -99,7 +101,7 @@ const CreateItem = () => {
          last && handleSave();
     },[last])
     return (
-        <section className="relative setting">
+        <section className="setting">
             {
                 loading? <Loading/>:<></>
             }
@@ -137,15 +139,14 @@ const CreateItem = () => {
             {
                  drawSidebar
             }
-            <div className="absolute right-0 bottom-40">
+            <div className="flex items-end justify-end w-full createitembuttonbar">
                 {
-                    profileImgs !="" && itemInfo && chargeRate?  <div style={{ height:"70px", width:"70px", opacity:"1", background:"#0052cc",borderRadius:"100px"}} className="flex items-center justify-center" onClick={()=>handleComplete()}>
+                    profileImgs !="" && itemInfo && chargeRate?  <div className="flex items-center justify-center createitembutton" onClick={()=>handleComplete()}>
                     <FontAwesomeIcon icon={ faArrowRightLong } className="text-white fontIcon"/>
-                </div>: <div style={{ height:"70px", width:"70px", opacity:"0.3", background:"#0052cc",borderRadius:"100px"}} className="flex items-center justify-center">
+                </div>: <div  className="flex items-center justify-center createitembutton opacity-30">
                     <FontAwesomeIcon icon={ faArrowRightLong } className="text-white fontIcon"/>
                 </div>
-                }
-               
+                }    
             </div>
         </section>
     )

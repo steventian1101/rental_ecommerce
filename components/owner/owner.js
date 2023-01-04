@@ -5,16 +5,20 @@ import { db } from "../../lib/initFirebase"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
+import OwnerItemcard from "./ownerItemcard";
 const Owner = () =>{
     const { userCredential } = useAuth();
     const [ownerImg, setOwnerImg] = useState('');
     const [tempData, setTempdata] = useState([]);
+    const listCollectionRef = collection(db, 'users');
+    const itemListCollectionRef = collection(db,'rental_items');
+    const [items, setItems] = useState(null);
     useEffect(()=>{
-          userCredential.email && getDetail(userCredential.email)
+          userCredential.email && getDetail(userCredential.email);
+          userCredential.email && getRentalItems(userCredential.email);
     },[userCredential]);
     const getDetail = async (email) =>{
         let temp = [];
-        const listCollectionRef = collection(db, 'users');
         let q = query(listCollectionRef, where("user_email", "==", email));
         const querySnapshot = await getDocs(q);
         querySnapshot.forEach((doc) => {
@@ -23,8 +27,22 @@ const Owner = () =>{
         console.log(temp)
         setTempdata(temp);
     }
+    const getRentalItems = async (email) =>{
+      let temp = [];
+      let q = query(itemListCollectionRef, where("rental_owner","==", email));
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach((doc)=>{
+        var tempobject = Object.assign(doc.data(),{item_id:doc.id})
+        temp.push(tempobject);
+        console.log(doc.id)
+      });
+      setItems(temp);
+    }
+    useEffect(()=>{
+        console.log(items)
+    },[items]);
     return(
-        <section className="w-full bg-black">
+        <section className="w-full bg-black owner">
             <div className="relative w-full" style={{ height:"400px"}}>
                 <div className="gradient"></div>
                 {
@@ -42,11 +60,15 @@ const Owner = () =>{
                 <button className="ownerRating">4.7 star(52 reviews)</button>
             </div>
             <div style={{ width:"90vw", background:"#ffffff33", height:"1px", marginRight:"auto", marginLeft:"auto", marginTop:"40px", marginBottom:"70px"}}></div>
-            <div className="flex flex-row justify-center ownerItemBoard flex-nowrap">
-                <Link href="/create"><div className="flex flex-col items-center justify-center addItem">
+            <div className="flex flex-row flex-wrap justify-center w-full ownerItemBoard">
+                <Link href="/create" className="flex w-full addItemLink"><div className="flex flex-col items-center justify-center addItem">
                     <FontAwesomeIcon icon={faPlus} style={{ color:"white", fontSize:"40px"}}/>
                     <p className="text-white">Add a new item</p>
                 </div></Link>
+               {
+                items && items.length > 0 && items.map((item)=>
+                (<OwnerItemcard details={item}/>))
+               }
             </div>
         </section>
     )
