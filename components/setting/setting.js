@@ -1,9 +1,11 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faArrowLeftLong } from "@fortawesome/free-solid-svg-icons"
+import { faLocationDot } from "@fortawesome/free-solid-svg-icons"
 import InputProfileInfo from "../auth/inputProfileInfo"
 import { useState, useEffect } from "react"
 import SidebarBack from "../sidebarBack"
 import Payment from "./payment"
+import Location from "./location"
 const Setting = () => {
     const [sideBar, setSideBar]= useState(0);
     const [drawSidebar, setDrawSidebar] = useState([]);
@@ -16,6 +18,11 @@ const Setting = () => {
        if(sideBar == 2){
         let temp = [];
         temp.push(<Payment setSideBar={ setSideBar } key={sideBar}/>);
+        setDrawSidebar(temp);
+       }
+       if(sideBar == 3){
+        let temp = [];
+        temp.push(<Location setSideBar={ setSideBar } key={sideBar}/>);
         setDrawSidebar(temp);
        }
        if(sideBar == 0){
@@ -43,6 +50,10 @@ const Setting = () => {
                 <div className="flex flex-col setting_box" onClick={()=>{ setSideBar(2)}}>
                     <img src='/logo/money.svg' className="settingItemImg" />
                     <p className="text-white">Payment</p>
+                </div>
+                <div className="flex flex-col setting_box" onClick={()=>{ setSideBar(3)}}>
+                    <FontAwesomeIcon icon={ faLocationDot} className="settingLocationImg"/>
+                    <p className="text-white">Add Location</p>
                 </div>
             </div>
         </section>

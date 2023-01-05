@@ -157,7 +157,7 @@ const Register = ({ sideBar, setSideBar }) => {
                     setPreviewImage('');
                     console.log(downloadUrl);
                 });
-            })
+            });
         }
         else{
         }

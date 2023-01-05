@@ -34,6 +34,7 @@
   font-family: poppins-black;
   src: url(Poppins-Black.ttf);
 }
+
 .navbar{
   position:sticky;
   width: 90vw;
@@ -198,6 +199,13 @@ p{
   height: 35px;
   margin-bottom: 10px;
 }
+.settingLocationImg{
+  color: white;
+  font-size: 35px;
+  margin-bottom: 10px;
+
+}
+
 .passwordResetButton{
   margin-top: 40px;
   margin-bottom: 15px;
@@ -432,6 +440,12 @@ input:-webkit-autofill:active {
 }
 .carousel:focus .itemButtons{
   display: flex;
+}
+.addlocationbutton{
+  border: solid 1px #ffffff4d;
+  border-radius: 8px;
+  background: transparent;
+  color: white;
 }
 
 
