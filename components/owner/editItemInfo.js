@@ -113,7 +113,7 @@ const EditItemInfo = ({ setSideBar, setItemInfo, prevName, prevLocation, prevIte
     return (
         <section className="overflow-auto addItemImg">
             <div style={{ height: "50px", marginBottom: "10px" }} className="flex flex-row items-center cursor-pointer"><FontAwesomeIcon icon={faArrowLeftLong} className="text-2xl text-white" onClick={() => setSideBar(0)} /></div>
-            <p className="loginText">ADD THE ITEM'S INFO</p>
+            <p className="loginText">EDIT THE ITEM'S INFO</p>
             <p className="loginDetail">Add critical item information that will help other users know what they're receiving .</p>
             <AuthInput title={"Item Name"} status={itemnamevalidation} placeholder={"E.g.Dress"} change={itemnameValidation} type={"text"} value={prevName} />
             <Textarea title={"Item Description"} status={ itemdescvalidation} placeholder={"Describe your items."} change = {handleTextarea} value={prevItemDesc}/>

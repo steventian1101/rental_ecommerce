@@ -39,26 +39,31 @@ const EditItem = ({query}) =>{
         setTime(serverTimestamp());
         let j = 0;
         setLoading(true)
-        for(let i in profileImgs){
+        if(profileImgs.length > 0){
+            for(let i in profileImgs){
             
-            const storageRef = ref(storage, `items/${itemInfo.itemname + i + "(" + profileImgs[i].name + ")" + ".jpg"}`);
-            const metadata = {
-                contentType: 'image/jpeg'
-            };
-            uploadBytes(storageRef, profileImgs[i]).then((snapshot) => {
-                console.log('Uploaded a blob or file!');
-                getDownloadURL(storageRef).then((downloadUrl) => {  
-                    j++;                 
-                    console.log(j);
-                    temp.push(downloadUrl);
-                    setImgArray(temp);
-                    if(j == profileImgs.length){
-                        setLast(true);
-                    }
-                });
-            }); 
-             
-        }   
+                const storageRef = ref(storage, `items/${itemInfo.itemname + i + "(" + profileImgs[i].name + ")" + ".jpg"}`);
+                const metadata = {
+                    contentType: 'image/jpeg'
+                };
+                uploadBytes(storageRef, profileImgs[i]).then((snapshot) => {
+                    console.log('Uploaded a blob or file!');
+                    getDownloadURL(storageRef).then((downloadUrl) => {  
+                        j++;                 
+                        console.log(j);
+                        temp.push(downloadUrl);
+                        setImgArray(temp);
+                        if(j == profileImgs.length){
+                            setLast(true);
+                        }
+                    });
+                }); 
+                 
+            }
+        } 
+        else{
+            setLast(true);
+        }  
     }
     const handleSave = () =>{
         const docRef = doc(db, "rental_items", id);
@@ -90,7 +95,7 @@ const EditItem = ({query}) =>{
             });
         updateDoc(docRef, newdata)
             .then(() => {
-                window.location.reload();
+                router.push("/profile")
             })
             .catch((error) => {
                 console.log(error);

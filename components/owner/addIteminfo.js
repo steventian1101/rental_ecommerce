@@ -22,6 +22,7 @@ const AddItemInfo = ({ setSideBar, setItemInfo}) => {
 
     const handleComplete = () => {
         console.log("okay")
+        console.log(location)
         if (itemname != "" && location != "" && itemDesc != "" && itemTag != "") {
            
             let temp = {
@@ -55,14 +56,7 @@ const AddItemInfo = ({ setSideBar, setItemInfo}) => {
         }
     }
     const locationValidation = (any) => {
-        console.log(any)
-        if (any != "") {
-            setLocationvalidation(true);
-            setLocation(any);
-        }
-        else {
-            setLocationvalidation(false);
-        }
+        setLocation(any);
     }
     const handleTextarea = (any) => {
         if (any != "") {
@@ -89,12 +83,14 @@ const AddItemInfo = ({ setSideBar, setItemInfo}) => {
             if (typeof (tempArray["user_address"]) == "string") {
                 console.log("okay")
                 temp.push(tempArray["user_address"]);
+                setLocation(temp[0])
             }
             if (typeof (tempArray["user_address"]) == "object") {
                 console.log("object");
                 for (let i in tempArray["user_address"]) {
                     temp.push(tempArray["user_address"][i]);
                 }
+                setLocation(temp[0])
             }
         });
         console.log(temp)
@@ -117,7 +113,7 @@ const AddItemInfo = ({ setSideBar, setItemInfo}) => {
             </div>
             <div>
                 <p className="text-white" style={{ fontSize: "15px"}}>Item Location</p>
-                <select className="w-full my-2.5 mb-5 py-3 pr-3 px-3 pb-3 bg-transparent text-white outline-none text-sm" style={{ border:"solid 1px #ffffff4d", borderRadius:"8px", fontFamily:"poppins-light"}} onChange={(e)=>{locationValidation(e.target.value)}} value={location}> 
+                <select className="w-full my-2.5 mb-5 py-3 pr-3 px-3 pb-3 bg-transparent text-white outline-none text-sm" style={{ border:"solid 1px #ffffff4d", borderRadius:"8px", fontFamily:"poppins-light"}} onChange={(e)=>{locationValidation(e.target.value)}} defaultvalue={""}> 
                     {
                         tempdata && tempdata.length > 0 && tempdata.map((data)=>(
                             <option className="p-2 mb-3 text-base bg-black rounded-lg" style={{ background:"#0e0e0e"}}>{data}</option>

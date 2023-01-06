@@ -102,7 +102,7 @@ const EditChargeRate = ({ setSideBar, setChargeRate, price, chargetype, insuranc
     return (
         <section className="overflow-auto addItemImg">
             <div style={{ height: "50px", marginBottom: "10px" }} className="flex flex-row items-center cursor-pointer"><FontAwesomeIcon icon={faArrowLeftLong} className="text-2xl text-white" onClick={() => setSideBar(0)} /></div>
-            <p className="loginText">ADD THE CHARGE RATE</p>
+            <p className="loginText">EDIT THE CHARGE RATE</p>
             <p className="loginDetail">Time to make some money and make sure you're item is covered!</p>
             <AuthInput title={"Item's Charge Rate"} status={chargevalidation} placeholder={"E.g.5 AUD"} change={chargeValidation} type={"number"} value={price} />
             <div>
