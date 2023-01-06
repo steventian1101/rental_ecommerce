@@ -5,8 +5,10 @@ import { useState, useEffect } from "react"
 import { useAuth } from "../../context/useAuth"
 import { updateDoc, deleteField, doc, collection, addDoc, query, orderBy, where, getDocs } from "firebase/firestore";
 import { db } from "../../lib/initFirebase"
+import Textarea from "./textarea"
 
-const AddItemInfo = ({ setSideBar, setItemInfo}) => {
+const EditItemInfo = ({ setSideBar, setItemInfo, prevName, prevLocation, prevItemDesc, prevItemTag}) => {
+    console.log(prevItemDesc)
     const [itemnamevalidation, setItemnamevalidation] = useState(true);
     const [itemname, setItemname] = useState('');
     const [location, setLocation] = useState('');
@@ -16,14 +18,16 @@ const AddItemInfo = ({ setSideBar, setItemInfo}) => {
     const [itemDesc, setItemDesc] = useState('');
     const [itemTag, setItemTag] = useState('');
     const [itemtagvalidation, setItemtagvalidation] = useState(true);
+    const [itemdescvalidation, setItemdescvalidation]= useState(true);
     const [tempdata, setTempdata] = useState(null);
     const { userCredential} = useAuth();
-    const listCollectionRef = collection(db, "users")
+    const listCollectionRef = collection(db, "users");
+    console.log(prevLocation)
+    
 
     const handleComplete = () => {
-        console.log("okay")
+        console.log(itemname, location, itemDesc, itemTag)
         if (itemname != "" && location != "" && itemDesc != "" && itemTag != "") {
-           
             let temp = {
                 "itemname": itemname,
                 "location": location,
@@ -66,13 +70,11 @@ const AddItemInfo = ({ setSideBar, setItemInfo}) => {
     }
     const handleTextarea = (any) => {
         if (any != "") {
-            setColor("#ffffff4d");
-            setFontColor("white")
+            setItemdescvalidation(true);
             setItemDesc(any.replace(/\n/g, "<br>"));
         }
         else {
-            setFontColor("#f66")
-            setColor('#f66')
+            setItemdescvalidation(false);
         }
     }
     useEffect(() => {
@@ -104,23 +106,26 @@ const AddItemInfo = ({ setSideBar, setItemInfo}) => {
         console.log(userCredential.email)
         userCredential.email && getDetail(userCredential.email);
     },[]);
+    useEffect(()=>{
+        locationValidation(prevLocation)
+    },[prevLocation])
 
     return (
         <section className="overflow-auto addItemImg">
             <div style={{ height: "50px", marginBottom: "10px" }} className="flex flex-row items-center cursor-pointer"><FontAwesomeIcon icon={faArrowLeftLong} className="text-2xl text-white" onClick={() => setSideBar(0)} /></div>
             <p className="loginText">ADD THE ITEM'S INFO</p>
             <p className="loginDetail">Add critical item information that will help other users know what they're receiving .</p>
-            <AuthInput title={"Item Name"} status={itemnamevalidation} placeholder={"E.g.Dress"} change={itemnameValidation} type={"text"} value={""} />
-            <div>
-                <p className="text-white" style={{ fontSize: "15px", color:fontColor }}>Item Description</p>
-                <textarea className="w-full bg-transparent outline-none" rows="7" placeholder="Example Text" style={{ borderColor: color }} onChange={(e) => handleTextarea(e.target.value)} />
-            </div>
+            <AuthInput title={"Item Name"} status={itemnamevalidation} placeholder={"E.g.Dress"} change={itemnameValidation} type={"text"} value={prevName} />
+            <Textarea title={"Item Description"} status={ itemdescvalidation} placeholder={"Describe your items."} change = {handleTextarea} value={prevItemDesc}/>
             <div>
                 <p className="text-white" style={{ fontSize: "15px"}}>Item Location</p>
-                <select className="w-full my-2.5 mb-5 py-3 pr-3 px-3 pb-3 bg-transparent text-white outline-none text-sm" style={{ border:"solid 1px #ffffff4d", borderRadius:"8px", fontFamily:"poppins-light"}} onChange={(e)=>{locationValidation(e.target.value)}} value={location}> 
+                <select className="w-full my-2.5 mb-5 py-3 pr-3 px-3 pb-3 bg-transparent text-white outline-none text-sm" style={{ border:"solid 1px #ffffff4d", borderRadius:"8px", fontFamily:"poppins-light"}} onChange={(e)=>{locationValidation(e.target.value)}} > 
+                    {
+                        prevLocation && <option className="p-2 mb-3 text-base bg-black rounded-lg" style={{ background:"#0e0e0e"}} value={prevLocation}>{prevLocation}</option>
+                    }
                     {
                         tempdata && tempdata.length > 0 && tempdata.map((data)=>(
-                            <option className="p-2 mb-3 text-base bg-black rounded-lg" style={{ background:"#0e0e0e"}}>{data}</option>
+                            <option className="p-2 mb-3 text-base bg-black rounded-lg" style={{ background:"#0e0e0e"}} value={data}>{data}</option>
                         ))
                     }
                     {/* <option className="mb-3 bg-black rounded-lg" style={{ background:"#0e0e0e"}}>Random Address, 4536, Australia</option>
@@ -128,7 +133,6 @@ const AddItemInfo = ({ setSideBar, setItemInfo}) => {
                     <option className="mb-3 bg-black rounded-lg" style={{ background:"#0e0e0e"}}>Random Address, 4536, Australia</option> */}
                 </select>
             </div>
-            {/* <AuthInput title={"Item's Location"} status={locationvalidation} placeholder={"E.g.John Doe"} change={locationValidation} type={"text"} value={""} /> */}
             <AuthInput title={"Item Tags"} status={itemtagvalidation} placeholder={"E.g.John Doe"} change={itemtagValidation} type={"text"} value={""} />
             <div className="loginButton">
                 <button className="flex items-center justify-center" onClick={() => handleComplete()}>Complete</button>
@@ -137,4 +141,4 @@ const AddItemInfo = ({ setSideBar, setItemInfo}) => {
     )
 
 }
-export default AddItemInfo
+export default EditItemInfo

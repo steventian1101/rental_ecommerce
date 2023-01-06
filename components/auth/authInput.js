@@ -2,7 +2,6 @@ import { useState, useEffect } from "react"
 const AuthInput = ({ title, placeholder, status, change, type, value}) => {
     const [ stringColor, setStringColor] = useState('');
     const [ inputborder, setInputBorder] = useState('');
-    let currentvalue = 
     useEffect(()=>{
         if(status === false){
             setStringColor("#f66");

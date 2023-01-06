@@ -1,7 +1,13 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, use } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { faPencil } from "@fortawesome/free-solid-svg-icons";
+import { doc, deleteDoc} from "firebase/firestore";
+import { db } from "../../lib/initFirebase";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import Loading from "../auth/loading";
+
 const CardCarousel = ({ imgArray, timeduration, id }) => {
     const [index, setIndex] = useState(0);
     const [direction, setDirection] = useState(0);
@@ -10,6 +16,8 @@ const CardCarousel = ({ imgArray, timeduration, id }) => {
     const [touchPosition, setTouchPosition] = useState(null);
     const [indicatorPan, setIndicatorPan] = useState([]);
     const [width, setWidth] = useState(null);
+    const router = useRouter();
+    const [loading, setLoading] = useState(false);
     const handleTouchStart = (e) => {
         const touchDown = e.touches[0].clientX
         setTouchPosition(touchDown);
@@ -99,7 +107,22 @@ const CardCarousel = ({ imgArray, timeduration, id }) => {
         }
         setIndicatorPan(temp)
     }
+    const handleItemDelete = async (id) =>{
+        setLoading(true)
+        const docRef = doc(db, "rental_items", id);
+        await deleteDoc(docRef);
+        router.push("/profile");
+        setLoading(false)
+        window.location.reload();
+
+    }
+
+
     return (
+        <>
+        {
+            loading?<Loading/>:<></>
+        }
         <div className="overflow-hidden carousel" onTouchStart={(e) => handleTouchStart(e)} onTouchMove={(e) => handleTouchMove(e)}>
             {
                 timeduration ? <div className="flex flex-row items-center justify-center timestamp">
@@ -117,18 +140,20 @@ const CardCarousel = ({ imgArray, timeduration, id }) => {
                 handlePrev()
             }}></button>
             <div className="flex flex-row itemButtons">
-                <button style={{  width: "35px", height: "30px", background: "black", borderRadius: "8px", marginRight:"5px" }} className="flex items-center justify-center">
+                <button style={{  width: "35px", height: "30px", background: "black", borderRadius: "8px", marginRight:"5px" }} className="flex items-center justify-center" onClick={()=>{ handleItemDelete(id)}}>
                     <FontAwesomeIcon icon={faTrash} style={{ fontSize: "16px", color: "red" }} />
                 </button>
-                <button style={{  width: "35px", height: "30px", background: "black", borderRadius: "8px" }} className="flex items-center justify-center">
+                <Link href={`/edit?query=${id}`}><button style={{  width: "35px", height: "30px", background: "black", borderRadius: "8px" }} className="flex items-center justify-center">
                     <FontAwesomeIcon icon={faPencil} style={{ fontSize: "16px", color: "white" }} />
                 </button>
+                </Link>
             </div>
             <div style={imgStyle} className="flex w-full h-full" >
                 {drawImg}
             </div>
 
         </div>
+        </>
     )
 }
 export default CardCarousel

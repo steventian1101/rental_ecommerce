@@ -136,7 +136,7 @@ const Location = ({ setSideBar }) => {
                     </div>
                 }
                 <div className="loginButton">
-                    <button className="flex items-center justify-center" onClick={() => { handleUpload() }}>Update</button>
+                    <button className="flex items-center justify-center" onClick={() => { handleUpload() }}>UPDATE</button>
                 </div>
                 {/* <button className="flex items-center justify-center w-20 h-10 bg-white felx-row addlocationbutton">
             <FontAwesomeIcon icon = {faPlus} className="mr-1 text-md"/>

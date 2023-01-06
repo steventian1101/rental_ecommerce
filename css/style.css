@@ -363,7 +363,7 @@ input:-webkit-autofill:active {
   padding: 8px 12px;
  }
  textarea:focus{
-  border: solid 1px #005ce7!important;
+  border: solid 1px #005ce7;
  }
  p{
   color: white;
