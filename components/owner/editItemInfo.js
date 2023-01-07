@@ -13,11 +13,9 @@ const EditItemInfo = ({ setSideBar, setItemInfo, prevName, prevLocation, prevIte
     const [itemname, setItemname] = useState('');
     const [location, setLocation] = useState('');
     const [locationvalidation, setLocationvalidation] = useState(true);
-    const [color, setColor] = useState('');
-    const [fontColor, setFontColor] = useState('white');
     const [itemDesc, setItemDesc] = useState('');
     const [itemTag, setItemTag] = useState('');
-    const [itemtagvalidation, setItemtagvalidation] = useState(true);
+    const [itemtagvalidation, setItemtagvalidation] = useState(false);
     const [itemdescvalidation, setItemdescvalidation]= useState(true);
     const [tempdata, setTempdata] = useState(null);
     const { userCredential} = useAuth();
@@ -133,7 +131,7 @@ const EditItemInfo = ({ setSideBar, setItemInfo, prevName, prevLocation, prevIte
                     <option className="mb-3 bg-black rounded-lg" style={{ background:"#0e0e0e"}}>Random Address, 4536, Australia</option> */}
                 </select>
             </div>
-            <AuthInput title={"Item Tags"} status={itemtagvalidation} placeholder={"E.g.John Doe"} change={itemtagValidation} type={"text"} value={""} />
+            <AuthInput title={"Item Tags"} status={itemtagvalidation} placeholder={"E.g.John Doe"} change={itemtagValidation} type={"text"} value={prevItemTag} />
             <div className="loginButton">
                 <button className="flex items-center justify-center" onClick={() => handleComplete()}>Complete</button>
             </div>

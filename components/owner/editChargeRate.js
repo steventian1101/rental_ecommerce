@@ -11,6 +11,7 @@ const EditChargeRate = ({ setSideBar, setChargeRate, price, chargetype, insuranc
     const [month, setMonth] = useState(false);
     const [own, setOwn] = useState(false);
     const [cover, setCover] = useState(false);
+    const [person, setPerson] = useState(false);
 
     useEffect(()=>{
         chargetype && handleClick(chargetype);
@@ -31,24 +32,35 @@ const EditChargeRate = ({ setSideBar, setChargeRate, price, chargetype, insuranc
             setDay(false);
             setWeek(false);
             setMonth(false);
+            setPerson(false);
         }
         if (type == "day") {
             setHour(false);
             setDay(true);
             setWeek(false);
             setMonth(false);
+            setPerson(false);
         }
         if (type == "week") {
             setHour(false);
             setDay(false);
             setWeek(true);
             setMonth(false);
+            setPerson(false);
         }
         if (type == "month") {
             setHour(false);
             setDay(false);
             setWeek(false);
             setMonth(true);
+            setPerson(false);
+        }
+        if (type == "person") {
+            setHour(false);
+            setDay(false);
+            setWeek(false);
+            setMonth(false);
+            setPerson(true);
         }
     }
     const handleInsurance = (type) => {
@@ -78,6 +90,9 @@ const EditChargeRate = ({ setSideBar, setChargeRate, price, chargetype, insuranc
             }
             if(month){
                 charge_rate_type = "month";
+            }
+            if(person){
+                charge_rate_type = "person";
             }
             if(own){
                 insurance = "own";
@@ -128,6 +143,12 @@ const EditChargeRate = ({ setSideBar, setChargeRate, price, chargetype, insuranc
                     <p className="text-white">Per Month</p>
                     {
                         month ? <img src="/logo/checked-circle.svg" style={{ width: "18px" }} /> : <div className="cursor-pointer empty" onClick={() => { handleClick("month") }}></div>
+                    }
+                </div>
+                <div className="flex flex-row justify-between chargeraterecordbutton">
+                    <p className="text-white">Per Person</p>
+                    {
+                        person ? <img src="/logo/checked-circle.svg" style={{ width: "18px" }} /> : <div className="cursor-pointer empty" onClick={() => { handleClick("person") }}></div>
                     }
                 </div>
             </div>

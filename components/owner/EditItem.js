@@ -67,16 +67,16 @@ const EditItem = ({query}) =>{
     }
     const handleSave = () =>{
         const docRef = doc(db, "rental_items", id);
-        const data = {
-            item_name: deleteField(),
-            insurance: deleteField(),
-            item_charge: deleteField(),
-            item_charge_rate: deleteField(),
-            item_desc: deleteField(),
-            item_location: deleteField(),
-            item_photos:deleteField(),
-            item_search_tag:deleteField()
-        };
+        // const data = {
+        //     item_name: deleteField(),
+        //     insurance: deleteField(),
+        //     item_charge: deleteField(),
+        //     item_charge_rate: deleteField(),
+        //     item_desc: deleteField(),
+        //     item_location: deleteField(),
+        //     item_photos:deleteField(),
+        //     item_search_tag:deleteField()
+        // };
         const newdata = {
            item_name:itemInfo.itemname,
            insurance:chargeRate.insurance,
@@ -87,12 +87,12 @@ const EditItem = ({query}) =>{
            item_search_tag:itemInfo.itemTag,
            item_photos:[...previousImgs, ...imgArray]
         };
-        updateDoc(docRef, data)
-            .then(() => {
-            })
-            .catch((error) => {
-                console.log(error);
-            });
+        // updateDoc(docRef, data)
+        //     .then(() => {
+        //     })
+        //     .catch((error) => {
+        //         console.log(error);
+        //     });
         updateDoc(docRef, newdata)
             .then(() => {
                 router.push("/profile")
@@ -114,7 +114,7 @@ const EditItem = ({query}) =>{
       }
       if(sideBar == 2){
         let temp = [];
-        temp.push( <EditItemInfo setSideBar={setSideBar} setItemInfo = { setItemInfo} prevName={previousData.item_name} prevLocation={previousData.item_location} prevItemDesc = {previousData.item_desc} prevItemTag={""} key={sideBar}/>);
+        temp.push( <EditItemInfo setSideBar={setSideBar} setItemInfo = { setItemInfo} prevName={previousData.item_name} prevLocation={previousData.item_location} prevItemDesc = {previousData.item_desc} prevItemTag={previousData.item_search_tag} key={sideBar}/>);
         setDrawSidebar(temp);
       }
       if(sideBar == 3){

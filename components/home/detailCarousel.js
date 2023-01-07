@@ -1,14 +1,8 @@
-import { useState, useEffect, useRef, use } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrash } from "@fortawesome/free-solid-svg-icons";
-import { faPencil } from "@fortawesome/free-solid-svg-icons";
-import { doc, deleteDoc} from "firebase/firestore";
-import { db } from "../../lib/initFirebase";
-import Link from "next/link";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/router";
 import Loading from "../auth/loading";
 
-const CardCarousel = ({ imgArray, timeduration, id }) => {
+const DetailCarousel = ({ imgArray}) => {
     const [index, setIndex] = useState(0);
     const [direction, setDirection] = useState(0);
     const [imgStyle, setImgStyle] = useState([]);
@@ -26,7 +20,7 @@ const CardCarousel = ({ imgArray, timeduration, id }) => {
     const imgRef = useRef();
     useEffect(() => {
         for (let k in imgArray) {
-            temp.push(<img src={imgArray[k]} className="carousel_img" ref={imgRef} key={k} />);
+            temp.push(<img src={imgArray[k]} className="w-full h-auto rounded-xl" ref={imgRef} key={k} />);
         }
         setDrawImg(temp);
     }, [])
@@ -66,7 +60,6 @@ const CardCarousel = ({ imgArray, timeduration, id }) => {
         }
     }
     useEffect(() => {
-
         window.addEventListener("resize", getListSize);
         return () => {
             window.addEventListener("resize", getListSize);
@@ -107,48 +100,22 @@ const CardCarousel = ({ imgArray, timeduration, id }) => {
         }
         setIndicatorPan(temp)
     }
-    const handleItemDelete = async (id) =>{
-        setLoading(true)
-        const docRef = doc(db, "rental_items", id);
-        await deleteDoc(docRef);
-        router.push("/profile");
-        setLoading(false)
-        window.location.reload();
-
-    }
-
-
     return (
         <>
         {
             loading?<Loading/>:<></>
         }
-        <div className="overflow-hidden carousel" onTouchStart={(e) => handleTouchStart(e)} onTouchMove={(e) => handleTouchMove(e)}>
-            {
-                timeduration ? <div className="flex flex-row items-center justify-center timestamp">
-                    <img src="https://uploads-ssl.webflow.com/5efdc8a4340de947404995b4/638d826a1f96abf10d6d4a87_runer-silhouette-running-fast.svg" style={{ height: "18px", marginRight: "5px", width: "auto" }} />
-                    <p style={{ fontSize: "14px", fontFamily: "poppins-light", color: "white" }}>{timeduration}</p>
-                </div> : <></>
-            }
-            {/* <div className="absolute z-30 flex flex-row justify-center w-full bottom-4">
+        <div className="relative overflow-hidden carousel" onTouchStart={(e) => handleTouchStart(e)} onTouchMove={(e) => handleTouchMove(e)} >
+            <div className="absolute z-30 flex flex-row justify-center w-full bottom-4">
                 {
                     indicatorPan
                 }
-            </div> */}
+            </div>
             <button id="prev" type="button" style={{ position: "absolute", left: "0px", width: "40px", height: "100%", background: "transparent  ", zIndex: "100" }} onClick={() => { handleNext() }}></button>
             <button id="next" type="button" style={{ position: "absolute", right: "0px", width: "40px", height: "100%", background: "transparent", zIndex: "100" }} onClick={() => {
                 handlePrev()
             }}></button>
-            <div className="flex flex-row itemButtons">
-                <button style={{  width: "35px", height: "30px", background: "black", borderRadius: "8px", marginRight:"5px" }} className="flex items-center justify-center" onClick={()=>{ handleItemDelete(id)}}>
-                    <FontAwesomeIcon icon={faTrash} style={{ fontSize: "16px", color: "red" }} />
-                </button>
-                <Link href={`/edit?query=${id}`}><button style={{  width: "35px", height: "30px", background: "black", borderRadius: "8px" }} className="flex items-center justify-center">
-                    <FontAwesomeIcon icon={faPencil} style={{ fontSize: "16px", color: "white" }} />
-                </button>
-                </Link>
-            </div>
-            <div style={imgStyle} className="flex w-full h-full" >
+            <div style={imgStyle} className="flex w-full h-auto">
                 {drawImg}
             </div>
 
@@ -156,4 +123,4 @@ const CardCarousel = ({ imgArray, timeduration, id }) => {
         </>
     )
 }
-export default CardCarousel
+export default DetailCarousel

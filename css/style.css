@@ -45,6 +45,9 @@
   margin-top: 0px;
   z-index: 40;
 }
+.font-15{
+  font-size: 15px!important;
+}
 .logo-title{
   font-size: 20px;
   line-height: 26px;
@@ -448,7 +451,7 @@ input:-webkit-autofill:active {
   color: white;
 }
 .hometitle{
-  font-size: 48px!important;
+  font-size: 48px;
   font-family: poppins-extrabold!important;
   text-align: center;
 }
@@ -457,8 +460,10 @@ input:-webkit-autofill:active {
   margin-bottom: 100px;
   margin-left: auto;
   margin-right: auto;
-  max-width: 1315px;
+}
+.searchResult{
   width: 90vw;
+  margin: auto;
 }
 .hometitleback{
   margin-top: -15px;
@@ -483,6 +488,7 @@ input:-webkit-autofill:active {
   border-radius: 30px;
   height: 50px;
   border: 1px solid white;
+  margin-bottom: 100px;
 
 }
 .searchBox input{
@@ -493,9 +499,54 @@ input::placeholder {
   font-size: 16px!important;
   font-family: poppins-medium;
 }
+.indicator{
+  width:25px;
+  height:2px;
+  background-color: black;
+  margin-right: 3px;
+}
+.current{
+  background: #9b9b9b!important;
+
+}
+.detail{
+  width: 900px;
+  height: 100%;
+  background: white;
+  position: fixed;
+  top:0px;
+  right:0px;  
+  padding: 20px 50px 100px 50px;
+  overflow: auto;
+  background: #0e0e0e;
+  z-index: 100000;
+}
+.detailImage{
+  width: 100%;
+  height: auto;
+  border-radius: 12px!important;
+}
+.detailTitle{
+  margin-top: 50px;
+  font-family: poppins-bold;
+  margin-bottom: 5px;
+  font-size: 25px;
+  line-height: 32px;
+}
+.detailpart{
+  width: 55%;
+}
 
 
 @media screen and (max-width: 991px){
+  .detailpart{
+    width: 57%;
+  }
+  .detail{
+    width: 100%!important;
+    padding-left: 7vw!important;
+    padding-right: 7vw!important;
+  }
   .ownerItemBoard{
     width: 90vw;
   }
@@ -537,6 +588,25 @@ input::placeholder {
 
 }
 @media screen and (max-width: 767px){
+  .detailpart{
+    width: 100%;
+  }
+  .detail{
+    width: 100%!important;
+    padding-left: 15vw!important;
+    padding-right: 15vw!important;
+  }
+  .searchBox{
+    width: 300px!important;
+    margin-bottom: 70px!important;
+  }
+  .hometitleback{
+    width: 330px;
+    height: 30px;
+  }
+  .hometitle{
+    font-size: 40px;
+  }
   .createitembutton{
     width: 50px;
     height: 50px;
@@ -623,6 +693,29 @@ input::placeholder {
 
 }
 @media screen and (max-width: 479px){
+  .detail{
+    width: 100%!important;
+    padding-left: 7vw!important;
+    padding-right: 7vw!important;
+  }
+  .search{
+    margin-top: 90px;
+  }
+  .searchBox{
+    width: 90%!important;
+    height: 45px!important;
+  }
+  .homeDetail{
+    font-size: 15px;
+    line-height: 18px;
+  }
+  .hometitleback{
+    width: 280px;
+    height: 30px;
+  }
+  .hometitle{
+    font-size: 35px;
+  }
   .settingTitle{
     font-size: 23px!important;
   }
