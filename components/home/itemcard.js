@@ -3,7 +3,6 @@ import { db } from "../../lib/initFirebase";
 import { useState, useEffect } from "react";
 import CardCarousel from "./cardCarousel";
 const Itemcard = ({ details, setItemID }) => {
-    console.log(details)
     const [ownerData, setOwnerData] = useState(null);
     const getOwnerDetail = async (email) => {
         const temp = [];
@@ -22,7 +21,7 @@ const Itemcard = ({ details, setItemID }) => {
         <>{
             details && ownerData && ownerData.length > 0?<div className="relative ownerItemcard">
             <CardCarousel imgArray = { details.item_photos} id={details.objectID} setItemID={setItemID}/>
-            <p className="text-white itemcardname">{ details.item_name}</p>
+            <p className="text-white itemcardname overflow-ellipsis">{ details.item_name}</p>
             <p className="itemcardownernameandprice">{ ownerData && ownerData.length > 0 && ownerData[0]["nick_name"]}</p>
             <p className="itemcardownernameandprice mb-2.5">Min. { "$"+Number(details["item_charge"]).toFixed(2)+"/"+details.item_charge_rate}</p>
         </div>:<div className="ownerItemcard">

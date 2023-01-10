@@ -7,7 +7,7 @@ import { updateDoc, deleteField, doc, collection, addDoc, query, orderBy, where,
 import { db } from "../../lib/initFirebase"
 import Textarea from "./textarea"
 
-const EditItemInfo = ({ setSideBar, setItemInfo, prevName, prevLocation, prevItemDesc, prevItemTag}) => {
+const EditItemInfo = ({ setSideBar, setItemInfo, prevName, prevLocation, prevItemDesc, prevItemTag, setInfoUpload}) => {
     console.log(prevItemDesc)
     const [itemnamevalidation, setItemnamevalidation] = useState(true);
     const [itemname, setItemname] = useState('');
@@ -34,6 +34,7 @@ const EditItemInfo = ({ setSideBar, setItemInfo, prevName, prevLocation, prevIte
             }
             setItemInfo(temp);
             setSideBar(0);
+            setInfoUpload(true)
         }
 
     }
@@ -67,7 +68,8 @@ const EditItemInfo = ({ setSideBar, setItemInfo, prevName, prevLocation, prevIte
         }
     }
     const handleTextarea = (any) => {
-        if (any != "") {
+        console.log(any)
+        if (any!= "") {
             setItemdescvalidation(true);
             setItemDesc(any.replace(/\n/g, "<br>"));
         }

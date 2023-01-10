@@ -36,7 +36,7 @@ const CreateItem = () => {
         setLoading(true)
         for(let i in profileImgs){
             
-            const storageRef = ref(storage, `items/${itemInfo.itemname + i + "(" + profileImgs[i].name + ")" + ".jpg"}`);
+            const storageRef = ref(storage, `items/${Math.floor(Math.random() * 100000000000000) + "(" + profileImgs[i].name + ")" + ".jpg"}`);
             const metadata = {
                 contentType: 'image/jpeg'
             };

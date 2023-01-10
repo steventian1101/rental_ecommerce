@@ -4,6 +4,7 @@ import Search from "../components/home/search";
 import { useEffect, useState } from "react";
 export default function IndexPage() {
   const [searchText, setSearchText] = useState('');
+  const [login, setLogin] = useState(false);
   const router = useRouter();
   useEffect(() => {
     if(router.query.query == undefined){
@@ -15,8 +16,8 @@ export default function IndexPage() {
   }, [router.query?.query])
   return (
     <>
-      <Header/>
-      <Search searchText = {searchText}/>
+      <Header login = { login } setLogin={ setLogin}/>
+      <Search searchText = {searchText} setLogin={ setLogin}/>
     </>
   )
 }

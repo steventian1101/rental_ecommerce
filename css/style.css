@@ -2,130 +2,149 @@
   font-family: poppins-extrabold;
   src: url(Poppins-ExtraBold.ttf);
 }
+
 @font-face {
   font-family: poppins-bold;
   src: url(Poppins-Bold.ttf);
 }
+
 @font-face {
   font-family: poppins-extralight;
   src: url(Poppins-ExtraLight.ttf);
 }
+
 @font-face {
   font-family: poppins-light;
   src: url(Poppins-Light.ttf);
 }
+
 @font-face {
   font-family: poppins-medium;
   src: url(Poppins-Medium.ttf);
 }
+
 @font-face {
   font-family: poppins-regular;
   src: url(Poppins-Regular.ttf);
 }
+
 @font-face {
   font-family: poppins-semibold;
   src: url(Poppins-SemiBold.ttf);
 }
+
 @font-face {
   font-family: poppins-thin;
   src: url(Poppins-Thin.ttf);
 }
+
 @font-face {
   font-family: poppins-black;
   src: url(Poppins-Black.ttf);
 }
 
-.navbar{
-  position:sticky;
+.navbar {
+  position: sticky;
   width: 90vw;
   max-width: 1315px;
-  height:80px;
+  height: 80px;
   padding-bottom: 20px;
   margin: auto;
   margin-top: 0px;
   z-index: 40;
 }
-.font-15{
+
+.font-15 {
   font-size: 15px!important;
+  line-height: 18px!important;
 }
-.logo-title{
+
+.logo-title {
   font-size: 20px;
   line-height: 26px;
   font-family: poppins-bold;
 }
-p{
+
+p {
   font-size: 16px;
   line-height: 20px;
   font-family: poppins-light;
 }
-.login{
+
+.login {
   position: fixed;
   z-index: 10001;
-  top:0px;
-  right:0px;
+  top: 0px;
+  right: 0px;
   height: 100vh;
   background-color: #0e0e0e;
-  width:400px;
-  padding:20px 50px 100px 50px;
+  width: 400px;
+  padding: 20px 50px 100px 50px;
   margin-bottom: 10px;
 }
-.register{
+
+.register {
   position: fixed;
   z-index: 10001;
-  top:0px;
-  right:0px;
+  top: 0px;
+  right: 0px;
   height: 100vh;
   background-color: #0e0e0e;
-  width:400px;
-  padding:20px 50px 100px 50px;
+  width: 400px;
+  padding: 20px 50px 100px 50px;
   margin-bottom: 10px;
 }
-.passwordReset{
+
+.passwordReset {
   position: fixed;
   z-index: 10001;
-  top:0px;
-  right:0px;
+  top: 0px;
+  right: 0px;
   height: 100vh;
   background-color: #0e0e0e;
-  width:400px;
-  padding:20px 50px 100px 50px;
+  width: 400px;
+  padding: 20px 50px 100px 50px;
   margin-bottom: 10px;
 }
-.addProfileInfo{
+
+.addProfileInfo {
   position: fixed;
   z-index: 10001;
-  top:0px;
-  right:0px;
+  top: 0px;
+  right: 0px;
   height: 100vh;
   background-color: #0e0e0e;
-  width:400px;
-  padding:20px 50px 100px 50px;
+  width: 400px;
+  padding: 20px 50px 100px 50px;
   margin-bottom: 10px;
 }
-.notification{
+
+.notification {
   position: fixed;
   z-index: 10001;
-  top:0px;
-  right:0px;
+  top: 0px;
+  right: 0px;
   height: 100vh;
   background-color: #0e0e0e;
-  width:400px;
-  padding:20px 50px 100px 50px;
+  width: 400px;
+  padding: 20px 50px 100px 50px;
   margin-bottom: 10px;
 }
-.addItemImg{
+
+.addItemImg {
   position: fixed;
   z-index: 10001;
-  top:0px;
-  right:0px;
+  top: 0px;
+  right: 0px;
   height: 100vh;
   background-color: #0e0e0e;
-  width:400px;
-  padding:20px 50px 100px 50px;
+  width: 400px;
+  padding: 20px 50px 100px 50px;
   margin-bottom: 10px;
 
 }
-.loginText{
+
+.loginText {
   display: block;
   margin-top: 0px;
   margin-bottom: 3px;
@@ -134,63 +153,72 @@ p{
   font-family: poppins-black;
   color: white;
 }
-.loginTextBack{
+
+.loginTextBack {
   margin-top: -25px;
   width: 45%;
   height: 25px;
   background-color: #0052cc;
   z-index: 10001;
 }
-.registerTextBack{
+
+.registerTextBack {
   margin-top: -23px;
   width: 160px;
   height: 20px;
   background-color: #b02b4a;
 
 }
-.passwordResetTextBack{
+
+.passwordResetTextBack {
   margin-top: -57px;
   width: 100%;
   height: 60px;
   background-color: #572bb0;
 }
-.loginDetail{
+
+.loginDetail {
   font-size: 15px;
   margin-bottom: 40px;
   font-family: poppins-light;
   color: white;
 }
-.emailInput{
+
+.emailInput {
   height: 38px;
   padding: 8px 12px 8px 0px;
   font-size: 14px;
-  border-bottom:1px solid #ffffff4d;
-  background-color: transparent!important;
+  border-bottom: 1px solid #ffffff4d;
+  background-color: transparent !important;
   outline: none;
   color: white;
   font-family: poppins-regular;
   margin-bottom: 10px;
 }
-.loginButton{
+
+.loginButton {
   margin-top: 40px;
   margin-bottom: 15px;
 }
-.loginButton button{
+
+.loginButton button {
   width: 100%;
-  height:45px;
+  height: 45px;
   font-size: 15px;
   font-family: poppins-medium;
   background-color: #0052cc;
   color: white;
   border-radius: 8px;
 }
-.registerButton{
+
+.registerButton {
   margin-top: 40px;
   margin-bottom: 15px;
 }
-.registerButton button{
+
+.registerButton button {
   width: 100%;
-  height:45px;
+  height: 45px;
   font-size: 15px;
   font-family: poppins-medium;
   background-color: #b02b4a;
@@ -198,106 +226,122 @@ p{
   border-radius: 8px;
 
 }
-.settingItemImg{
+
+.settingItemImg {
   height: 35px;
   margin-bottom: 10px;
 }
-.settingLocationImg{
+
+.settingLocationImg {
   color: white;
   font-size: 35px;
   margin-bottom: 10px;
 
 }
 
-.passwordResetButton{
+.passwordResetButton {
   margin-top: 40px;
   margin-bottom: 15px;
 }
-.passwordResetButton button{
+
+.passwordResetButton button {
   width: 100%;
-  height:45px;
+  height: 45px;
   font-size: 15px;
   font-family: poppins-medium;
   background-color: #0052cc;
   color: white;
   border-radius: 8px;
 }
-input:focus{
+
+input:focus {
   border-bottom: solid 1px #005ce7;
 }
+
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
-    transition: background-color 5000s ease-in-out 0s;
-    -webkit-text-fill-color: white !important;
+  transition: background-color 5000s ease-in-out 0s;
+  -webkit-text-fill-color: white !important;
 }
-.stickyBarSearch{
+
+.stickyBarSearch {
   width: 250px;
-  border:1px solid #333;
-  padding:10px;
+  border: 1px solid #333;
+  padding: 10px;
   border-radius: 30px;
   height: 40px;
 }
-.stickyBarSearch input{
-  border-width: 0px!important;
+
+.stickyBarSearch input {
+  border-width: 0px !important;
 }
-.navbarIcon{
+
+.navbarIcon {
   width: 40px;
   height: 40px;
   display: flex;
-  background-color:transparent;
+  background-color: transparent;
   margin-left: 10px;
   border-radius: 100px;
   border: solid 1px #ffffff4d;
   overflow: auto;
   align-items: center;
 }
-.notificationItem{
+
+.notificationItem {
   width: 100%;
   height: 60px;
   margin-bottom: 30px;
 }
+
 @keyframes shine {
   to {
     background-position-x: -200%;
   }
 }
-.detail-loading{
+
+.detail-loading {
   background: #0E0E03;
-  background: linear-gradient(90deg,#0E0E0E 8%,#000000 18%,#0E0E0E 33%);
+  background: linear-gradient(90deg, #0E0E0E 8%, #000000 18%, #0E0E0E 33%);
   border-radius: 5px;
   background-size: 200% 100%;
   animation: 1.5s shine linear infinite;
 }
-.dropbox:hover{
+
+.dropbox:hover {
   background: #ffffff33;
 }
-.setting{
+
+.setting {
   position: relative;
   width: 90vw;
   max-width: 1315px;
   margin-top: 30px;
   padding-bottom: 100px;
   margin-left: auto;
-  margin-right:auto;
+  margin-right: auto;
   height: 100%;
 
 }
-.setting_box{
+
+.setting_box {
   width: 250px;
   height: 150px;
   margin-right: 10px;
   margin-bottom: 15px;
   align-items: center;
   justify-content: center;
-  border:solid 1px #ffffff4d;
+  border: solid 1px #ffffff4d;
   cursor: pointer;
   border-radius: 8px;
 }
-.searchIcon{
+
+.searchIcon {
   display: none;
 }
+
 .gradient {
   background: transparent;
   position: absolute;
@@ -307,178 +351,213 @@ input:-webkit-autofill:active {
   z-index: 10;
 
 }
-.ownerText{
+
+.ownerText {
   font-size: 50px;
   font-family: poppins-black;
-  color:white;
+  color: white;
   line-height: 50px;
 }
-.ownerMessage{
-  padding:0px 25px;
+
+.ownerMessage {
+  padding: 0px 25px;
   margin-right: 10px;
-  background:#0052cc;
+  background: #0052cc;
   border-radius: 12px;
   height: 50px;
   align-items: center;
 }
-.ownerMessage .fontIcon{
+
+.ownerMessage .fontIcon {
   color: white;
   height: 24px;
   width: 24px;
   margin-right: 10px;
- }
- .ownerWebsite{
-  background: transparent!important;
+}
+
+.ownerWebsite {
+  background: transparent !important;
   border: solid 1px #ffffff33;
- }
- .ownerRating{
+}
+
+.ownerRating {
   padding: 0px 25px;
   height: 50px;
   background: transparent;
   border-radius: 12px;
   align-items: center;
-  color:white;
+  color: white;
   font-size: 15px;
   font-family: poppins-light;
   border: solid 1px #ffffff33;
- }
- .ownerItemBoard{
-  width:95vw;
+}
+
+.ownerItemBoard {
+  width: 95vw;
   height: auto;
   margin-bottom: 100px;
   margin-right: auto;
   margin-left: auto;
- }
- .addItem{
+}
+
+.addItem {
   width: 316px;
   height: 280px;
   background: #141414;
   border: solid 1px #ffffff33;
   border-radius: 8px;
- }
- textarea{
+}
+
+textarea {
   margin: 10px 0px 20px 0px;
   border: solid 1px #ffffff4d;
   border-radius: 8px;
   font-size: 14px;
   font-family: poppins-light;
-  color:white;
-  padding: 8px 12px;
- }
- textarea:focus{
-  border: solid 1px #005ce7;
- }
- p{
   color: white;
- }
- .chargeraterecordbutton{
+  padding: 8px 12px;
+}
+
+textarea:focus {
+  border: solid 1px #005ce7;
+}
+
+p {
+  color: white;
+}
+
+.chargeraterecordbutton {
   width: 100%;
   margin-top: 10px;
   padding: 15px 30px;
-  border:solid 1px #ffffff4d;
+  border: solid 1px #ffffff4d;
   background: transparent;
   border-radius: 8px;
- }
- .empty{
+}
+
+.empty {
   height: 18px;
   width: 18px;
   background-color: transparent;
   border: solid 1px #ffffff4d;
   border-radius: 100px;
- }
- .ownerItemcard{
+}
+
+.ownerItemcard {
   width: 316px;
   height: auto;
   margin-right: 20px;
   margin-bottom: 15px;
- }
- .ownerItemcard .carousel{
+}
+
+.ownerItemcard .carousel {
   width: 100%;
   height: 200px;
   object-fit: cover;
   border-radius: 8px;
   margin-bottom: 10px;
- }
- .addItemLink{
+}
+
+.addItemLink {
   width: 316px;
   margin-right: 20px;
   margin-bottom: 15px;
- }
- .itemcardname{
-  font-family: poppins-bold!important;
+}
+
+.itemcardname {
+  font-family: poppins-bold !important;
   font-size: 16px;
   line-height: 20px;
   margin-bottom: 2px;
- }
- .itemcardownernameandprice{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+
+}
+
+.itemcardownernameandprice {
   font-size: 15px;
   color: white;
   font-family: poppins-light;
- }
- .createitembuttonbar{
+}
+
+.createitembuttonbar {
   margin-top: 350px;
- }
- .createitembutton{
+}
+
+.createitembutton {
   height: 70px;
   width: 70px;
   background: #0052cc;
   border-radius: 100px;
 
- }
- .carousel_img{
+}
+
+.carousel_img {
   min-width: 100%;
-  width:100%;
+  width: 100%;
   object-fit: cover;
   border-radius: 8px;
 }
-.itemButtons{
+
+.itemButtons {
   position: absolute;
   top: 2%;
   left: 2%;
   display: none;
   z-index: 100;
 }
-.carousel:hover .itemButtons{
+
+.carousel:hover .itemButtons {
   display: flex;
 }
-.carousel:focus .itemButtons{
+
+.carousel:focus .itemButtons {
   display: flex;
 }
-.addlocationbutton{
+
+.addlocationbutton {
   border: solid 1px #ffffff4d;
   border-radius: 8px;
   background: transparent;
   color: white;
 }
-.hometitle{
+
+.hometitle {
   font-size: 48px;
-  font-family: poppins-extrabold!important;
+  font-family: poppins-extrabold !important;
   text-align: center;
 }
-.search{
+
+.search {
   margin-top: 130px;
   margin-bottom: 100px;
   margin-left: auto;
   margin-right: auto;
 }
-.searchResult{
+
+.searchResult {
   width: 90vw;
   margin: auto;
 }
-.hometitleback{
+
+.hometitleback {
   margin-top: -15px;
   width: 380px;
-  height:35px;
-  background:#b02b4a;
+  height: 35px;
+  background: #b02b4a;
   margin-left: auto;
   margin-right: auto;
 }
+
 .homeDetail {
   font-family: poppins-light;
   margin-top: 5px;
   margin-bottom: 25px;
   font-size: 18px;
 }
+
 .searchBox {
   width: 350px;
   background-color: transparent;
@@ -491,291 +570,430 @@ input:-webkit-autofill:active {
   margin-bottom: 100px;
 
 }
-.searchBox input{
-  border:solid 0px #000000!important;
+
+.searchBox input {
+  border: solid 0px #000000 !important;
 }
+
 input::placeholder {
   color: #ffffff33;
-  font-size: 16px!important;
+  font-size: 16px !important;
   font-family: poppins-medium;
 }
-.indicator{
-  width:25px;
-  height:2px;
+
+.indicator {
+  width: 25px;
+  height: 2px;
   background-color: black;
   margin-right: 3px;
 }
-.current{
-  background: #9b9b9b!important;
+
+.current {
+  background: #9b9b9b !important;
 
 }
-.detail{
+
+.detail {
   width: 900px;
   height: 100%;
   background: white;
   position: fixed;
-  top:0px;
-  right:0px;  
+  top: 0px;
+  right: 0px;
   padding: 20px 50px 100px 50px;
   overflow: auto;
   background: #0e0e0e;
   z-index: 100000;
 }
-.detailImage{
+
+.detailImage {
   width: 100%;
   height: auto;
-  border-radius: 12px!important;
+  border-radius: 12px !important;
 }
-.detailTitle{
+
+.detailTitle {
   margin-top: 50px;
   font-family: poppins-bold;
   margin-bottom: 5px;
   font-size: 25px;
   line-height: 32px;
 }
-.detailpart{
+
+.detailpart {
   width: 55%;
 }
 
+.line {
+  margin-top: 30px;
+  margin-bottom: 30px;
+  background: #ffffff1a;
+  height: 1px;
+  width: 100%;
+}
 
-@media screen and (max-width: 991px){
-  .detailpart{
+.bold {
+  font-family: poppins-bold !important;
+}
+.font-18{
+  font-size: 18px;
+  line-height: 24px;
+}
+.extrabold{
+  font-family: poppins-extrabold;
+}
+
+.detailReviewAvatar {
+  margin-right: 15px;
+  width: 50px;
+  height: 50px;
+}
+
+.stickyReserve {
+  position: sticky;
+  top: 0px;
+  height: auto;
+  margin-top: 50px;
+  width: 300px;
+  border: solid 1px #ffffff1a;
+  padding: 30px 25px;
+  border-radius: 8px;
+}
+
+.stickyReserve .itemname {
+  font-size: 18px;
+  line-height: 24px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+}
+.time:hover{
+  background: black;
+}
+.booking{
+  max-width: 1315px;
+  width: 90vw;
+  height: auto;
+  margin: auto;
+  margin-top: 30px;
+}
+.font-30{
+  font-size: 30px;
+  line-height: 35px;
+  font-family: poppins-extrabold;
+}
+.bookingbutton{
+  padding:15px 20px;
+  border:solid 1px #ffffff4d;
+  border-radius: 8px;
+}
+.bookingtab{
+  margin-bottom: 40px;
+  border-bottom: solid 1px #ffffff1a;
+}
+.bookingtab p{
+  padding-bottom: 5px;
+  margin-right: 15px;
+  cursor: pointer;
+}
+
+@media screen and (max-width: 991px) {
+  .detailpart {
     width: 57%;
   }
-  .detail{
-    width: 100%!important;
-    padding-left: 7vw!important;
-    padding-right: 7vw!important;
+
+  .detail {
+    width: 100% !important;
+    padding-left: 7vw !important;
+    padding-right: 7vw !important;
   }
-  .ownerItemBoard{
+
+  .ownerItemBoard {
     width: 90vw;
   }
-  .setting{
-    padding-right:  48px!important;
-    padding-left: 48px!important;
+
+  .setting {
+    padding-right: 48px !important;
+    padding-left: 48px !important;
   }
-  .login{
-    width: 100%!important;
-    padding-right: 25vw!important;
-    padding-left: 25vw!important;
+
+  .login {
+    width: 100% !important;
+    padding-right: 25vw !important;
+    padding-left: 25vw !important;
   }
-  .register{
-    width: 100%!important;
-    padding-right: 25vw!important;
-    padding-left: 25vw!important;
+
+  .register {
+    width: 100% !important;
+    padding-right: 25vw !important;
+    padding-left: 25vw !important;
   }
-  .passwordReset{
-    width: 100%!important;
-    padding-right: 25vw!important;
-    padding-left: 25vw!important;
+
+  .passwordReset {
+    width: 100% !important;
+    padding-right: 25vw !important;
+    padding-left: 25vw !important;
   }
-  .addProfileInfo{
-    width: 100%!important;
-    padding-right: 25vw!important;
-    padding-left: 25vw!important;
+
+  .addProfileInfo {
+    width: 100% !important;
+    padding-right: 25vw !important;
+    padding-left: 25vw !important;
   }
-  .notification{
-    width: 100%!important;
-    padding-right: 25vw!important;
-    padding-left: 25vw!important;
+
+  .notification {
+    width: 100% !important;
+    padding-right: 25vw !important;
+    padding-left: 25vw !important;
   }
-  .addItemImg{
-    width: 100%!important;
-    padding-right: 25vw!important;
-    padding-left: 25vw!important;
+
+  .addItemImg {
+    width: 100% !important;
+    padding-right: 25vw !important;
+    padding-left: 25vw !important;
 
   }
 
 }
-@media screen and (max-width: 767px){
-  .detailpart{
+
+@media screen and (max-width: 767px) {
+  .bookingbutton .icon{
+    margin-right: 0px!important;
+  }
+  .bookingbutton p{
+    display: none;
+  }
+  .detailpart {
     width: 100%;
   }
-  .detail{
-    width: 100%!important;
-    padding-left: 15vw!important;
-    padding-right: 15vw!important;
+
+  .detail {
+    width: 100% !important;
+    padding-left: 15vw !important;
+    padding-right: 15vw !important;
   }
-  .searchBox{
-    width: 300px!important;
-    margin-bottom: 70px!important;
+
+  .searchBox {
+    width: 300px !important;
+    margin-bottom: 70px !important;
   }
-  .hometitleback{
+
+  .hometitleback {
     width: 330px;
     height: 30px;
   }
-  .hometitle{
+
+  .hometitle {
     font-size: 40px;
   }
-  .createitembutton{
+
+  .createitembutton {
     width: 50px;
     height: 50px;
   }
-  .createitembuttonbar{
+
+  .createitembuttonbar {
     margin-top: 10px;
   }
-  .ownerItemcard .carousel{
+
+  .ownerItemcard .carousel {
     height: 50vw;
   }
-  .addItemLink{
-    width:100%;
-    margin-right: 0px!important;
+
+  .addItemLink {
+    width: 100%;
+    margin-right: 0px !important;
   }
 
-  .ownerItemcard{
+  .ownerItemcard {
     width: 100%;
-    margin-right: 0px!important;
-   
+    margin-right: 0px !important;
+
   }
-  .addItem{
-    width:100%;
+
+  .addItem {
+    width: 100%;
   }
-  .ownerMessage p{
+
+  .ownerMessage p {
     display: none;
   }
-  .ownerMessage .fontIcon{  
-   margin-right: 0px;
+
+  .ownerMessage .fontIcon {
+    margin-right: 0px;
   }
-  .ownerText{
+
+  .ownerText {
     font-size: 40px;
     line-height: 40px;
   }
-  .logo-title{
+
+  .logo-title {
     display: none;
   }
-  .stickyBarSearch{
-    width: 60%!important;
-    margin-right: 5px!important;
+
+  .stickyBarSearch {
+    width: 60% !important;
+    margin-right: 5px !important;
   }
-  .setting{
-    padding-right: 32px!important;
-    padding-left: 32px!important;
+
+  .setting {
+    padding-right: 32px !important;
+    padding-left: 32px !important;
   }
-  .setting_box_pan{
-    flex-direction: column!important;
+
+  .setting_box_pan {
+    flex-direction: column !important;
   }
-  .setting_box{
-    width: 100%!important;
+
+  .setting_box {
+    width: 100% !important;
   }
-  .login{
-    width: 100%!important;
-    padding-right: 15vw!important;
-    padding-left: 15vw!important;
+
+  .login {
+    width: 100% !important;
+    padding-right: 15vw !important;
+    padding-left: 15vw !important;
   }
-  .register{
-    width: 100%!important;
-    padding-right: 15vw!important;
-    padding-left: 15vw!important;
+
+  .register {
+    width: 100% !important;
+    padding-right: 15vw !important;
+    padding-left: 15vw !important;
   }
-  .passwordReset{
-    width: 100%!important;
-    padding-right: 15vw!important;
-    padding-left: 15vw!important;
+
+  .passwordReset {
+    width: 100% !important;
+    padding-right: 15vw !important;
+    padding-left: 15vw !important;
   }
-  .addProfileInfo{
-    width: 100%!important;
-    padding-right: 15vw!important;
-    padding-left: 15vw!important;
+
+  .addProfileInfo {
+    width: 100% !important;
+    padding-right: 15vw !important;
+    padding-left: 15vw !important;
   }
-  .notification{
-    width: 100%!important;
-    padding-right: 15vw!important;
-    padding-left: 15vw!important;
+
+  .notification {
+    width: 100% !important;
+    padding-right: 15vw !important;
+    padding-left: 15vw !important;
   }
-  .addItemImg{
-    width: 100%!important;
-    padding-right: 15vw!important;
-    padding-left: 15vw!important;
+
+  .addItemImg {
+    width: 100% !important;
+    padding-right: 15vw !important;
+    padding-left: 15vw !important;
 
   }
 
- 
+
 
 }
-@media screen and (max-width: 479px){
-  .detail{
-    width: 100%!important;
-    padding-left: 7vw!important;
-    padding-right: 7vw!important;
+
+@media screen and (max-width: 479px) {
+  .detail {
+    width: 100% !important;
+    padding-left: 7vw !important;
+    padding-right: 7vw !important;
   }
-  .search{
+
+  .search {
     margin-top: 90px;
   }
-  .searchBox{
-    width: 90%!important;
-    height: 45px!important;
+
+  .searchBox {
+    width: 90% !important;
+    height: 45px !important;
   }
-  .homeDetail{
+
+  .homeDetail {
     font-size: 15px;
     line-height: 18px;
   }
-  .hometitleback{
+
+  .hometitleback {
     width: 280px;
     height: 30px;
   }
-  .hometitle{
+
+  .hometitle {
     font-size: 35px;
   }
-  .settingTitle{
-    font-size: 23px!important;
+
+  .settingTitle {
+    font-size: 23px !important;
   }
-  .ownerRating{
+
+  .ownerRating {
     display: none;
   }
-  .ownerMessage{
-    width: 70%!important;
+
+  .ownerMessage {
+    width: 70% !important;
     justify-content: center;
   }
-  .ownerWebsite{
-    width: 25%!important;
+
+  .ownerWebsite {
+    width: 25% !important;
     justify-content: center;
     padding: 15px 25px;
   }
-  .ownerText{
+
+  .ownerText {
     font-size: 30px;
     line-height: 30px;
   }
-  .stickyBarSearch{
+
+  .stickyBarSearch {
     display: none;
   }
-  .searchIcon{
+
+  .searchIcon {
     display: flex;
   }
-  .setting{
-    width: 100%!important;
-    padding-right: 7vw!important;
-    padding-left: 7vw!important;
+
+  .setting {
+    width: 100% !important;
+    padding-right: 7vw !important;
+    padding-left: 7vw !important;
   }
-  .login{
-    width: 100%!important;
-    padding-right: 7vw!important;
-    padding-left: 7vw!important;
+
+  .login {
+    width: 100% !important;
+    padding-right: 7vw !important;
+    padding-left: 7vw !important;
   }
-  .register{
-    width: 100%!important;
-    padding-right: 7vw!important;
-    padding-left: 7vw!important;
+
+  .register {
+    width: 100% !important;
+    padding-right: 7vw !important;
+    padding-left: 7vw !important;
   }
-  .passwordReset{
-    width: 100%!important;
-    padding-right: 7vw!important;
-    padding-left: 7vw!important;
+
+  .passwordReset {
+    width: 100% !important;
+    padding-right: 7vw !important;
+    padding-left: 7vw !important;
   }
-  .addProfileInfo{
-    width: 100%!important;
-    padding-right: 7vw!important;
-    padding-left: 7vw!important;
+
+  .addProfileInfo {
+    width: 100% !important;
+    padding-right: 7vw !important;
+    padding-left: 7vw !important;
   }
-  .notification{
-    width: 100%!important;
-    padding-right: 7vw!important;
-    padding-left: 7vw!important;
+
+  .notification {
+    width: 100% !important;
+    padding-right: 7vw !important;
+    padding-left: 7vw !important;
   }
-  .addItemImg{
-    width: 100%!important;
-    padding-right: 7vw!important;
-    padding-left: 7vw!important;
+
+  .addItemImg {
+    width: 100% !important;
+    padding-right: 7vw !important;
+    padding-left: 7vw !important;
   }
 
 }
-

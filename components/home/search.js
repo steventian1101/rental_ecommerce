@@ -5,7 +5,7 @@ import SearchBox from "./searchBox"
 import SearchResult from "./searchResult"
 import Detail from "./detail"
 import SidebarBack from "../sidebarBack"
-const Search = ({searchText}) => {
+const Search = ({searchText, setLogin}) => {
     const [itemID, setItemID] = useState(null);
     const [detail, setDetail] = useState([]);
     const [sideBar, setSideBar] = useState([]);
@@ -18,7 +18,7 @@ const Search = ({searchText}) => {
     },[itemID]);
     const drawDetail = () =>{
         setSideBar(<SidebarBack/>);
-        setDetail(<Detail id={itemID} setSideBar= { setSideBar} setDetail={ setDetail} setItemID={ setItemID}/>)
+        setDetail(<Detail id={itemID} setSideBar= { setSideBar} setDetail={ setDetail} setItemID={ setItemID} setLogin={ setLogin}/>)
     }
     return (
         <>

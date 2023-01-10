@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeftLong } from "@fortawesome/free-solid-svg-icons";
 import AuthInput from "../auth/authInput";
 import { useState, useEffect } from "react";
-const EditChargeRate = ({ setSideBar, setChargeRate, price, chargetype, insurance}) => {
+const EditChargeRate = ({ setSideBar, setChargeRate, price, chargetype, insurance, setChargeRateUpload}) => {
     const [charge, setCharge] = useState(0);
     const [chargevalidation, setChargevalidation] = useState(true);
     const [hour, setHour] = useState(true);
@@ -110,6 +110,7 @@ const EditChargeRate = ({ setSideBar, setChargeRate, price, chargetype, insuranc
             }
             setChargeRate(temp);
             setSideBar(0);
+            setChargeRateUpload(true)
         }
        
     }

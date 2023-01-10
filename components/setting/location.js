@@ -39,7 +39,6 @@ const Location = ({ setSideBar }) => {
                 }
             }
 
-
         });
         console.log(temp)
         setTempdata(temp);

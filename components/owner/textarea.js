@@ -1,5 +1,6 @@
 import { useState, useEffect} from "react";
-
+import { htmlToText } from "html-to-text";
+import parse from 'html-react-parser'
 const Textarea = ({title, placeholder, status, change, type, value}) => {
     const [ stringColor, setStringColor] = useState('');
     const [ inputborder, setInputBorder] = useState('');
@@ -16,8 +17,10 @@ const Textarea = ({title, placeholder, status, change, type, value}) => {
         }
     },[status])
     useEffect(()=>{
-     change(value)
-     setDesc(value)
+     let temp = value.replaceAll("<br>","\n");
+     console.log(temp)
+     change(temp)
+     setDesc(temp)
     },[value])
     return (
         <div>

@@ -56,10 +56,10 @@ const Owner = () => {
             </div>
             <div className="flex flex-row justify-center" style={{ width: "90vw", margin: "auto" }}>
                 <button className="flex flex-row ownerMessage"><img src="/logo/message.svg" className="fontIcon" /><p style={{ fontSize: "15px", color: "white" }}>Message Us</p></button>
-                <Link href="">
+                <Link href={tempData && tempData.length > 0 ? "https://"+tempData[0]["website"]:""}>
                     <button className="flex flex-row ownerMessage ownerWebsite"><img src="/logo/website.svg" className="fontIcon" /><p style={{ fontSize: "15px", color: "white" }}>Website</p></button> </Link>
-                    <button className="ownerRating">{tempData && tempData.length > 0 ? tempData[0].item_rating : "0"} star(0 reviews)</button>
-               
+                <button className="ownerRating">{tempData && tempData.length > 0 ? tempData[0].item_rating : "0"} star(0 reviews)</button>
+
 
             </div>
             <div style={{ width: "90vw", background: "#ffffff33", height: "1px", marginRight: "auto", marginLeft: "auto", marginTop: "40px", marginBottom: "70px" }}></div>

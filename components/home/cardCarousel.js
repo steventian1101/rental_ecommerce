@@ -9,7 +9,6 @@ import { useRouter } from "next/router";
 import Loading from "../auth/loading";
 
 const CardCarousel = ({ imgArray, timeduration, id, setItemID }) => {
-    console.log(imgArray, id)
     const [index, setIndex] = useState(0);
     const [direction, setDirection] = useState(0);
     const [imgStyle, setImgStyle] = useState([]);

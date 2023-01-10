@@ -18,7 +18,7 @@ import { collection, addDoc, query, orderBy, where, getDocs } from "firebase/fir
 import { async } from "@firebase/util";
 import Link from "next/link"
 
-export default function Header() {
+export default function Header({login, setLogin}) {
   const listCollectionRef = collection(db, "users")
   const { authenticated, userCredential, logOut } = useAuth();
   const [sideBar, setSideBar] = useState(0);
@@ -30,6 +30,13 @@ export default function Header() {
   const [dropbox, setDropbox] = useState(false);
   const [tempdata, setTempdata] = useState([]);
   let i = 0;
+  useEffect(()=>{
+      if(login) 
+      {
+        setSideBar(1);
+        setLogin(false);
+      }
+  },[login])
   useEffect(() => {
     i++;
     let temp = [];
