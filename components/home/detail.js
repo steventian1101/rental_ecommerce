@@ -11,7 +11,6 @@ import { useState, useEffect } from "react";
 import DetailCarousel from "./detailCarousel";
 import DetailReview from "./detailReview";
 import Calendar from 'react-calendar';
-import { duration } from "moment";
 import { useAuth } from "../../context/useAuth";
 import { faPeopleGroup } from "@fortawesome/free-solid-svg-icons";
 import { faCircleCheck } from "@fortawesome/free-solid-svg-icons";
@@ -111,6 +110,9 @@ const Detail = ({ id, setSideBar, setDetail, setItemID, setLogin }) => {
     }
     const handleReserve = () =>{
         setReserve(false);
+    }
+    const handlefinish = () =>{
+        setReserve(true)
     }
     useEffect(() => {
         id && getDetail(id);
@@ -309,7 +311,7 @@ const Detail = ({ id, setSideBar, setDetail, setItemID, setLogin }) => {
                             <FontAwesomeIcon icon={faCircleCheck} style={{ fontSize: "90px", color: "#47d585" }} className="mx-auto mr-auto text-center" />
                             <p className="text-white font-18 bold my-2.5 text-center">REQUEST SENT</p>
                             <p className="mb-5 text-center text-white font-15">Your request has been submitted, a notification will be sent to you once we get a reply from the owner.</p>
-                            <p style={{ padding:"15px 20px", background:"#47d585"}} className="w-full text-center text-black rounded-lg cursor-pointer bold font-15" >OK</p>
+                            <p style={{ padding:"15px 20px", background:"#47d585"}} className="w-full text-center text-black rounded-lg cursor-pointer bold font-15" onClick = {()=>{handlefinish()}}>OK</p>
                     </div>
                     }
                    

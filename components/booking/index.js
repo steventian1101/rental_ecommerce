@@ -1,9 +1,12 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faPlus } from "@fortawesome/free-solid-svg-icons"
 import { useState, useEffect } from "react"
+import CreateBooking from "./createBooking"
 const Booking = () =>{
     const [inbounded, setInbounded] = useState(true)
     return(
+        <>
+        <CreateBooking/>
         <section className="booking">
             <div className="flex flex-row items-center justify-between" style={{ marginBottom:"30px"}}>
                 <div className="flex flex-col mb-2.5">
@@ -20,6 +23,7 @@ const Booking = () =>{
                 <p className="text-white font-15" style={{ borderBottom:inbounded? "solid 1px transparent":"solid 1px white", color:inbounded?"#ffffff4d":"white"}} onClick={()=>{setInbounded(false)}}>Your Bookings</p>
             </div> 
         </section>
+        </>
     )
      
 }
