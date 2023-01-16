@@ -48,7 +48,7 @@ const time = [
     "11:00 PM",
 ];
 const duration = [1, 2, 3];
-const CreateBooking = () => {
+const CreateBooking = ({ setScreenNumber, setNewBooking}) => {
     const [calendarDisplay, setCalendarDisplay] = useState(false);
     const [value, setValue] = useState(new Date());
     const [date, setDate] = useState(new Date());
@@ -61,10 +61,12 @@ const CreateBooking = () => {
     const [durationIndex, setDurationIndex] = useState(2);
     const [result, setResult] = useState(null);
     const [displayDuration, setDisplayDuration] = useState(false);
-    const [email,setEmail] = useState(null);
+    const [email, setEmail] = useState(null);
     const [emailvalidation, setEmailvalidation] = useState(true);
     const [phone, setPhone] = useState('');
     const [phonevalidation, setPhonevalidation] = useState(true);
+    const [drivingvalidation, setDrivingvalidadtion] = useState(true);
+    const [driving, setDriving] = useState(null);
     const phoneValidation = (any) => {
         let str = /^\+?([61]{2})\)?[ ]?([0-9]{3})[ ]?([0-9]{3})[ ]?([0-9]{3})$/;
         if (str.test(any)) {
@@ -75,13 +77,21 @@ const CreateBooking = () => {
         }
 
     }
+    const drivingValidation = (any) => {
+        if (any != "") {
+            setDrivingvalidadtion(true);
+            setDriving(any)
+        }
+        else {
+            setDrivingvalidadtion(false)
+        }
+
+    }
     useEffect(() => {
-        console.log(value);
         setDate(value);
         setCalendarDisplay(false);
     }, [value]);
     const handleTime = (index) => {
-        console.log(index);
         setStartTime(index);
         setDisplayTimetable(false)
     }
@@ -89,40 +99,51 @@ const CreateBooking = () => {
         Id && setContent(Id)
     }, [Id]);
     useEffect(() => {
-        console.log("durationIndex..........", durationIndex)
         content && content.item_charge_rate != "person" && getTotal(Number(durationIndex) + 1);
     }, [durationIndex, content?.item_charge]);
     useEffect(() => {
-        console.log("durationIndex..........", durationIndex)
         content && content.item_charge_rate == "person" && getTotal(Number(number));
 
     }, [number, content?.item_charge]);
     const getTotal = (index) => {
-        console.log("gettotal", content.item_charge * 1.35 * index)
         setResult(content.item_charge * 1.35 * index);
     };
     const handleDuration = (index) => {
         setDisplayDuration(false);
         setDurationIndex(index)
     }
-    useEffect(()=>{
-         console.log(result)
-    },[result]);
+    useEffect(() => {
+    }, [result]);
     const emailValidation = (any) => {
         if ((any.indexOf("@") > -1) && (any.indexOf(".") > -1)) {
             setEmail(any)
             setEmailvalidation(true);
         }
         else {
-            console.log("incorrect")
             setEmailvalidation(false)
         }
+    }
+    const handleComplete = () =>{
+        
+       if(result && emailvalidation && phoneValidation && drivingvalidation){
+        const Info ={ 
+            "item_id":Id.objectID,
+            "start_date":date.getDate()+","+date.getMonth()+","+date.getFullYear(),
+            "start_time":startTime,
+            "email":email,
+            "phone_number":phone,
+            "driving_license":driving ,
+            "result":result,    
+        }
+        setNewBooking(Info)
+        setScreenNumber(2);
+       }
     }
 
 
     return (
         <section className="overflow-auto createbooking">
-            <div style={{ height: "50px", marginBottom: "10px" }} className="flex flex-row items-center cursor-pointer mb-2.5"><FontAwesomeIcon icon={faArrowLeftLong} className="text-2xl text-white" /></div>
+            <div style={{ height: "50px", marginBottom: "10px" }} className="flex flex-row items-center cursor-pointer mb-2.5"><FontAwesomeIcon icon={faArrowLeftLong} className="text-2xl text-white" onClick={()=>{ setScreenNumber(0)}}/></div>
             <p className="loginText">NEW BOOKING</p>
             <p className="loginDetail">Add all the customer's information.</p>
             <div className="py-3">
@@ -192,59 +213,32 @@ const CreateBooking = () => {
             <div className="line"></div>
             <div>
                 <p className="mb-5 text-white font-18 bold">General Info</p>
-                <AuthInput title={"Email Address"} status={emailvalidation} placeholder={"E.g.johndoe@gmail.com"} change={emailValidation} type={"text"} value={""}/>
-                <AuthInput title={"Phone Number"} status={phonevalidation} placeholder={"E.g.+61 488 789 765"} change={phoneValidation} type={"text"} value={""}/>
+                <AuthInput title={"Email Address"} status={emailvalidation} placeholder={"E.g.johndoe@gmail.com"} change={emailValidation} type={"text"} value={""} />
+                <AuthInput title={"Phone Number"} status={phonevalidation} placeholder={"E.g.+61 488 789 765"} change={phoneValidation} type={"text"} value={""} />
+                <AuthInput title={"Driver's License Number"} status={drivingvalidation} placeholder={"E.g. LC82392389"} change={drivingValidation} type={"text"} value={""} />
             </div>
             <div className="line"></div>
             <div>
                 <p className="mb-5 font-18 white bold">Booking Summary</p>
                 <div className="bookingsummary">
                     <p className="text-white font-15">Total Price</p>
-                   {
-                    result? <p className="mb-4 text-xl text-white bold">AUD $ {result.toFixed(2)}</p>:<div className="w-full h-8 my-1 mb-4 rounded-lg detail-loading"></div>
-                   }
                     {
-                        content ? <p className="mb-1 text-white ellipsis font-15">{Id && Id.item_name}</p>:<div className="h-5 mb-1 detail-loading"></div>
+                        result ? <p className="mb-4 text-xl text-white bold">AUD $ {result.toFixed(2)}</p> : <div className="w-full h-8 my-1 mb-4 rounded-lg detail-loading"></div>
                     }
-                    <p className="mb-1 font-15 ellipsis">Start: {date && date.getDate() + " " + month[`${date.getMonth()}`] + ", " + date.getFullYear()} { time[startTime]}</p>
-                   {
-                    content ?<>{
-                        content.item_charge_rate != "person"? <p className="mb-1 text-white font-15">Duration: { duration[durationIndex]} { content.item_charge_rate}</p>:<p className="mb-1 text-white font-15">Members: { number} { content.item_charge_rate}</p>
-                      }</>:<div className="h-5 detail-loading"></div>
-                   }
+                    {
+                        content ? <p className="mb-1 text-white ellipsis font-15">{Id && Id.item_name}</p> : <div className="h-5 mb-1 detail-loading"></div>
+                    }
+                    <p className="mb-1 font-15 ellipsis">Start: {date && date.getDate() + " " + month[`${date.getMonth()}`] + ", " + date.getFullYear()} {time[startTime]}</p>
+                    {
+                        content ? <>{
+                            content.item_charge_rate != "person"?<p className="mb-1 text-white font-15">Duration: {duration[durationIndex]} {content.item_charge_rate}</p> : <p className="mb-1 text-white font-15">Members: {number} {content.item_charge_rate}</p>
+                        }</> : <div className="h-5 detail-loading"></div>
+                    }
                 </div>
             </div>
-            {/* {
-                content && content.item_charge_rate != "person" ? <div>
-                    <div className="flex flex-row justify-between my-1">
-                        <p className="text-white font-15">${content && content.item_charge ? Number(content.item_charge).toFixed(2) : 0.00} &times; {duration[durationIndex]} {content && content.item_charge_rate}s</p>
-                        <p className="text-white font-15">${Number(content && Number(content.item_charge) * Number(duration[durationIndex])).toFixed(2)}</p>
-                    </div>
-                    <div className="flex flex-row justify-between my-1">
-                        <p className="text-white font-15">Service Fee</p>
-                        <p className="text-white font-15">${Number(content && Number(content.item_charge) * Number(duration[durationIndex]) * 0.2).toFixed(2)}</p>
-                    </div>
-                    <div className="flex flex-row justify-between my-1">
-                        <p className="text-white font-15">GST</p>
-                        <p className="text-white font-15">${Number(content && Number(content.item_charge) * Number(duration[durationIndex]) * 0.15).toFixed(2)}</p>
-                    </div>
-                </div> : <div>
-                    <div className="flex flex-row justify-between my-1">
-                        <p className="text-white font-15">${content && content.item_charge ? Number(content.item_charge).toFixed(2) : 0.00} &times; {number} {content && content.item_charge_rate}s</p>
-                        <p className="text-white font-15">${Number(content && Number(content.item_charge) * Number(number)).toFixed(2)}</p>
-                    </div>
-                    <div className="flex flex-row justify-between my-1">
-                        <p className="text-white font-15">Service Fee</p>
-                        <p className="text-white font-15">${Number(content && Number(content.item_charge) * Number(number) * 0.2).toFixed(2)}</p>
-                    </div>
-                    <div className="flex flex-row justify-between my-1">
-                        <p className="text-white font-15">GST</p>
-                        <p className="text-white font-15">${Number(content && Number(content.item_charge) * Number(number) * 0.15).toFixed(2)}</p>
-                    </div>
-                </div>
-            } */}
-
-
+            <div className="loginButton">
+                <button className="flex items-center justify-center" onClick={handleComplete}>COMPLETE</button>
+            </div>
         </section>
     )
 

@@ -6,9 +6,11 @@ import { useState, useEffect } from "react"
 import SidebarBack from "../sidebarBack"
 import Payment from "./payment"
 import Location from "./location"
+import { useRouter } from "next/router"
 const Setting = () => {
     const [sideBar, setSideBar]= useState(0);
     const [drawSidebar, setDrawSidebar] = useState([]);
+    const router = useRouter();
     useEffect(()=>{
        if(sideBar == 1){
         let temp = [];
@@ -31,6 +33,9 @@ const Setting = () => {
         setDrawSidebar(temp);
        }
     },[sideBar])
+    useEffect(()=>{
+       router.query.query == "payment" && setSideBar(2)
+    },[router.query?.query])
     return (
         <>
         {

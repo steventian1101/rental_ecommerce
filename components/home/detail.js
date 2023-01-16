@@ -6,7 +6,7 @@ import { faEye } from "@fortawesome/free-solid-svg-icons";
 import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
 import { faClock } from "@fortawesome/free-solid-svg-icons";
 import { db } from "../../lib/initFirebase"
-import { updateDoc, doc, getDoc, collection, getDocs, where, query } from "firebase/firestore";
+import { updateDoc, doc, getDoc, collection, getDocs, where, query, addDoc, serverTimestamp } from "firebase/firestore";
 import { useState, useEffect } from "react";
 import DetailCarousel from "./detailCarousel";
 import DetailReview from "./detailReview";
@@ -14,8 +14,9 @@ import Calendar from 'react-calendar';
 import { useAuth } from "../../context/useAuth";
 import { faPeopleGroup } from "@fortawesome/free-solid-svg-icons";
 import { faCircleCheck } from "@fortawesome/free-solid-svg-icons";
+import Link from "next/link";
 
-const Detail = ({ id, setSideBar, setDetail, setItemID, setLogin }) => {
+const Detail = ({ id, setSideBar, setDetail, setItemID, setLogin , setPayment}) => {
 
 
     const [content, setContent] = useState(null);
@@ -34,6 +35,8 @@ const Detail = ({ id, setSideBar, setDetail, setItemID, setLogin }) => {
     const { userCredential } = useAuth();
     const [number, setNumber] = useState(0);
     const [reserve, setReserve] = useState(true);
+    const [userDetail, setUserDetail] = useState(null);
+   
     const month = {
         "0": "January",
         "1": "February",
@@ -90,6 +93,7 @@ const Detail = ({ id, setSideBar, setDetail, setItemID, setLogin }) => {
         setDetail(<></>)
         setItemID(null);
     }
+   
     const getDetail = async (id) => {
         const docRef = doc(db, "rental_items", id);
         let querySnapshot = await getDoc(docRef);
@@ -108,14 +112,39 @@ const Detail = ({ id, setSideBar, setDetail, setItemID, setLogin }) => {
         console.log(temp)
         setOwnerData(temp);
     }
+    const getUserDetail = async (email) =>{
+        const temp = [];
+        const listCollectionRef = collection(db, "users");
+        let q = query(listCollectionRef, where("user_email", "==", email));
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach((doc) => {
+            temp.push(doc.data());
+        });
+        console.log(temp)
+        setUserDetail(temp);
+
+    }
     const handleReserve = () =>{
-        setReserve(false);
+        if(result == 0){
+           
+        }
+        else{
+            const listCollectionRef = collection(db,"bookings")
+            addDoc(listCollectionRef, { item_id: id, start_date: date.getDate()+","+date.getMonth()+","+date.getFullYear(), start_time: startTime, customer_email: userCredential.email, phone_number: userDetail[0].user_phone, result: result, driving_license:"", full_name: userDetail[0].full_name, credit: userDetail[0].credit_card_number, cvv: userDetail[0].cvv, expireDate: userDetail[0].expire_date, owner_email:content.rental_owner, status:0, createdTime:serverTimestamp()}).then(response => {
+                setReserve(false);
+            }).catch(error => {
+            });
+           
+        }
+
+        
     }
     const handlefinish = () =>{
         setReserve(true)
     }
     useEffect(() => {
         id && getDetail(id);
+        userCredential.email && getUserDetail(userCredential.email);
     }, [])
     useEffect(() => {
         content && setViewnumber(Number(content["item_views"]) + 1);
@@ -266,7 +295,9 @@ const Detail = ({ id, setSideBar, setDetail, setItemID, setLogin }) => {
                                         }
                                     </div>
                                 }
-                                <button className="flex justify-center w-full text-white rounded-lg font-15 bold" style={{ marginTop: "30px", marginBottom: "35px", padding: "15px 10px", background: "#0052cc" }} onClick={()=>{handleReserve()}}>RESERVE</button>
+                               {
+                                userDetail && userDetail.length > 0 && userDetail[0]["credit_card_number"] ?<button className="flex justify-center w-full text-white rounded-lg font-15 bold" style={{ marginTop: "30px", marginBottom: "35px", padding: "15px 10px", background: "#0052cc" }} onClick={()=>{handleReserve()}}>RESERVE</button>:<Link href="/setting?query=payment"><button className="flex justify-center w-full text-white rounded-lg font-15 bold" style={{ marginTop: "30px", marginBottom: "35px", padding: "15px 10px", background: "#b02b4a" }}>PAYMENT REQUIRE</button></Link>
+                               }
                                 <p className="text-white font-15">Total Price</p>
                                 <p className="text-white font-18 bold"> $ {result ? result.toFixed(2) : "0.00"} AUD</p>
                                 <div className="line" style={{ marginTop: "15px", marginBottom: "24px" }}></div>

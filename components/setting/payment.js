@@ -94,12 +94,6 @@ const Payment = ({ setSideBar }) => {
             expire_date: expireDate,
             cvv: cvv,
         };
-        updateDoc(docRef, data)
-            .then(() => {
-            })
-            .catch((error) => {
-                console.log(error);
-            });
         updateDoc(docRef, newdata)
             .then(() => {
                 setLoading(false);

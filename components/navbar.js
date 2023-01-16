@@ -142,7 +142,7 @@ export default function Header({login, setLogin}) {
               <FontAwesomeIcon icon={faSearch} style={{ color: "white", fontSize: "18px" }} />
             </div>
             <div className="flex items-center justify-center navbarIcon">
-              <FontAwesomeIcon icon={faCalendarCheck} style={{ color: "white", fontSize: "18px" }} />
+              <Link href="/booking"><FontAwesomeIcon icon={faCalendarCheck} style={{ color: "white", fontSize: "18px" }} /></Link>
             </div>
             <div className="flex items-center justify-center navbarIcon">
               <FontAwesomeIcon icon={faBell} style={{ color: "white", fontSize: "18px" }} onClick={() => { setSideBar(4) }} />
