@@ -5,6 +5,7 @@ import { Result } from "postcss";
 import date from "date-and-time";
 import Pending from "./pending";
 import Ready from "./ready";
+import Complete from "./complete";
 const month = [
     "January",
     "February",
@@ -170,7 +171,7 @@ const BookingCard = ({ booking, inbounded, setSideBar,setLoading }) => {
             setColor("#2962ff")
         }
         if (booking.status == 3) {
-            setColor("#ff9d00")
+            setColor("#802df5")
         }
         if (booking.status == 4) {
             setColor("#ff9d00")
@@ -188,6 +189,7 @@ const BookingCard = ({ booking, inbounded, setSideBar,setLoading }) => {
 
         }
         if(booking.status ==3 ){
+            setSideBar(<Complete setSideBar={setSideBar} id={ booking.item_id} ownerdata={ownerdata} customerdata={ customerdata} itemdata={itemdata} booking={ booking} setLoading={setLoading}/>);
 
         }
         if(booking.status ==4 ){

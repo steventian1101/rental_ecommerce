@@ -9,6 +9,7 @@ import DetailCarousel from "../home/detailCarousel";
 import { useState, useEffect } from "react";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import LeaveReview from "./leaveReview";
+import Review from "./review";
 const month = {
     "0": "January",
     "1": "February",
@@ -53,8 +54,10 @@ const duration = [1, 2, 3];
 const Complete = ({ setSideBar, id, ownerdata, customerdata, itemdata, booking }) => {
     const [groupbuttons, setGroupbuttons] = useState(false);
     const { userCredential } = useAuth();
+    const [reviewborder, setReviewBorder] = useState(null);
     useEffect(() => {
-        userCredential.email && selectButtons()
+        userCredential.email && selectButtons();
+        userCredential.email && setreviewborder();
     }, []);
     const selectButtons = () => {
         if (userCredential.email == booking.owner_email) {
@@ -64,31 +67,49 @@ const Complete = ({ setSideBar, id, ownerdata, customerdata, itemdata, booking }
             setGroupbuttons(false);
         }
     }
+    const setreviewborder = () => {
+        if (userCredential.email == booking.owner_email) {
+            if (booking.customer_feedback) {
+                setReviewBorder(<>
+                    <Review booking={booking} ownerdata={ownerdata} customerdata={customerdata} itemdata={itemdata} />
+                    <div className="line"></div>
+                    
+                   </>);
+            }
+            else {
+                setReviewBorder(<>
+                    <LeaveReview booking={booking} ownerdata={ownerdata} customerdata={customerdata} itemdata={itemdata} setReviewborder={setReviewBorder}/>
+                    <div className="line"></div>
+                </>)
+            }
+        }
+        if (userCredential.email == booking.customer_email) {
+            if (booking.owner_feedback) {
+                setReviewBorder(<>
+                    <Review booking={booking} ownerdata={ownerdata} customerdata={customerdata} itemdata={itemdata} />
+                    <div className="line"></div>
+                   </>);
+            }
+            else {
+                setReviewBorder(<>
+                    <LeaveReview booking={booking} ownerdata={ownerdata} customerdata={customerdata} itemdata={itemdata} setReviewborder={setReviewBorder}/>
+                    <div className="line"></div>
+                </>)
+            }
+        }
+    }
     return (
         <section className="overflow-auto bookingpending">
-            <div style={{ height: "50px", marginBottom: "10px" }} className="flex flex-row  cursor-pointer mb-2.5 justify-between items-center"><FontAwesomeIcon icon={faArrowLeftLong} className="text-2xl text-white" onClick={() => { setSideBar(null) }} /><div className="flex items-center justify-center w-10 h-10" style={{ borderRadius: "100px", border: "solid 1px white" }}><FontAwesomeIcon icon={faPencil} className="text-lg text-white" /></div></div>
+            <div style={{ height: "50px"}} className="flex flex-row  cursor-pointer mb-2.5 justify-between items-center"><FontAwesomeIcon icon={faArrowLeftLong} className="text-2xl text-white" onClick={() => { setSideBar(null) }} /><div className="flex items-center justify-center w-10 h-10" style={{ borderRadius: "100px", border: "solid 1px white" }}><FontAwesomeIcon icon={faPencil} className="text-lg text-white" /></div></div>
             <p className="loginText complete">BOOKING COMPLETE</p>
-            <p className="mb-10 loginDetail ellipsis">Booking Number: <span className="font-15 bold">{id.toUpperCase()}</span></p>
+            <p className="mb-10 loginDetail ellipsis">Booking Number: <span className="font-15 bold">{booking["booking_id"].toUpperCase()}</span></p>
             <div className="relative">
                 <DetailCarousel imgArray={itemdata["item_photos"]} />
             </div>
             <div className="line"></div>
-            <div>
-                <p className="mb-5 text-white font-18 bold">{ownerdata && ownerdata.length > 0 &&  ownerdata[0].nick_name}'s Feedback</p>
-                <div className="flex flex-row mb-2.5">
-                   <div className="flex flex-rowm mr-2.5 ">
-                    <FontAwesomeIcon icon={ faStar} className="text-lg text-white"/>
-                    <FontAwesomeIcon icon={ faStar} className="text-lg text-white"/>
-                    <FontAwesomeIcon icon={ faStar} className="text-lg text-white"/>
-                    <FontAwesomeIcon icon={ faStar} className="text-lg text-white"/>
-                    <FontAwesomeIcon icon={ faStar} className="text-lg text-white"/>
-                   </div>
-                   <p className="text-white border-l-2 border-gray-600 font-15 px-2.5">{month[(booking.start_date).split(",")[1]] + ", " + (booking.start_date).split(",")[2]}</p>
-                </div>
-                <p className="text-white font-15">Popped in for a coffee and cake. Coffee and banana bread was great, service was good and the ambience is a lot nicer than many of the other open air cafe's</p>
-            </div>
-            <LeaveReview booking={booking} ownerdata={ownerdata} customerdata ={ customerdata} itemdata={itemdata}/>
-            <div className="line"></div>
+            {
+                reviewborder
+            }
             <div>
                 <p className="mb-5 text-white font-18 bold">General Info</p>
                 <div style={{ marginBottom: "15px" }}>
