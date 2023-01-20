@@ -7186,7 +7186,7 @@ through@^2.3.6:
 
 timediff@^1.1.1:
   version "1.1.1"
-  resolved "https://registry.npmjs.org/timediff/-/timediff-1.1.1.tgz"
+  resolved "https://registry.yarnpkg.com/timediff/-/timediff-1.1.1.tgz#66437af9b094022711e7de850ecb00a9f3407d38"
   integrity sha512-0jw2uAy2Wc+tlKo/puWa2U20NwGkadyh0qSxz/paWWay1dR+4V82BQJ4/s+ebk89tN/+W2Al5YZp7K6cVTDevg==
   dependencies:
     moment "^2.9.0"

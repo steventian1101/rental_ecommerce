@@ -57,10 +57,10 @@ const Review = ({booking, ownerdata, customerdata}) =>{
     }
     const getfeedback = () =>{
         if(userCredential.email == booking.owner_email){
-            setFeedback(<p className="text-white font-15">{booking.customer_feedback}</p>);
+            setFeedback(<div className="w-full"><p className="text-white break-words font-15">{booking.customer_feedback}</p></div>);
         }
         if(userCredential.email == booking.customer_email){
-            setFeedback(<p className="text-white font-15">{booking.owner_feedback}</p>);
+            setFeedback(<div className="w-full"><p className="text-white break-words font-15">{booking.owner_feedback}</p></div>);
         }
 
     }

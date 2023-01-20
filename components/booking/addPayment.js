@@ -12,7 +12,6 @@ const AddPayment = ({setScreenNumber, setNewPayment}) => {
     const [expirevalidation, setExpirevalidation] = useState(true);
     const [cvvvalidation, setCvvvalidation] = useState(true);
     const fullnameValidation = (any) => {
-        console.log(any)
         let str = /(^[A-Za-z]{3,16})([ ]{0,1})([A-Za-z]{3,16})?([ ]{0,1})?([A-Za-z]{3,16})?([ ]{0,1})?([A-Za-z]{3,16})/;
         setFullnamevalidation(str.test(any))
         if (str.test(any)) {
@@ -21,7 +20,6 @@ const AddPayment = ({setScreenNumber, setNewPayment}) => {
 
     }
     const creditValidation = (any) => {
-        console.log(any)
         let str = /[^0-9]+/;
         setCreditvalidation(str.test(any));
         if (str.test(any)) {
@@ -50,7 +48,6 @@ const AddPayment = ({setScreenNumber, setNewPayment}) => {
                 "expireDate":expireDate,
                 "cvv":cvv
             }
-            console.log(newpayment);
             setNewPayment(newpayment);
             setScreenNumber(0);
         }

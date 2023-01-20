@@ -125,7 +125,7 @@ const InboundedBookingCard = ({ booking, inbounded, setSideBar, setLoading}) => 
     }, [itemdata]);
     const getenddate = () => {
         if (itemdata.item_charge_rate == "hour") {
-            const start = (booking.start_date).split(",")[2] + "/" + month[(booking.start_date).split(",")[1]] + "/" + (booking.start_date).split(",")[0] + " " + time[booking.start_time] + ":" + "00 ";
+            const start = booking.start_date + " " + time[booking.start_time] + ":" + "00 ";
             const duration = Math.abs(booking.result / (1.35 * itemdata.item_charge));
             console.log(duration)
             const end = date.addHours(new Date(start), duration)
@@ -134,16 +134,17 @@ const InboundedBookingCard = ({ booking, inbounded, setSideBar, setLoading}) => 
             // YYYY/MM/DD HH:mm:ss 
         }
         if (itemdata.item_charge_rate == "day") {
-            const start = (booking.start_date).split(",")[2] + "/" + month[(booking.start_date).split(",")[1]] + "/" + (booking.start_date).split(",")[0] + " " + time[booking.start_time] + ":" + "00 ";
+            console.log(booking.start_date)
+            const start = booking.start_date + " " + time[booking.start_time] + ":" + "00 ";
             const duration = Math.abs(booking.result / (1.35 * itemdata.item_charge));
-            console.log(duration)
+            console.log("herer...............",start, duration)
             const end = date.addDays(new Date(start), duration)
             console.log(end)
             setEnddate(end)
             // YYYY/MM/DD HH:mm:ss 
         }
         if (itemdata.item_charge_rate == "week") {
-            const start = (booking.start_date).split(",")[2] + "/" + month[(booking.start_date).split(",")[1]] + "/" + (booking.start_date).split(",")[0] + " " + time[booking.start_time] + ":" + "00 ";
+            const start = booking.start_date + " " + time[booking.start_time] + ":" + "00 ";
             const duration = Math.abs(booking.result / (1.35 * itemdata.item_charge));
             console.log(duration)
             const end = date.addDays(new Date(start), duration * 7)
@@ -152,7 +153,7 @@ const InboundedBookingCard = ({ booking, inbounded, setSideBar, setLoading}) => 
             // YYYY/MM/DD HH:mm:ss 
         }
         if (itemdata.item_charge_rate == "month") {
-            const start = (booking.start_date).split(",")[2] + "/" + month[(booking.start_date).split(",")[1]] + "/" + (booking.start_date).split(",")[0] + " " + time[booking.start_time] + ":" + "00 ";
+            const start = booking.start_date+ " " + time[booking.start_time] + ":" + "00 ";
             const duration = Math.abs(booking.result / (1.35 * itemdata.item_charge));
             console.log(duration)
             const end = date.addMonths(new Date(start), duration)
@@ -216,9 +217,9 @@ const InboundedBookingCard = ({ booking, inbounded, setSideBar, setLoading}) => 
                 </div>
             </div>
             <div className="flex flex-col">
-                <p className="flex text-white">Start: {(booking.start_date).split(",")[0] + " " + month[(booking.start_date).split(",")[1]] + " " + (booking.start_date).split(",")[2] + " " + time[booking.start_time]}</p>
+                <p className="flex text-white">Start: {(booking.start_date).split(",")[0] + " " + (booking.start_date).split(",")[1] + ", " + (booking.start_date).split(",")[2]+" "+ time[booking.start_time]}</p>
                 {
-                    itemdata && itemdata.item_charge_rate == "person" ? <></> : <p className="flex text-white">End: {enddate && enddate.getDate() + " " + month[enddate.getMonth()] + " " + enddate.getFullYear() + " " + String(enddate.getHours()).padStart(2, "0") + ":" + String(enddate.getMinutes()).padStart(2, "0")}</p>
+                    itemdata && itemdata.item_charge_rate == "person" ? <></> : <p className="flex text-white">End: {enddate && month[enddate.getMonth()] + " " + enddate.getDate() + ", " + enddate.getFullYear() + " " + String(enddate.getHours()).padStart(2, "0") + ":" + String(enddate.getMinutes()).padStart(2, "0")}</p>
                 }
                 <p className="flex text-white">Charge: +${booking.result.toFixed(2)}</p>
             </div>

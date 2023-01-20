@@ -57,7 +57,6 @@ const BookingCard = ({ booking, inbounded, setSideBar,setLoading }) => {
         const docRef = doc(db, "rental_items", id);
         let querySnapshot = await getDoc(docRef);
         let tempdata = querySnapshot.data();
-        console.log(tempdata)
         setItemdata(tempdata);
     }
     const getCustomerdetail = async (email) => {
@@ -121,45 +120,46 @@ const BookingCard = ({ booking, inbounded, setSideBar,setLoading }) => {
     useEffect(()=>{
         itemdata && getenddate();
     },[itemdata]);
-    const getenddate = () =>{
-        if(itemdata.item_charge_rate == "hour"){
-            const start = (booking.start_date).split(",")[2]+"/"+ month[(booking.start_date).split(",")[1]]+"/"+(booking.start_date).split(",")[0]+" "+time[booking.start_time]+":"+"00 ";
-            const duration = Math.abs(booking.result/(1.35*itemdata.item_charge));
+    const getenddate = () => {
+        if (itemdata.item_charge_rate == "hour") {
+            const start = booking.start_date + " " + time[booking.start_time] + ":" + "00 ";
+            const duration = Math.abs(booking.result / (1.35 * itemdata.item_charge));
             console.log(duration)
             const end = date.addHours(new Date(start), duration)
-            console.log(end) ;
-            setEnddate(end) 
+            console.log(end);
+            setEnddate(end)
             // YYYY/MM/DD HH:mm:ss 
         }
-        if(itemdata.item_charge_rate == "day"){
-            const start = (booking.start_date).split(",")[2]+"/"+ month[(booking.start_date).split(",")[1]]+"/"+(booking.start_date).split(",")[0]+" "+time[booking.start_time]+":"+"00 ";
-            const duration = Math.abs(booking.result/(1.35*itemdata.item_charge));
-            console.log(duration)
+        if (itemdata.item_charge_rate == "day") {
+            console.log(booking.start_date)
+            const start = booking.start_date + " " + time[booking.start_time] + ":" + "00 ";
+            const duration = Math.abs(booking.result / (1.35 * itemdata.item_charge));
+            console.log("herer...............",start, duration)
             const end = date.addDays(new Date(start), duration)
-            console.log(end) 
-            setEnddate(end)  
+            console.log(end)
+            setEnddate(end)
             // YYYY/MM/DD HH:mm:ss 
         }
-        if(itemdata.item_charge_rate == "week"){
-            const start = (booking.start_date).split(",")[2]+"/"+ month[(booking.start_date).split(",")[1]]+"/"+(booking.start_date).split(",")[0]+" "+time[booking.start_time]+":"+"00 ";
-            const duration = Math.abs(booking.result/(1.35*itemdata.item_charge));
+        if (itemdata.item_charge_rate == "week") {
+            const start = booking.start_date + " " + time[booking.start_time] + ":" + "00 ";
+            const duration = Math.abs(booking.result / (1.35 * itemdata.item_charge));
             console.log(duration)
-            const end = date.addDays(new Date(start), duration*7)
-            console.log(end)  
-            setEnddate(end) 
+            const end = date.addDays(new Date(start), duration * 7)
+            console.log(end)
+            setEnddate(end)
             // YYYY/MM/DD HH:mm:ss 
         }
-        if(itemdata.item_charge_rate == "month"){
-            const start = (booking.start_date).split(",")[2]+"/"+ month[(booking.start_date).split(",")[1]]+"/"+(booking.start_date).split(",")[0]+" "+time[booking.start_time]+":"+"00 ";
-            const duration = Math.abs(booking.result/(1.35*itemdata.item_charge));
+        if (itemdata.item_charge_rate == "month") {
+            const start = booking.start_date+ " " + time[booking.start_time] + ":" + "00 ";
+            const duration = Math.abs(booking.result / (1.35 * itemdata.item_charge));
             console.log(duration)
             const end = date.addMonths(new Date(start), duration)
-            console.log(end) 
-            setEnddate(end)  
+            console.log(end)
+            setEnddate(end)
             // YYYY/MM/DD HH:mm:ss 
         }
-        
-    }
+
+    }  
     const getColor = () => {
         if (booking.status == 0) {
             setColor("#ff9d00")
@@ -213,8 +213,8 @@ const BookingCard = ({ booking, inbounded, setSideBar,setLoading }) => {
                 </div>
             </div>
             <div className="flex flex-col">
-                <p className="flex text-white">Start: {(booking.start_date).split(",")[0] + " " + month[(booking.start_date).split(",")[1]] + " " + (booking.start_date).split(",")[2]+" "+ time[booking.start_time]}</p>
-                <p className="flex text-white">End: {enddate && enddate.getDate()+" "+month[enddate.getMonth()]+" "+enddate.getFullYear()+" "+ String(enddate.getHours()).padStart(2,"0")+":"+ String(enddate.getMinutes()).padStart(2,"0")}</p>
+                <p className="flex text-white">Start: {(booking.start_date).split(",")[0] + " " + (booking.start_date).split(",")[1] + ", " + (booking.start_date).split(",")[2]+" "+ time[booking.start_time]}</p>
+                <p className="flex text-white">End: {enddate && month[enddate.getMonth()] + " " + enddate.getDate() + ", " + enddate.getFullYear() + " " + String(enddate.getHours()).padStart(2, "0") + ":" + String(enddate.getMinutes()).padStart(2, "0")}</p>
                 <p className="flex text-white">Charge: +${booking.result.toFixed(2)}</p>
 
             </div>

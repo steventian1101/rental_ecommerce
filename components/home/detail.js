@@ -14,7 +14,8 @@ import Calendar from 'react-calendar';
 import { useAuth } from "../../context/useAuth";
 import { faPeopleGroup } from "@fortawesome/free-solid-svg-icons";
 import { faCircleCheck } from "@fortawesome/free-solid-svg-icons";
-import Link from "next/link";
+import Link from "next/link";   
+import { getdisabledates } from "../../utils/getdisabledates";
 
 const Detail = ({ id, setSideBar, setDetail, setItemID, setLogin , setPayment}) => {
 
@@ -24,33 +25,35 @@ const Detail = ({ id, setSideBar, setDetail, setItemID, setLogin , setPayment}) 
     const [owner, setOwner] = useState(null);
     const [ownerData, setOwnerData] = useState(null);
     const [value, setValue] = useState(new Date());
-    const disabledDates = [new Date(2023, 0, 14), new Date(2023, 0, 23)];
+    const [disabledDates, setDisabledates] = useState(null);
     const [date, setDate] = useState(new Date());
     const [calendarDisplay, setCalendarDisplay] = useState(true);
     const [startTime, setStartTime] = useState(0);
     const [displayTimetable, setDisplayTimetable] = useState(false);
     const [displayDuration, setDisplayDuration] = useState(false);
-    const [durationIndex, setDurationIndex] = useState(2);
+    const [durationIndex, setDurationIndex] = useState(0);
     const [result, setResult] = useState(0);
     const { userCredential } = useAuth();
     const [number, setNumber] = useState(0);
     const [reserve, setReserve] = useState(true);
     const [userDetail, setUserDetail] = useState(null);
+    const [data, setdata] = useState(null);
+
    
-    const month = {
-        "0": "January",
-        "1": "February",
-        "2": "March",
-        "3": "April",
-        "4": "May",
-        "5": "June",
-        "6": "July",
-        "7": "August",
-        "8": "September",
-        "9": "October",
-        "10": "November",
-        "11": "December"
-    }
+    const month = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+    ]
     const time = [
         "12:00 AM",
         "01:00 AM",
@@ -79,15 +82,12 @@ const Detail = ({ id, setSideBar, setDetail, setItemID, setLogin , setPayment}) 
     ]
     const duration = [1, 2, 3];
     const handleTime = (index) => {
-        console.log(index);
         setStartTime(index);
         setDisplayTimetable(false)
     }
     const handleDuration = (index) => {
-        setDisplayDuration(false);
         setDurationIndex(index)
     }
-    console.log(id)
     const handleback = () => {
         setSideBar(<></>)
         setDetail(<></>)
@@ -109,7 +109,6 @@ const Detail = ({ id, setSideBar, setDetail, setItemID, setLogin , setPayment}) 
         querySnapshot.forEach((doc) => {
             temp.push(doc.data());
         });
-        console.log(temp)
         setOwnerData(temp);
     }
     const getUserDetail = async (email) =>{
@@ -120,7 +119,6 @@ const Detail = ({ id, setSideBar, setDetail, setItemID, setLogin , setPayment}) 
         querySnapshot.forEach((doc) => {
             temp.push(doc.data());
         });
-        console.log(temp)
         setUserDetail(temp);
 
     }
@@ -130,7 +128,7 @@ const Detail = ({ id, setSideBar, setDetail, setItemID, setLogin , setPayment}) 
         }
         else{
             const listCollectionRef = collection(db,"bookings")
-            addDoc(listCollectionRef, { item_id: id, start_date: date.getDate()+","+date.getMonth()+","+date.getFullYear(), start_time: startTime, customer_email: userCredential.email, phone_number: userDetail[0].user_phone, result: result, driving_license:"", full_name: userDetail[0].full_name, credit: userDetail[0].credit_card_number, cvv: userDetail[0].cvv, expireDate: userDetail[0].expire_date, owner_email:content.rental_owner, status:0, createdTime:serverTimestamp()}).then(response => {
+            addDoc(listCollectionRef, { item_id: id, start_date: month[Number(date.getMonth())]+","+date.getDate()+","+date.getFullYear(), start_time: startTime, customer_email: userCredential.email, phone_number: userDetail[0].user_phone, result: result, driving_license:"", full_name: userDetail[0].full_name, credit: userDetail[0].credit_card_number, cvv: userDetail[0].cvv, expireDate: userDetail[0].expire_date, owner_email:content.rental_owner, status:0, createdTime:serverTimestamp()}).then(response => {
                 setReserve(false);
             }).catch(error => {
             });
@@ -165,7 +163,6 @@ const Detail = ({ id, setSideBar, setDetail, setItemID, setLogin , setPayment}) 
         }
     }, [viewnumber]);
     useEffect(() => {
-        console.log(owner)
         owner && ownerDetail(owner);
     }, [owner]);
     const handleLogin = () => {
@@ -173,23 +170,25 @@ const Detail = ({ id, setSideBar, setDetail, setItemID, setLogin , setPayment}) 
         setLogin(true);
     }
     useEffect(() => {
-        console.log("durationIndex..........", durationIndex)
-        content && content.item_charge_rate != "person" && getTotal(Number(durationIndex) + 1);
+        content && content.item_charge_rate != "person" && getTotal(Number(durationIndex));
     }, [durationIndex, content?.item_charge])
     useEffect(() => {
-        console.log(value);
         setDate(value);
         setCalendarDisplay(false);
     }, [value]);
     const getTotal = (index) => {
-        console.log("gettotal", content.item_charge * 1.35 * index)
         setResult(content.item_charge * 1.35 * index);
     }
     useEffect(() => {
-        console.log("durationIndex..........", durationIndex)
         content && content.item_charge_rate == "person" && getTotal(Number(number));
 
-    }, [number, content?.item_charge])
+    }, [number, content?.item_charge]);
+    useEffect(()=>{
+        getdisabledates(id, content)
+            .then((data) => {
+                setDisabledates(data)
+            })
+    },[id && content]);
     return (
         <section className="fixed top-0 right-0 z-50 bg-white detail">
             <div style={{ height: "50px", marginBottom: "10px" }} className="flex flex-row items-center cursor-pointer" onClick={handleback}><FontAwesomeIcon icon={faArrowLeftLong} className="text-2xl text-white" /></div>
@@ -244,7 +243,7 @@ const Detail = ({ id, setSideBar, setDetail, setItemID, setLogin , setPayment}) 
                                     {
                                         calendarDisplay && <div className="w-full top-8 ">
                                             <Calendar onChange={setValue} value={value} tileDisabled={({ date, view }) =>
-                                                (view === 'month') && // Block day tiles only
+                                                (view === 'month') && disabledDates &&
                                                 disabledDates.some(disabledDate =>
                                                     (date.getFullYear() === disabledDate.getFullYear() &&
                                                         date.getMonth() === disabledDate.getMonth() &&
@@ -280,19 +279,8 @@ const Detail = ({ id, setSideBar, setDetail, setItemID, setLogin , setPayment}) 
                                     </div> : <div className="my-2.5">
                                         <p className="font-15 ">Duration</p>
                                         <div className="relative flex flex-row items-center justify-between py-2" style={{ borderBottom: "solid 1px #ffffff1a" }} onClick={() => { setDisplayDuration(true) }}>
-                                            <p className="text-white font-15">{content && duration[durationIndex] + " " + content.item_charge_rate}</p>
-
+                                            <input type="text" className="text-white bg-transparent outline-none" style={{ border: "solid 0px black" }} defaultValue="0" onChange={(e) => { handleDuration(e.target.value) }} />
                                         </div>
-                                        {
-                                            displayDuration && <div className="flex flex-col bg-white" style={{ background: "#ffffff1a" }}>
-                                                {
-                                                    duration.map((duration, index) => (
-                                                        <p className="w-full px-2 py-1 text-white time" onClick={() => { handleDuration(index) }}>{duration}</p>
-                                                    ))
-                                                }
-
-                                            </div>
-                                        }
                                     </div>
                                 }
                                {
@@ -304,16 +292,16 @@ const Detail = ({ id, setSideBar, setDetail, setItemID, setLogin , setPayment}) 
                                 {
                                     content && content.item_charge_rate != "person" ? <div>
                                         <div className="flex flex-row justify-between my-1">
-                                            <p className="text-white font-15">${content && content.item_charge ? Number(content.item_charge).toFixed(2) : 0.00} &times; {duration[durationIndex]} {content && content.item_charge_rate}s</p>
-                                            <p className="text-white font-15">${Number(content && Number(content.item_charge) * Number(duration[durationIndex])).toFixed(2)}</p>
+                                            <p className="text-white font-15">${content && content.item_charge ? Number(content.item_charge).toFixed(2) : 0.00} &times; {durationIndex} {content && content.item_charge_rate}s</p>
+                                            <p className="text-white font-15">${content && (Number(content.item_charge) * Number(durationIndex)).toFixed(2)}</p>
                                         </div>
                                         <div className="flex flex-row justify-between my-1">
                                             <p className="text-white font-15">Service Fee</p>
-                                            <p className="text-white font-15">${Number(content && Number(content.item_charge) * Number(duration[durationIndex]) * 0.2).toFixed(2)}</p>
+                                            <p className="text-white font-15">${content && (Number(content.item_charge) * Number(durationIndex) * 0.2).toFixed(2)}</p>
                                         </div>
                                         <div className="flex flex-row justify-between my-1">
                                             <p className="text-white font-15">GST</p>
-                                            <p className="text-white font-15">${Number(content && Number(content.item_charge) * Number(duration[durationIndex]) * 0.15).toFixed(2)}</p>
+                                            <p className="text-white font-15">${content && (Number(content.item_charge) * Number(durationIndex * 0.15)).toFixed(2)}</p>
                                         </div>
                                     </div> : <div>
                                         <div className="flex flex-row justify-between my-1">

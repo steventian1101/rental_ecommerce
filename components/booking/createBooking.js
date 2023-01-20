@@ -7,20 +7,21 @@ import Calendar from "react-calendar"
 import { faCalendar } from "@fortawesome/free-solid-svg-icons"
 import { faClock } from "@fortawesome/free-solid-svg-icons"
 import { faPeopleGroup } from "@fortawesome/free-solid-svg-icons"
-const month = {
-    "0": "January",
-    "1": "February",
-    "2": "March",
-    "3": "April",
-    "4": "May",
-    "5": "June",
-    "6": "July",
-    "7": "August",
-    "8": "September",
-    "9": "October",
-    "10": "November",
-    "11": "December"
-};
+import { getdisabledates } from "../../utils/getdisabledates"
+const month = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December"
+];
 const time = [
     "12:00 AM",
     "01:00 AM",
@@ -52,13 +53,13 @@ const CreateBooking = ({ setScreenNumber, setNewBooking}) => {
     const [calendarDisplay, setCalendarDisplay] = useState(false);
     const [value, setValue] = useState(new Date());
     const [date, setDate] = useState(new Date());
-    const disabledDates = [new Date(2023, 0, 14), new Date(2023, 0, 23)];
+    const [disabledDates, setDisabledates] = useState(null); 
     const [displayTimetable, setDisplayTimetable] = useState(false);
     const [startTime, setStartTime] = useState(0);
     const [content, setContent] = useState(null);
     const [number, setNumber] = useState(0);
     const [Id, setId] = useState(null);
-    const [durationIndex, setDurationIndex] = useState(2);
+    const [durationIndex, setDurationIndex] = useState(0);
     const [result, setResult] = useState(null);
     const [displayDuration, setDisplayDuration] = useState(false);
     const [email, setEmail] = useState(null);
@@ -99,17 +100,17 @@ const CreateBooking = ({ setScreenNumber, setNewBooking}) => {
         Id && setContent(Id)
     }, [Id]);
     useEffect(() => {
-        content && content.item_charge_rate != "person" && getTotal(Number(durationIndex) + 1);
+        content && content.item_charge_rate != "person" && getTotal(Number(durationIndex));
     }, [durationIndex, content?.item_charge]);
     useEffect(() => {
         content && content.item_charge_rate == "person" && getTotal(Number(number));
 
     }, [number, content?.item_charge]);
     const getTotal = (index) => {
+        console.log("here is calculator............................................................")
         setResult(content.item_charge * 1.35 * index);
     };
     const handleDuration = (index) => {
-        setDisplayDuration(false);
         setDurationIndex(index)
     }
     useEffect(() => {
@@ -128,7 +129,7 @@ const CreateBooking = ({ setScreenNumber, setNewBooking}) => {
        if(result && emailvalidation && phoneValidation && drivingvalidation){
         const Info ={ 
             "item_id":Id.objectID,
-            "start_date":date.getDate()+","+date.getMonth()+","+date.getFullYear(),
+            "start_date":month[Number(date.getMonth())]+","+date.getDate()+","+date.getFullYear(),
             "start_time":startTime,
             "email":email,
             "phone_number":phone,
@@ -139,6 +140,13 @@ const CreateBooking = ({ setScreenNumber, setNewBooking}) => {
         setScreenNumber(2);
        }
     }
+    useEffect(()=>{
+       let tempId = Id && Id.objectID
+        tempId && getdisabledates(tempId, content)
+            .then((data) => {
+                setDisabledates(data)
+            })
+    },[Id && content]);
 
 
     return (
@@ -192,22 +200,11 @@ const CreateBooking = ({ setScreenNumber, setNewBooking}) => {
                         <input type="text" className="text-white bg-transparent outline-none" style={{ border: "solid 0px black" }} defaultValue="0" onChange={(e) => { setNumber(e.target.value) }} />
                         <FontAwesomeIcon icon={faPeopleGroup} className="text-lg text-white" />
                     </div>
-                </div> : <div className="my-2.5">
+                </div> :<div className="my-2.5">
                     <p className="font-15 ">Duration</p>
                     <div className="relative flex flex-row items-center justify-between py-2" style={{ borderBottom: "solid 1px #ffffff1a" }} onClick={() => { setDisplayDuration(true) }}>
-                        <p className="text-white font-15">{content && duration[durationIndex] + " " + content.item_charge_rate}</p>
-
+                        <input type="text" className="text-white bg-transparent outline-none" style={{ border: "solid 0px black" }} defaultValue="0" onChange={(e) => { handleDuration(e.target.value) }} />
                     </div>
-                    {
-                        displayDuration && <div className="flex flex-col bg-white" style={{ background: "#ffffff1a" }}>
-                            {
-                                duration.map((duration, index) => (
-                                    <p className="w-full px-2 py-1 text-white time" onClick={() => { handleDuration(index) }}>{duration}</p>
-                                ))
-                            }
-
-                        </div>
-                    }
                 </div>
             }
             <div className="line"></div>
@@ -231,7 +228,7 @@ const CreateBooking = ({ setScreenNumber, setNewBooking}) => {
                     <p className="mb-1 font-15 ellipsis">Start: {date && date.getDate() + " " + month[`${date.getMonth()}`] + ", " + date.getFullYear()} {time[startTime]}</p>
                     {
                         content ? <>{
-                            content.item_charge_rate != "person"?<p className="mb-1 text-white font-15">Duration: {duration[durationIndex]} {content.item_charge_rate}</p> : <p className="mb-1 text-white font-15">Members: {number} {content.item_charge_rate}</p>
+                            content.item_charge_rate != "person"?<p className="mb-1 text-white font-15">Duration: {durationIndex} {content.item_charge_rate}</p> : <p className="mb-1 text-white font-15">Members: {number} {content.item_charge_rate}</p>
                         }</> : <div className="h-5 detail-loading"></div>
                     }
                 </div>

@@ -109,7 +109,7 @@ const Pending = ({ setSideBar, id, ownerdata, customerdata, itemdata, booking, s
                 </div>
                 <div style={{ marginBottom: "15px" }}>
                     <p className="text-white font-15">Start Date & Time</p>
-                    <p className="text-white font-15 ellipsis">{(booking.start_date).split(",")[0] + " " + month[(booking.start_date).split(",")[1]] + ", " + (booking.start_date).split(",")[2] + " " + time[booking.start_time]}</p>
+                    <p className="text-white font-15 ellipsis">{(booking.start_date).split(",")[0] + " " + (booking.start_date).split(",")[1] + ", " + (booking.start_date).split(",")[2] + " " + time[booking.start_time]}</p>
                 </div>
                 {
                     itemdata.item_charge_rate == "person" ? <div style={{ marginBottom: "15px" }}>
