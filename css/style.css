@@ -107,6 +107,21 @@ p {
   padding: 20px 50px 100px 50px;
   margin-bottom: 10px;
 }
+.mobilesuccessnoti{
+  display: none;
+  z-index:10000001;
+  padding: 20px 50px 100px 50px;
+}
+.stickyupdate{
+  display: none;
+  padding: 20px 50px 100px 50px;
+}
+.detailsticky{
+  padding-left: 50px;
+  padding-right: 50px;
+  display: none;
+}
+
 .addpayment{
   position: fixed;
   z-index: 10001;
@@ -139,6 +154,16 @@ p {
   width: 400px;
   padding: 20px 50px 100px 50px;
   margin-bottom: 10px;
+
+}
+.detailstickybutton{
+  height: 55px;
+  background: #0052cc;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  padding: 0px 20px;
+  border-radius: 8px;
 
 }
 
@@ -745,6 +770,9 @@ input::placeholder {
   padding: 35px;
   border-radius: 8px;
 }
+.booking_card:hover{
+  background: #1e1e1e;
+}
 .font-30{
   font-size: 30px;
   line-height: 35px;
@@ -805,10 +833,15 @@ input::placeholder {
 .marginTop-5{
   margin-top: 5px;
 }
+.font-14{
+  font-size: 14px;
+  line-height: 18px;
+
+}
 
 @media screen and (max-width: 991px) {
   .detailpart {
-    width: 57%;
+    width: 52%;
   }
 
   .detail {
@@ -884,6 +917,9 @@ input::placeholder {
 }
 
 @media screen and (max-width: 767px) {
+  .mobilesuccessnoti{
+    display: flex;
+  }
   .bookingbutton .icon{
     margin-right: 0px!important;
   }
@@ -892,6 +928,19 @@ input::placeholder {
   }
   .detailpart {
     width: 100%;
+  }
+  .reservepan{
+    display: none;
+  }
+  .detailsticky{
+    display: flex;
+    padding-left: 15vw !important;
+    padding-right: 15vw !important;
+  }
+  .stickyupdate{
+    display: flex;
+    padding-left: 15vw !important;
+    padding-right: 15vw !important;
   }
 
   .detail {
@@ -982,6 +1031,19 @@ input::placeholder {
     padding-right: 15vw !important;
     padding-left: 15vw !important;
   }
+  .mobilesuccessnoti{
+    width: 100% !important;
+    padding-right: 15vw !important;
+    padding-left: 15vw !important;
+  }
+  .detailsticky{
+    padding-right: 15vw !important;
+    padding-left: 15vw !important;
+  }
+  .stickyupdate{
+    padding-right: 15vw !important;
+    padding-left: 15vw !important;
+  }
   .addpayment{
     width: 100% !important;
     padding-right: 15vw !important;
@@ -1035,6 +1097,12 @@ input::placeholder {
 }
 
 @media screen and (max-width: 479px) {
+  .paymentRequire{
+    font-size: 12px!important;
+  }
+  .mobilesuccessnoti{
+    display: flex;
+  }
   .detail {
     width: 100% !important;
     padding-left: 7vw !important;
@@ -1106,6 +1174,21 @@ input::placeholder {
     width: 100% !important;
     padding-right: 7vw !important;
     padding-left: 7vw !important;
+  }
+  .mobilesuccessnoti{
+    width: 100% !important;
+    padding-right: 7vw !important;
+    padding-left: 7vw !important;
+  }
+  .detailsticky{
+    padding-right: 7vw !important;
+    padding-left: 7vw !important;
+
+  }
+  .stickyupdate{
+    padding-right: 7vw !important;
+    padding-left: 7vw !important;
+
   }
   .addpayment{
     width: 100% !important;

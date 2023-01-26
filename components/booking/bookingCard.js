@@ -81,16 +81,13 @@ const BookingCard = ({ booking, inbounded, setSideBar,setLoading }) => {
 
     }
     const getOwnerdetail = async (email) => {
-        console.log("this is the owner email", email)
         let temp = [];
         const listCollectionRef = collection(db, "users");
         let q = query(listCollectionRef, where("user_email", "==", email));
         const querySnapshot = await getDocs(q);
-        console.log(querySnapshot)
         querySnapshot.forEach((doc) => {
             temp.push(doc.data())
         });
-        console.log(temp)
         setOwnerdata(temp)
     }
 
@@ -112,7 +109,6 @@ const BookingCard = ({ booking, inbounded, setSideBar,setLoading }) => {
 
             }
             else {
-                console.log(ownerdata[0]["profile_img"]);
                 getColor();
             }
         }
@@ -124,42 +120,33 @@ const BookingCard = ({ booking, inbounded, setSideBar,setLoading }) => {
         if (itemdata.item_charge_rate == "hour") {
             const start = booking.start_date + " " + time[booking.start_time] + ":" + "00 ";
             const duration = Math.abs(booking.result / (1.35 * itemdata.item_charge));
-            console.log(duration)
             const end = date.addHours(new Date(start), duration)
-            console.log(end);
             setEnddate(end)
             // YYYY/MM/DD HH:mm:ss 
         }
         if (itemdata.item_charge_rate == "day") {
-            console.log(booking.start_date)
             const start = booking.start_date + " " + time[booking.start_time] + ":" + "00 ";
             const duration = Math.abs(booking.result / (1.35 * itemdata.item_charge));
-            console.log("herer...............",start, duration)
             const end = date.addDays(new Date(start), duration)
-            console.log(end)
             setEnddate(end)
             // YYYY/MM/DD HH:mm:ss 
         }
         if (itemdata.item_charge_rate == "week") {
             const start = booking.start_date + " " + time[booking.start_time] + ":" + "00 ";
             const duration = Math.abs(booking.result / (1.35 * itemdata.item_charge));
-            console.log(duration)
             const end = date.addDays(new Date(start), duration * 7)
-            console.log(end)
             setEnddate(end)
             // YYYY/MM/DD HH:mm:ss 
         }
         if (itemdata.item_charge_rate == "month") {
             const start = booking.start_date+ " " + time[booking.start_time] + ":" + "00 ";
             const duration = Math.abs(booking.result / (1.35 * itemdata.item_charge));
-            console.log(duration)
             const end = date.addMonths(new Date(start), duration)
-            console.log(end)
             setEnddate(end)
             // YYYY/MM/DD HH:mm:ss 
         }
 
-    }  
+    }     
     const getColor = () => {
         if (booking.status == 0) {
             setColor("#ff9d00")

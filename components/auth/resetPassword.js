@@ -14,7 +14,6 @@ const ResetPassword = ({ setSideBar, sidebar}) =>{
         sendPasswordResetEmail(auth,email).then(
             (result)=>{
                 setWarning("Password reset email sent");
-                console.log(result)
                 setLoading(false)
             }
         ).catch((error) =>{
@@ -29,13 +28,9 @@ const ResetPassword = ({ setSideBar, sidebar}) =>{
             setEmailvalidation(true);
         }
         else {
-            console.log("incorrect")
             setEmailvalidation(false)
         }
     }
-    useEffect(() => {
-      console.log(email)
-    }, [email])
  return(
     <section className="passwordReset">
             <div style={{ height: "50px", marginBottom:"10px" }} className="flex flex-row items-center cursor-pointer"><FontAwesomeIcon icon={faArrowLeftLong} className="text-2xl text-white"  onClick={ () =>setSideBar(0)}/></div>

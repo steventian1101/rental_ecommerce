@@ -2,7 +2,6 @@ import Itemcard from "./itemcard"
 import { useInfiniteHits } from 'react-instantsearch-hooks-web'
 import { useEffect } from "react";
 const SearchResult = ({ setItemID, searchText }) => {
-    console.log("search result................", searchText)
     const { hits,
         currentPageHits,
         results,
@@ -11,9 +10,6 @@ const SearchResult = ({ setItemID, searchText }) => {
         showPrevious,
         showMore,
         sendEvent } = useInfiniteHits();
-    useEffect(() => {
-        console.log(hits)
-    }, [hits]);
     useEffect(() => {
         window.addEventListener("scroll", handleScroll);
         return () => {

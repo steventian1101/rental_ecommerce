@@ -25,7 +25,6 @@ const Login = ({ setSideBar }) => {
             setEmailvalidation(true);
         }
         else {
-            console.log("incorrect")
             setEmailvalidation(false)
         }
     }
@@ -35,7 +34,6 @@ const Login = ({ setSideBar }) => {
             setPasswordvalidation(true);
         }
         else {
-            console.log("incorrect")
             setPasswordvalidation(false)
         }
     }
@@ -48,13 +46,11 @@ const Login = ({ setSideBar }) => {
             querySnapshot.forEach((doc) => {
                 temp.push(doc.data());
             });
-            console.log(temp)
             if(temp.length != 0){
                 signIn(auth, email, password)
                 
             }
             else{
-                console.log("okay")
                 setEmailvalidation(false);
                 setLoading(false)  
             }

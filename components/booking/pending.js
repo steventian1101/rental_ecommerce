@@ -83,6 +83,7 @@ const Pending = ({ setSideBar, id, ownerdata, customerdata, itemdata, booking, s
 
     }
     const handleDecline = async () =>{
+            setLoading(true)
             await deleteDoc(doc(db, "bookings", booking.booking_id));
             window.location.reload();
     }

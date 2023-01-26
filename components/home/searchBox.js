@@ -4,7 +4,6 @@ import { useSearchBox } from "react-instantsearch-hooks-web";
 import { useCallback, useState } from "react";
 import { useEffect } from "react";
 export default function SearchBox({ searchText }) {
-    console.log("searchBox................",searchText)
     const [text, setText] = useState(null);
     const memoizedSearch = useCallback((query, search) => {
       search(query);

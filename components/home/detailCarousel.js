@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/router";
 import Loading from "../auth/loading";
 
-const DetailCarousel = ({ imgArray}) => {
+const DetailCarousel = ({ imgArray, id}) => {
     const [index, setIndex] = useState(0);
     const [direction, setDirection] = useState(0);
     const [imgStyle, setImgStyle] = useState([]);
@@ -23,7 +23,7 @@ const DetailCarousel = ({ imgArray}) => {
             temp.push(<img src={imgArray[k]} className="w-full h-auto rounded-xl" ref={imgRef} key={k} />);
         }
         setDrawImg(temp);
-    }, [])
+    }, [id])
     const handlePrev = () => {
         if (index == imgArray.length - 1) {
             return;
@@ -118,7 +118,6 @@ const DetailCarousel = ({ imgArray}) => {
             <div style={imgStyle} className="flex w-full h-auto">
                 {drawImg}
             </div>
-
         </div>
         </>
     )

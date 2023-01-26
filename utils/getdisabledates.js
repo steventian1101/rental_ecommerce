@@ -43,7 +43,6 @@ const month = {
     "11": "December"
 };
 export async function getdisabledates(id, content) {
-    console.log(id, content);
     const temp = await getdisabletimes(id, content);
     return temp;
 }
@@ -65,15 +64,12 @@ const getdisabletimes = async (id, content) => {
     items.forEach((item) => {
         temp.push(item);
     });
-    console.log("........................here is get item results",temp.length)
     if (content && content["item_charge_rate"] == "day") {
         for (let i in temp) {
             let disabletemp = [];
             const duration = Math.abs(Number(temp[i].result) / (1.35 * Number(content.item_charge)));
             for (let j = 0; j < duration; j++) {
-                console.log("...........................okay", j)
                 if (j == 0) {
-                    console.log(".................first", new Date(temp[i].start_date + " " + time[temp[i].start_time]))
                     disabletemp[j]=(new Date(temp[i].start_date + " " + time[temp[i].start_time]));
                 }
                 else {
@@ -90,13 +86,9 @@ const getdisabletimes = async (id, content) => {
             const duration = Math.abs(Number(temp[i].result) / (1.35 * Number(content.item_charge)));
             const enddate = date.addHours(new Date(temp[i].start_date + " " + time[temp[i].start_time]), duration);
             const days = (timediff(new Date(temp[i].start_date + " " + time[temp[i].start_time]),enddate,'D')).days;
-            console.log(days)
-
             if(days != 0){
                 for (let j = 0; j <= days; j++) {
-                    console.log("...........................okay", j)
                     if (j == 0) {
-                        console.log(".................first", new Date(temp[i].start_date + " " + time[temp[i].start_time]))
                         disabletemp[j]=(new Date(temp[i].start_date + " " + time[temp[i].start_time]));
                     }
                     else {
@@ -104,12 +96,13 @@ const getdisabletimes = async (id, content) => {
                         disabletemp[j] = nextdate
                     }
                 }
-                disabledates.push.apply(disabledates, disabletemp);
+                disabledates.push(disabletemp);
             }
             if(days ==  0){
                 let tempdate = new Date(temp[i].start_date + " " + time[temp[i].start_time]);
-                disabledates.push.apply(disabledates, tempdate)
+                disabledates.push(tempdate)
             }
+            
         }
     }
     if (content && content.item_charge_rate == "week") {
@@ -117,9 +110,7 @@ const getdisabletimes = async (id, content) => {
             let disabletemp = [];
             const duration = Math.abs(Number(temp[i].result) / (1.35 * Number(content.item_charge)));
             for (let j = 0; j <= duration * 7; j++) {
-                console.log("...........................okay", j)
                 if (j == 0) {
-                    console.log(".................first", new Date(temp[i].start_date + " " + time[temp[i].start_time]))
                     disabletemp[j]=(new Date(temp[i].start_date + " " + time[temp[i].start_time]));
                 }
                 else {
@@ -134,6 +125,26 @@ const getdisabletimes = async (id, content) => {
         for( let i in temp){
         disabledates.push(new Date(temp[i].start_date + " " + time[temp[i].start_time]));}
     }
-    console.log("there are disable dates", disabledates)
+    if (content && content.item_charge_rate == "month") {
+        for (let i in temp) {
+            let disabletemp = [];
+            const duration = Math.abs(Number(temp[i].result) / (1.35 * Number(content.item_charge)));
+            const enddate = date.addMonths(new Date(temp[i].start_date + " " + time[temp[i].start_time]), duration);
+            const days = (timediff(new Date(temp[i].start_date + " " + time[temp[i].start_time]),enddate,'D')).days;
+
+            if(days != 0){
+                for (let j = 0; j <= days; j++) {
+                    if (j == 0) {
+                        disabletemp[j]=(new Date(temp[i].start_date + " " + time[temp[i].start_time]));
+                    }
+                    else {
+                        let nextdate = date.addDays(new Date(disabletemp[j - 1]), 1)
+                        disabletemp[j] = nextdate
+                    }
+                }
+                disabledates.push.apply(disabledates, disabletemp);
+            }
+        }
+    }
     return disabledates;
 }

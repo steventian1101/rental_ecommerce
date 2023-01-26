@@ -59,7 +59,6 @@ const InboundedBookingCard = ({ booking, inbounded, setSideBar, setLoading}) => 
         const docRef = doc(db, "rental_items", id);
         let querySnapshot = await getDoc(docRef);
         let tempdata = querySnapshot.data();
-        console.log(tempdata)
         setItemdata(tempdata);
     }
     const getCustomerdetail = async (email) => {
@@ -84,16 +83,13 @@ const InboundedBookingCard = ({ booking, inbounded, setSideBar, setLoading}) => 
 
     }
     const getOwnerdetail = async (email) => {
-        console.log("this is the owner email", email)
         let temp = [];
         const listCollectionRef = collection(db, "users");
         let q = query(listCollectionRef, where("user_email", "==", email));
         const querySnapshot = await getDocs(q);
-        console.log(querySnapshot)
         querySnapshot.forEach((doc) => {
             temp.push(doc.data())
         });
-        console.log(temp)
         setOwnerdata(temp)
     }
 
@@ -115,7 +111,6 @@ const InboundedBookingCard = ({ booking, inbounded, setSideBar, setLoading}) => 
                 getColor();
             }
             else {
-                console.log(ownerdata[0]["profile_img"]);
                 getColor();
             }
         }
@@ -127,19 +122,14 @@ const InboundedBookingCard = ({ booking, inbounded, setSideBar, setLoading}) => 
         if (itemdata.item_charge_rate == "hour") {
             const start = booking.start_date + " " + time[booking.start_time] + ":" + "00 ";
             const duration = Math.abs(booking.result / (1.35 * itemdata.item_charge));
-            console.log(duration)
             const end = date.addHours(new Date(start), duration)
-            console.log(end);
             setEnddate(end)
             // YYYY/MM/DD HH:mm:ss 
         }
         if (itemdata.item_charge_rate == "day") {
-            console.log(booking.start_date)
             const start = booking.start_date + " " + time[booking.start_time] + ":" + "00 ";
             const duration = Math.abs(booking.result / (1.35 * itemdata.item_charge));
-            console.log("herer...............",start, duration)
-            const end = date.addDays(new Date(start), duration)
-            console.log(end)
+            const end = date.addDays(new Date(start), duration);
             setEnddate(end)
             // YYYY/MM/DD HH:mm:ss 
         }

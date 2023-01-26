@@ -20,6 +20,7 @@ const Booking = () => {
     const [newPayment, setNewPayment] = useState(null);
     const [bookings, setBookings] = useState(null);
     const [email, setEmail] = useState(null);
+    const [userDetail, setUserDetail] = useState(null)
     
     const [loading, setLoading] = useState(false);
     const { userCredential } = useAuth();
@@ -49,6 +50,17 @@ const Booking = () => {
                 window.location.reload();
             }).catch(error => {
             });
+            const notificationRef = collection(db,"notifications");
+            addDoc(notificationRef, { 
+                to:newBooking.email,
+                notificationContent:userDetail[0].nick_name +" has accepted your booking of " + newBooking["item_name"],
+                show:false,
+                time:serverTimestamp(),
+                status:2
+            }).then(response => {
+            }).catch(error => {
+                console.log(error)
+            });
         }
     }
     const getallinboundedbooking  = async (email) =>{
@@ -74,6 +86,7 @@ const Booking = () => {
         setBookings(temp);
     }
     useEffect(()=>{
+          userCredential.email && getUserDetail(userCredential.email)
           userCredential.email && setEmail(userCredential.email)
     },[userCredential?.email]);
     useEffect(()=>{
@@ -85,6 +98,17 @@ const Booking = () => {
         email && inbounded && getallinboundedbooking(userCredential.email);
         email && !inbounded && getallcilentbooking(userCredential.email);
     },[inbounded]);
+    const getUserDetail = async (email) => {
+        const temp = [];
+        const listCollectionRef = collection(db, "users");
+        let q = query(listCollectionRef, where("user_email", "==", email));
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach((doc) => {
+            temp.push(doc.data());
+        });
+        setUserDetail(temp);
+
+    }
     return (
         <>
             {

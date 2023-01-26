@@ -53,7 +53,7 @@ const CreateBooking = ({ setScreenNumber, setNewBooking}) => {
     const [calendarDisplay, setCalendarDisplay] = useState(false);
     const [value, setValue] = useState(new Date());
     const [date, setDate] = useState(new Date());
-    const [disabledDates, setDisabledates] = useState(null); 
+    const [disabledDates, setDisabledates] = useState(new Date()); 
     const [displayTimetable, setDisplayTimetable] = useState(false);
     const [startTime, setStartTime] = useState(0);
     const [content, setContent] = useState(null);
@@ -107,7 +107,6 @@ const CreateBooking = ({ setScreenNumber, setNewBooking}) => {
 
     }, [number, content?.item_charge]);
     const getTotal = (index) => {
-        console.log("here is calculator............................................................")
         setResult(content.item_charge * 1.35 * index);
     };
     const handleDuration = (index) => {
@@ -134,7 +133,8 @@ const CreateBooking = ({ setScreenNumber, setNewBooking}) => {
             "email":email,
             "phone_number":phone,
             "driving_license":driving ,
-            "result":result,    
+            "result":result, 
+            "item_name":Id.item_name  
         }
         setNewBooking(Info)
         setScreenNumber(2);
@@ -144,10 +144,15 @@ const CreateBooking = ({ setScreenNumber, setNewBooking}) => {
        let tempId = Id && Id.objectID
         tempId && getdisabledates(tempId, content)
             .then((data) => {
-                setDisabledates(data)
+                if (data.length > 0) {
+                    
+                    setDisabledates(data)
+                }
+                else {
+                    setDisabledates([new Date()])
+                }
             })
     },[Id && content]);
-
 
     return (
         <section className="overflow-auto createbooking">

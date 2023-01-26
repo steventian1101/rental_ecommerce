@@ -18,7 +18,7 @@ import { collection, addDoc, query, orderBy, where, getDocs } from "firebase/fir
 import { async } from "@firebase/util";
 import Link from "next/link"
 
-export default function Header({login, setLogin}) {
+export default function Header({ login, setLogin }) {
   const listCollectionRef = collection(db, "users")
   const { authenticated, userCredential, logOut } = useAuth();
   const [sideBar, setSideBar] = useState(0);
@@ -30,13 +30,12 @@ export default function Header({login, setLogin}) {
   const [dropbox, setDropbox] = useState(false);
   const [tempdata, setTempdata] = useState([]);
   let i = 0;
-  useEffect(()=>{
-      if(login) 
-      {
-        setSideBar(1);
-        setLogin(false);
-      }
-  },[login])
+  useEffect(() => {
+    if (login) {
+      setSideBar(1);
+      setLogin(false);
+    }
+  }, [login])
   useEffect(() => {
     i++;
     let temp = [];
@@ -47,27 +46,27 @@ export default function Header({login, setLogin}) {
     }
     if (sideBar == 1) {
       setDrawbackground(true);
-      temp.push(<Login setSideBar={setSideBar} key={i}/>);
+      temp.push(<Login setSideBar={setSideBar} key={i} />);
       setDrawSidebar(temp);
     }
     if (sideBar == 2) {
       setDrawbackground(true);
-      temp.push(<Register sideBar={sideBar} setSideBar={setSideBar} key={i}/>);
+      temp.push(<Register sideBar={sideBar} setSideBar={setSideBar} key={i} />);
       setDrawSidebar(temp);
     }
     if (sideBar == 3) {
       setDrawbackground(true);
-      temp.push(<ResetPassword sideBar={sideBar} setSideBar={setSideBar} key={i}/>);
+      temp.push(<ResetPassword sideBar={sideBar} setSideBar={setSideBar} key={i} />);
       setDrawSidebar(temp);
     }
     if (sideBar == 4) {
       setDrawbackground(true);
-      temp.push(<Notification sideBar={sideBar} setSideBar={setSideBar} key={i}/>);
+      temp.push(<Notification sideBar={sideBar} setSideBar={setSideBar} key={i} />);
       setDrawSidebar(temp);
     }
     if (sideBar == 5) {
       setDrawbackground(true);
-      temp.push(<InputProfileInfo sideBar={sideBar} setSideBar={setSideBar} key={i}/>);
+      temp.push(<InputProfileInfo sideBar={sideBar} setSideBar={setSideBar} key={i} />);
       setDrawSidebar(temp);
     }
   }, [sideBar])
@@ -97,9 +96,6 @@ export default function Header({login, setLogin}) {
     setDropbox(false)
   }
   useEffect(() => {
-    console.log(dropbox)
-  }, [dropbox])
-  useEffect(() => {
     tempdata && tempdata.length > 0 && setProfileImg(tempdata[0].profile_img)
     tempdata && tempdata.length > 0 && setNickname(tempdata[0].nick_name)
   }, [tempdata])
@@ -109,10 +105,12 @@ export default function Header({login, setLogin}) {
         drawbackground ? <SidebarBack /> : <></>
       }
       <section className='z-50 flex flex-row items-end justify-between navbar'>
-        <div className='flex flex-row items-center' style={{height:"40px"}}>
-          <img src="/logo/logo.svg" className='mr-2.5 w-full' />
-          <p className='text-white logo-title'>Sdrop.</p>
-        </div>
+        <Link href='/'>
+          <div className='flex flex-row items-center' style={{ height: "40px" }}>
+            <img src="/logo/logo.svg" className='mr-2.5 w-full' />
+            <p className='text-white logo-title'>Sdrop.</p>
+          </div>
+        </Link>
         {/* <div className='flex flex-row'>
           <p className='mx-5 text-white cursor-pointer'>Login</p>
           <p className='text-white cursor-pointer'>Sign Up</p>
@@ -152,7 +150,7 @@ export default function Header({login, setLogin}) {
             </div> */}
             <div className="flex items-center justify-center w-10 h-10 mx-2.5" style={{ position: "relative" }} onMouseEnter={() => { handleEnter() }}>
               {
-                profileImg != "" ?<Link href="/profile"> <img src={profileImg} style={{ width: "100%", objectFit: "cover", borderRadius: "100px" }} className="w-10 h-10 overflow-hidden" /></Link> :
+                profileImg != "" ? <Link href="/profile"> <img src={profileImg} style={{ width: "100%", objectFit: "cover", borderRadius: "100px" }} className="w-10 h-10 overflow-hidden" /></Link> :
                   <div style={{ width: "100%", objectFit: "cover", borderRadius: "100px" }} className="w-10 h-10 overflow-hidden detail-loading"></div>
               }
               {

@@ -35,8 +35,7 @@ const InputProfileInfo = ({ setSideBar }) => {
             setFirstname(any)
             setFirstnamevalidation(true);
         }
-        else {
-            console.log("incorrect")
+        else { 
             setFirstnamevalidation(false)
         }
     }
@@ -47,7 +46,6 @@ const InputProfileInfo = ({ setSideBar }) => {
             setLastnamevalidation(true);
         }
         else {
-            console.log("incorrect")
             setLastnamevalidation(false)
         }
     }
@@ -57,7 +55,6 @@ const InputProfileInfo = ({ setSideBar }) => {
             setNicknamevalidation(true);
         }
         else {
-            console.log("incorrect")
             setNicknamevalidation(false)
         }
     }
@@ -81,8 +78,7 @@ const InputProfileInfo = ({ setSideBar }) => {
         }
     }
     const websiteValidation = (any) =>{
-        // console.log(any);
-        // return;
+        
         if(any.indexOf(".") > 0){
             setWebsitevalidation(true);
             setWebsite(any);
@@ -100,17 +96,15 @@ const InputProfileInfo = ({ setSideBar }) => {
     const handleComplete = () => {
         setLoading(true);
         if (file  && firstnamevalidation && lastnamevalidation && nicknameValidation && phonevalidation && addressvalidation && websitevalidation && email!= "") {
-            console.log(file)
+           
             const storageRef = ref(storage, `images/${email + ".jpg"}`);
             const metadata = {
                 contentType: 'image/jpeg'
             };
             
             uploadBytes(storageRef, file).then((snapshot) => {
-                console.log('Uploaded a blob or file!');
                 getDownloadURL(storageRef).then((downloadUrl) => {
                     setImgurl(downloadUrl);
-                    console.log(downloadUrl);
                 });
             })
         }
@@ -124,7 +118,6 @@ const InputProfileInfo = ({ setSideBar }) => {
        getDetail(userCredential.email)
     },[userCredential])
     useEffect(() => {
-        console.log(imgurl);
         email != "" && getDetailAndUpdate(email);
         // addDoc(listCollectionRef, { user_email: email, first_name: firstname, profile_img:imgurl, last_name:lastname, nick_name:nickname, user_phone:phone, user_address:address }).then(response => {
         //   createUser(auth, email, password);
@@ -141,11 +134,9 @@ const InputProfileInfo = ({ setSideBar }) => {
         querySnapshot.forEach((doc) => {
             temp.push(doc.data());
         });
-        console.log(temp)
         setTempdata(temp);
     }
      const getDetailAndUpdate = async (email) =>{
-        console.log(email)
         let docID;
         const listCollectionRef = collection(db, 'users');
         let q = query(listCollectionRef, where("user_email", "==", email));

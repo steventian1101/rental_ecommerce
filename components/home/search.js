@@ -16,6 +16,8 @@ const Search = ({searchText, setLogin}) => {
         process.env.NEXT_PUBLIC_ALGOLIA_SEARCH_API_KEY
     );
     useEffect(()=>{
+        setDetail(null);
+        setSideBar(null);
         itemID && itemID.length > 0 && drawDetail(itemID);
     },[itemID]);
     const drawDetail = () =>{

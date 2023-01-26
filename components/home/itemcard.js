@@ -16,7 +16,7 @@ const Itemcard = ({ details, setItemID }) => {
     }
     useEffect(() => {
         details.rental_owner && getOwnerDetail(details.rental_owner);
-    }, [])
+    }, [details])
     return (
         <>{
             details && ownerData && ownerData.length > 0?<div className="relative ownerItemcard">
