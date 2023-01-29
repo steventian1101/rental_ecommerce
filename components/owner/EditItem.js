@@ -15,6 +15,7 @@ import Loading from "../auth/loading";
 import { useRouter } from "next/router";
 import EditItemImg from "./editItemImg";
 import EditChargeRate from "./editChargeRate";
+import back from "../../utils/handleBack";
 const EditItem = ({ query }) => {
     const [sideBar, setSideBar] = useState(0);
     const [drawSidebar, setDrawSidebar] = useState([]);
@@ -190,7 +191,7 @@ const EditItem = ({ query }) => {
                 loading ? <Loading /> : <></>
             }
             <div className="flex items-center justify-start w-full">
-                <div style={{ height: "70px" }} className="flex flex-row items-center cursor-pointer"><FontAwesomeIcon icon={faArrowLeftLong} className="text-2xl text-white" /></div>
+                <div style={{ height: "70px" }} className="flex flex-row items-center cursor-pointer" onClick={back}><FontAwesomeIcon icon={faArrowLeftLong} className="text-2xl text-white" /></div>
             </div>
             <p className="loginText settingTitle">EDIT AN ITEM</p>
             <p className="loginDetail" style={{ marginBottom: "30px" }}>Complete the sections below to edit your item to the platform.</p>

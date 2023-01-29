@@ -8,6 +8,7 @@ import Link from "next/link";
 import RentalOwnerItem from "./rentalOwnerItem";
 import Detail from "../home/detail";
 import SidebarBack from "../sidebarBack";
+import { getRatingAndReviewNumbersForOwner } from "../../utils/getRatingAndReviewsNumber";
 const RentalOwner = ({ id, setLogin }) => {
     const { userCredential } = useAuth();
     const [ownerImg, setOwnerImg] = useState('');
@@ -19,6 +20,7 @@ const RentalOwner = ({ id, setLogin }) => {
     const [detail, setDetail] = useState([]);
     const [sideBar, setSideBar] = useState([]);
     const [payment, setPayment] = useState(null);
+    const [reviewNumbers, setReviewNumbers] = useState(null);
     useEffect(() => {
         setDetail(null);
         setSideBar(null);
@@ -57,6 +59,12 @@ const RentalOwner = ({ id, setLogin }) => {
         });
         setItems(temp);
     }
+    useEffect(()=>{
+        tempData && tempData.length > 0 &&  getRatingAndReviewNumbersForOwner(tempData[0]["user_email"]).then((result)=>{
+           setReviewNumbers(result)
+        }
+        )
+    },[tempData])
     return (
         <section className="w-full my-20 bg-black owner">
             {
@@ -80,7 +88,12 @@ const RentalOwner = ({ id, setLogin }) => {
                 <button className="flex flex-row ownerMessage"><img src="/logo/message.svg" className="fontIcon" /><p style={{ fontSize: "15px", color: "white" }}>Message Us</p></button>
                 <Link href={tempData && tempData.length > 0 ? "https://" + tempData[0]["website"] : ""}>
                     <button className="flex flex-row ownerMessage ownerWebsite"><img src="/logo/website.svg" className="fontIcon" /><p style={{ fontSize: "15px", color: "white" }}>Website</p></button> </Link>
-                <button className="ownerRating">{tempData && tempData.length > 0 ? tempData[0].item_rating : "0"} star(0 reviews)</button>
+                {
+                    reviewNumbers && reviewNumbers.reviewNumber != 0 && <button className="ownerRating">{
+                        reviewNumbers.rating +" Star (" + reviewNumbers.reviewNumber+" Reviews)"
+                    }</button>
+                }
+              {/* {  <button className="ownerRating">{tempData && tempData.length > 0 ? tempData[0].item_rating : "0"} star(0 reviews)</button>} */}
 
 
             </div>

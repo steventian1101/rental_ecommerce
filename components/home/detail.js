@@ -23,6 +23,8 @@ import MobileReserve from "./mobileReserve";
 import InputDurationForDesktop from "./inputDurationForDesktop";
 import InputDurationForMobile from "./inputDurationForMobile";
 import MobileSuccessNotification from "./mobileSuccessNotification";
+import getRatingAndReviewNumbers from "../../utils/getRatingAndReviewsNumber";
+import { getRatingAndReviewNumbersForOwner } from "../../utils/getRatingAndReviewsNumber";
 import date from "date-and-time"
 
 const Detail = ({ id, setSideBar, setDetail, setItemID, setLogin }) => {
@@ -51,6 +53,8 @@ const Detail = ({ id, setSideBar, setDetail, setItemID, setLogin }) => {
     const [updateMobileSideBar, setUpdateMobileSidebar] = useState(false);
     const [tempDuration, setTempDuration] = useState(null)
     const detailRef = useRef();
+    const [reviewNumbers, setReviewNumbers] = useState(null);
+    const [ownerReview, setOwnerReview] = useState(null);
     const month = [
         "January",
         "February",
@@ -131,6 +135,9 @@ const Detail = ({ id, setSideBar, setDetail, setItemID, setLogin }) => {
                 temp.push(tempdata);
             }
         });
+        for(let i in temp){
+
+        }
         setReviews(temp);
     }
     const getUserDetail = async (email) => {
@@ -182,6 +189,9 @@ const Detail = ({ id, setSideBar, setDetail, setItemID, setLogin }) => {
         id && getDetail(id);
         id && getReviews(id);
         userCredential.email && getUserDetail(userCredential.email);
+        id && getRatingAndReviewNumbers(id).then((result)=>{
+            setReviewNumbers(result)
+        });
     }, [id])
     useEffect(() => {
         content && setViewnumber(Number(content["item_views"]) + 1);
@@ -235,6 +245,9 @@ const Detail = ({ id, setSideBar, setDetail, setItemID, setLogin }) => {
     }, [content]);
     useEffect(() => {
         ownerData && getSimilarItems(ownerData[0]["user_email"]);
+        ownerData && getRatingAndReviewNumbersForOwner(ownerData[0]["user_email"]).then((result)=>{
+            setOwnerReview(result)
+        })
     }, [ownerData]);
     const getSimilarItems = async (email) => {
         let temp = [];
@@ -284,7 +297,7 @@ const Detail = ({ id, setSideBar, setDetail, setItemID, setLogin }) => {
                     <div className="flex flex-col flex-wrap detailpart">
                         <p className="text-white detailTitle">{content && content["item_name"]}</p>
                         <div className="flex flex-row flex-wrap">
-                            <p className="text-white font-15 mb-2.5 flex flex-row justify-center items-center" style={{ borderRight: "solid 1px #ffffff4d", padding: "0px 10px 0px 0px", marginRight: "10px" }}><FontAwesomeIcon icon={faStar} className="mr-2.5 text-sm text-white" />{content && content["item_rating"] + ' - ' + content["item_reviews"].length + " Reviews"}</p>
+                            <p className="text-white font-15 mb-2.5 flex flex-row justify-center items-center" style={{ borderRight: "solid 1px #ffffff4d", padding: "0px 10px 0px 0px", marginRight: "10px" }}><FontAwesomeIcon icon={faStar} className="mr-2.5 text-sm text-white" />{reviewNumbers && reviewNumbers.reviewNumber != "0" && reviewNumbers["rating"] + ' - ' + reviewNumbers["reviewNumber"] + " Reviews"}</p>
                             <p className="text-white font-15 mb-2.5" style={{ borderRight: "solid 1px #ffffff4d", padding: "0px 10px 0px 0px", marginRight: "10px" }}>20 mins away</p>
                             <p className="text-white font-15 mb-2.5 flex flex-row justify-center items-center" style={{ borderRight: "solid 0px #ffffff4d", padding: "0px 10px 0px 0px", marginRight: "10px" }}><FontAwesomeIcon icon={faEye} className="mr-2.5 text-sm text-white" />{content && (Number(content["item_views"]) + 1) + " views "}</p>
                         </div>
@@ -296,15 +309,21 @@ const Detail = ({ id, setSideBar, setDetail, setItemID, setLogin }) => {
                             })}
                         </div>
                         <div className="line"></div>
-                        <div className="flex flex-col mb-2.5">
-                            <p className="w-full text-white font-15 bold" style={{ marginBottom: "15px" }}>Reviews {content && "(" + content.item_rating + " | " + content.item_reviews.length + " Reviews)"}</p>
+                        {
+                           reviewNumbers &&  reviewNumbers.reviewNumber != 0 && <><div className="flex flex-col mb-2.5">
+                            <p className="w-full text-white font-15 bold" style={{ marginBottom: "15px" }}>Reviews  <span className="text-white font-15">{
+                                 "("+ reviewNumbers.rating + " Star  |  " + reviewNumbers.reviewNumber +" Reviews)"
+                            }</span></p>
                             <div className="my-5">
-                                <DetailReview src={"https://uploads-ssl.webflow.com/5efdc8a4340de947404995b4/638de93ece20b775d2dc039f_6%20Haircut%20Trends%20for%20Late%202021.jpg"} username={"Hannah Loss"} date={"March 2023"} content={"Popped in for a coffee and cake. Coffee and banana bread was great, service was good and the ambience is a lot nicer than many of the other open air cafe's"} />
-                                <div className="h-8"></div>
-                                <DetailReview src={"https://uploads-ssl.webflow.com/5efdc8a4340de947404995b4/638de93ece20b775d2dc039f_6%20Haircut%20Trends%20for%20Late%202021.jpg"} username={"Hannah Loss"} date={"March 2023"} content={"Popped in for a coffee and cake. Coffee and banana bread was great, service was good and the ambience is a lot nicer than many of the other open air cafe's"} />
+                                {
+                                    reviews && reviews.length > 0 && reviews.map((review,index)=>(
+                                      review.owner_feedback &&  <DetailReview useremail = {review.customer_email} date={review["createdTime"]} content={review["owner_feedback"]}/>
+                                    ))
+                                }
                             </div>
                         </div>
-                        <div className="line"></div>
+                        <div className="line"></div></>
+                        }
                         <div className="flex flex-col mb-2.5">
                             <p className="w-full text-white font-15 bold" style={{ marginBottom: "15px" }}>Item Location</p>
                             <p className="flex flex-row items-center justify-start text-white font-15"><FontAwesomeIcon icon={faLocationDot} className="mr-2.5 text-sm text-white" /> {content && content["item_location"]}</p>

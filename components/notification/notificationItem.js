@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react"
 import timediff from "timediff";
-import { serverTimestamp } from "firebase/firestore";
 import Link from "next/link";
+import { updateDoc, doc} from "firebase/firestore";
+import { db } from "../../lib/initFirebase";
+import { useRouter } from "next/router";
 const NotificationItem = ({notification}) =>{
     const [background, setBackground] = useState("#ffffff");
     const [time, setTime] = useState(null);
+    const router = useRouter();
     useEffect(()=>{
        notification && getTime();
        notification && getBackground();
@@ -38,10 +41,24 @@ const NotificationItem = ({notification}) =>{
             setBackground("#802df5");
         }
     }
+    const handleClick = () =>{
+        console.log("I have already showned.")
+        const docRef = doc(db, "notifications", notification.objectID);
+        const newdata = {
+            show: true,
+        };
+        updateDoc(docRef, newdata)
+            .then(() => {
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+        router.push('/booking');
+        window.location.reload();
+    }
 
        return(
-        <Link href="/booking">
-        <div className="flex flex-row items-start notificationItem">
+        <div className="flex flex-row items-start notificationItem" onClick={handleClick}>
             <div style={{ width:"30px", height:"30px", background:background, borderRadius:"100px", marginRight:"15px"}} className="flex items-center justify-center">
                 <img src='/logo/blacklogo.svg' />
             </div>
@@ -50,7 +67,6 @@ const NotificationItem = ({notification}) =>{
                 <p className="text-white" style={{fontSize:"12px", lingHeight:"15px", opacity:"0.7" }}>Sent {time} ago</p>
             </div>
         </div>
-        </Link>
        )
 }
 export default NotificationItem

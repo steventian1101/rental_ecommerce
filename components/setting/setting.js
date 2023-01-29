@@ -9,6 +9,7 @@ import Location from "./location"
 import { useRouter } from "next/router"
 import Booking from "../booking"
 import NavBarBack from "../navBarBack"
+import back from "../../utils/handleBack"
 const Setting = () => {
     const [sideBar, setSideBar]= useState(0);
     const [drawSidebar, setDrawSidebar] = useState([]);
@@ -45,7 +46,7 @@ const Setting = () => {
         }
         <section className="setting">
             <div className="flex items-center justify-start w-full">
-                <div style={{ height: "70px" }} className="flex flex-row items-center cursor-pointer" onClick={handleBack}><FontAwesomeIcon icon={faArrowLeftLong} className="text-2xl text-white" /></div>
+                <div style={{ height: "70px" }} className="flex flex-row items-center cursor-pointer" onClick={back}><FontAwesomeIcon icon={faArrowLeftLong} className="text-2xl text-white" /></div>
             </div>
             <p className="loginText settingTitle">Settings</p>
             <p className="loginDetail" style={{ marginBottom: "30px" }}>Complete the sections below to add your item to the platform.</p>

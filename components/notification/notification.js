@@ -21,7 +21,8 @@ const Notification = ({sideBar, setSideBar}) => {
             let q  = query(listCollectionRef, where("to", "==", email), where("show","==",false), orderBy("time","desc"));
             const querySnapshot = await getDocs(q);
             querySnapshot.forEach((doc)=>{
-                temp.push(doc.data())
+                var tempobject = Object.assign(doc.data(), { objectID: doc.id })
+                temp.push(tempobject)
             })
             console.log(temp);
             setNotifications(temp);

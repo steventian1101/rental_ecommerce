@@ -13,6 +13,7 @@ import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
 import { useAuth } from "../../context/useAuth";
 import Loading from "../auth/loading";
 import { useRouter } from "next/router";
+import back from "../../utils/handleBack";
 
 const CreateItem = () => {
 
@@ -106,7 +107,7 @@ const CreateItem = () => {
                 loading? <Loading/>:<></>
             }
             <div className="flex items-center justify-start w-full">
-                <div style={{ height: "70px" }} className="flex flex-row items-center cursor-pointer"><FontAwesomeIcon icon={faArrowLeftLong} className="text-2xl text-white" /></div>
+                <div style={{ height: "70px" }} className="flex flex-row items-center cursor-pointer" onClick={back}><FontAwesomeIcon icon={faArrowLeftLong} className="text-2xl text-white" /></div>
             </div>
             <p className="loginText settingTitle">CREATE AN ITEM</p>
             <p className="loginDetail" style={{ marginBottom: "30px" }}>Complete the sections below to add your item to the platform.</p>

@@ -145,9 +145,9 @@ export default function Header({ login, setLogin, search }) {
             <img src="https://uploads-ssl.webflow.com/5efdc8a4340de947404995b4/638de93ece20b775d2dc039f_6%20Haircut%20Trends%20for%20Late%202021.jpg" style={{ width:"100%",objectFit:"cover", borderRadius:"100px"}} className="w-10 h-10 overflow-hidden"/>
           </div>
         </div> */}
-          <div className="flex flex-row">
+          <div className="flex flex-row items-center">
             {
-              search && <div className="flex flex-row w-full">
+              search && <div className="flex flex-row">
               <div className="flex flex-row items-center justify-around mr-0 stickyBarSearch">
                 <FontAwesomeIcon icon={faSearch} className="mx-3 mr-0 text-xl font-thin text-white" />
                 <input type="text" className="w-full p-0.5 mx-2 text-base text-white bg-transparent outline-none mr-0" id="homeSearch" placeholder="e.g.SnowBoards" />
