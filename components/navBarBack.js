@@ -1,7 +1,6 @@
-const SidebarBack = ({ setSideBar, setDetail}) =>{
+const NavBarBack = ({ setSideBar}) =>{
     const handleClick = () =>{
-        setSideBar(<></>);
-        setDetail(<></>)
+        setSideBar(0);
     }
     return (
     <section>
@@ -9,4 +8,4 @@ const SidebarBack = ({ setSideBar, setDetail}) =>{
         </div>
     </section>);
 }
-export default SidebarBack
+export default NavBarBack

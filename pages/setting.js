@@ -3,7 +3,7 @@ import Setting from "../components/setting/setting"
 export default function SettingsPage() {
     return (
       <>
-      <Header/>
+      <Header search={true}/>
       <Setting/>
       </> 
   )

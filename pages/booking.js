@@ -3,7 +3,7 @@ import Header from "../components/navbar"
 export default function BookingPage () {
      return(
         <>
-        <Header/>
+        <Header search={true}/>
         <Booking/>
         </>
      )

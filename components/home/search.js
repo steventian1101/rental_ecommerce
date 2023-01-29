@@ -21,7 +21,7 @@ const Search = ({searchText, setLogin}) => {
         itemID && itemID.length > 0 && drawDetail(itemID);
     },[itemID]);
     const drawDetail = () =>{
-        setSideBar(<SidebarBack/>);
+        setSideBar(<SidebarBack setSideBar={setSideBar} setDetail={setDetail}/>);
         setDetail(<Detail id={itemID} setSideBar= { setSideBar} setDetail={ setDetail} setItemID={ setItemID} setLogin={ setLogin} setPayment={ setPayment}/>)
     }
     return (

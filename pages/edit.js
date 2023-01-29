@@ -5,7 +5,7 @@ export default function EditPage () {
     const router = useRouter();
      return(
         <>
-        <Header/>
+        <Header search={true}/>
         <EditItem query={router.query}/>
         </>
      )

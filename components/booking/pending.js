@@ -7,7 +7,7 @@ import { faCommentDots } from "@fortawesome/free-solid-svg-icons";
 import { useAuth } from "../../context/useAuth";
 import DetailCarousel from "../home/detailCarousel";
 import { useState, useEffect } from "react";
-import { collection, serverTimestamp, doc, getDoc, updateDoc, deleteField, getDocs, query, where, deleteDoc } from "firebase/firestore";
+import { collection, serverTimestamp, doc, updateDoc, deleteDoc, addDoc } from "firebase/firestore";
 import { db } from "../../lib/initFirebase";
 const month = {
     "0": "January",
@@ -51,7 +51,7 @@ const time = [
 ];
 const duration = [1, 2, 3];
 const Pending = ({ setSideBar, id, ownerdata, customerdata, itemdata, booking, setLoading }) => {
-    console.log(id, ownerdata, customerdata)
+    console.log(id, ownerdata, customerdata, itemdata)
     const [groupbuttons, setGroupbuttons] = useState(false);
     const { userCredential } = useAuth();
     useEffect(() => {
@@ -65,10 +65,10 @@ const Pending = ({ setSideBar, id, ownerdata, customerdata, itemdata, booking, s
             setGroupbuttons(false);
         }
     }
-    const handleAccept = () =>{
+    const handleAccept = () => {
         const docRef = doc(db, "bookings", booking.booking_id);
         const newdata = {
-            status:1
+            status: 1
         };
         setLoading(true);
         updateDoc(docRef, newdata)
@@ -79,13 +79,34 @@ const Pending = ({ setSideBar, id, ownerdata, customerdata, itemdata, booking, s
             .catch((error) => {
                 console.log(error);
             });
-        
+        const notificationRef = collection(db, "notifications");
+        addDoc(notificationRef, {
+            to: newBooking.email,
+            notificationContent: userDetail[0].nick_name + " has accepted your booking of " + newBooking["item_name"],
+            show: false,
+            time: serverTimestamp(),
+            status: 2
+        }).then(response => {
+        }).catch(error => {
+            console.log(error)
+        });
+
 
     }
-    const handleDecline = async () =>{
-            setLoading(true)
-            await deleteDoc(doc(db, "bookings", booking.booking_id));
-            window.location.reload();
+    const handleDecline = async () => {
+
+        const notificationRef = collection(db, "notifications");
+        addDoc(notificationRef,{
+                to:booking.customer_email,
+                notificationContent:ownerdata[0]["nick_name"]+" has decliend your bookings of " + itemdata["item_name"],
+                time: serverTimestamp(),
+                show:false,
+                status:0
+        });
+        setLoading(true)
+        await deleteDoc(doc(db, "bookings", booking.booking_id));
+
+        window.location.reload();
     }
     return (
         <section className="overflow-auto bookingpending">
@@ -96,12 +117,12 @@ const Pending = ({ setSideBar, id, ownerdata, customerdata, itemdata, booking, s
                 <DetailCarousel imgArray={itemdata["item_photos"]} />
             </div>
             <div className="line"></div>
-                {
-                    groupbuttons &&  <><div className="flex flex-row"><button className="px-5 mr-2.5 pr-5 text-white flex items-center" style={{ height: "45px", border: "solid 1px #ffffff4d", borderRadius: "8px" }} onClick={()=>{handleAccept()}}><FontAwesomeIcon icon={faCheck} className="text-lg text-white" style={{ marginRight: "5px" }} /><p className="text-white font-15">Accept</p></button>
-                        <button className="px-5 mr-2.5 pr-5 text-white flex items-center" style={{ height: "45px", border: "solid 1px #ffffff4d", borderRadius: "8px" }} onClick={()=>{ handleDecline()}}><FontAwesomeIcon icon={faTimes} className="text-lg text-white" style={{ marginRight: "5px" }} /><p className="text-white font-15">Decline</p></button></div>
-                        <div className="line"></div></>
-                }
-            
+            {
+                groupbuttons && <><div className="flex flex-row"><button className="px-5 mr-2.5 pr-5 text-white flex items-center" style={{ height: "45px", border: "solid 1px #ffffff4d", borderRadius: "8px" }} onClick={() => { handleAccept() }}><FontAwesomeIcon icon={faCheck} className="text-lg text-white" style={{ marginRight: "5px" }} /><p className="text-white font-15">Accept</p></button>
+                    <button className="px-5 mr-2.5 pr-5 text-white flex items-center" style={{ height: "45px", border: "solid 1px #ffffff4d", borderRadius: "8px" }} onClick={() => { handleDecline() }}><FontAwesomeIcon icon={faTimes} className="text-lg text-white" style={{ marginRight: "5px" }} /><p className="text-white font-15">Decline</p></button></div>
+                    <div className="line"></div></>
+            }
+
             <div>
                 <p className="mb-5 text-white font-18 bold">General Info</p>
                 <div style={{ marginBottom: "15px" }}>
@@ -146,21 +167,21 @@ const Pending = ({ setSideBar, id, ownerdata, customerdata, itemdata, booking, s
             </div>
             <div className="line"></div>
             <div>
-                <p className="mb-5 text-white font-18 bold">Customer's Info</p>
-                <div style={{ marginBottom:"15px"}}>
+                <p className="mb-5 text-white font-18 bold">Potential Payment</p>
+                <div style={{ marginBottom: "15px" }}>
                     <p className="text-white font-15">Total Charge:</p>
-                    <p className="font-20" style={{color:"#e39457", marginBottom:"30px"}}>${Number(booking.result).toFixed(2)} AUD</p>
+                    <p className="font-20" style={{ color: "#e39457", marginBottom: "30px" }}>${Number(booking.result).toFixed(2)} AUD</p>
                     <div className="flex flex-row justify-between marginTop-5">
-                        <p className="text-white ">${Number(itemdata.item_charge).toFixed(2)} &times; { Math.abs(booking.result/(1.35*itemdata.item_charge))} {itemdata.item_charge_rate}</p>
-                        <p className="text-white ">${Number(booking.result/1.35).toFixed(2)}</p>
+                        <p className="text-white ">${Number(itemdata.item_charge).toFixed(2)} &times; {Math.abs(booking.result / (1.35 * itemdata.item_charge))} {itemdata.item_charge_rate}</p>
+                        <p className="text-white ">${Number(booking.result / 1.35).toFixed(2)}</p>
                     </div>
                     <div className="flex flex-row justify-between marginTop-5">
                         <p className="text-white">Service Fee</p>
-                        <p className="text-white">${Number((booking.result/1.35)*0.2).toFixed(2)}</p>
+                        <p className="text-white">${Number((booking.result / 1.35) * 0.2).toFixed(2)}</p>
                     </div>
                     <div className="flex flex-row justify-between marginTop-5">
                         <p className="text-white">GST</p>
-                        <p className="text-white">${Number((booking.result/1.35)*0.15).toFixed(2)}</p>
+                        <p className="text-white">${Number((booking.result / 1.35) * 0.15).toFixed(2)}</p>
                     </div>
                 </div>
 

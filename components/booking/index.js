@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import CreateBooking from "./createBooking"
 import Pending from "./pending"
 import AddPayment from "./addPayment"
-import SidebarBack from "../sidebarBack"
+import BookingBack from "./sidebarBack"
 import { collection, addDoc, query, orderBy, where, getDocs, serverTimestamp } from "firebase/firestore";
 import { db } from "../../lib/initFirebase"
 import Loading from "../auth/loading"
@@ -66,7 +66,7 @@ const Booking = () => {
     const getallinboundedbooking  = async (email) =>{
         let temp = [];
         const listCollectionRef = collection(db, "bookings");
-        let q = query(listCollectionRef, where("owner_email", "==", email));
+        let q = query(listCollectionRef, where("owner_email", "==", email), orderBy("status","asc"), orderBy("createdTime","asc"));
         const querysnapshot =  await getDocs(q);
         querysnapshot.forEach((doc)=>{
             var tempobject = Object.assign(doc.data(), { booking_id: doc.id })
@@ -112,7 +112,7 @@ const Booking = () => {
     return (
         <>
             {
-                sideBar != null && <SidebarBack/>
+                sideBar != null && <BookingBack setSideBar={setSideBar}/>
             }
             {
                 sideBar

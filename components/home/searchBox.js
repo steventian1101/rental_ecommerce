@@ -1,8 +1,20 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { useSearchBox } from "react-instantsearch-hooks-web";
-import { useCallback, useState } from "react";
+import { useCallback, useState} from "react";
 import { useEffect } from "react";
+const useDebounce = (func, milliseconds) => {
+    const time = milliseconds || 400
+    let timer
+
+    return event => {
+        if (timer) {
+            clearTimeout(timer)
+        }
+
+        timer = setTimeout(func, time, event)
+    }
+}
 export default function SearchBox({ searchText }) {
     const [text, setText] = useState(null);
     const memoizedSearch = useCallback((query, search) => {
@@ -11,13 +23,14 @@ export default function SearchBox({ searchText }) {
     const { refine } = useSearchBox({
         queryHook: memoizedSearch,
     });
-    const handleChange = (event) => {
-        refine(event.target.value);
-    };
+    const handleChange = useDebounce((event) => {
+        refine(event.target.value)
+    },500)
     useEffect(()=>{
          refine(searchText)
          setText(searchText)
     },[text])
+   
     
     
 

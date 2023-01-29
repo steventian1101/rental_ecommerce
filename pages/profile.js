@@ -4,7 +4,7 @@ import Owner from "../components/owner/owner"
 export default function ProfilePage () {
     return(
         <>
-        <Header/>
+        <Header search={true}/>
          <Owner/>
         </>
     )

@@ -152,7 +152,7 @@ const CreateBooking = ({ setScreenNumber, setNewBooking}) => {
                     setDisabledates([new Date()])
                 }
             })
-    },[Id && content]);
+    },[content]);
 
     return (
         <section className="overflow-auto createbooking">
@@ -165,10 +165,17 @@ const CreateBooking = ({ setScreenNumber, setNewBooking}) => {
             <InstantItemNameSearch setId={setId} />
             <div className="my-2.5">
                 <p className="font-15">Start Date</p>
+                {
+                    content? <div className="relative flex flex-row items-center justify-between py-2" style={{ borderBottom: "solid 1px #ffffff1a" }} onClick={() => { setCalendarDisplay(true) }}>
+                    <p className="text-white font-15">{date && date.getDate() + " " + month[`${date.getMonth()}`] + ", " + date.getFullYear()}</p>
+                    <FontAwesomeIcon icon={faCalendar} className="text-lg text-white" />
+                </div>:<div className="flex w-full h-8 detail-loading"></div>
+                }
+                {/* <div className="flex w-full h-8 detail-loading"></div>
                 <div className="relative flex flex-row items-center justify-between py-2" style={{ borderBottom: "solid 1px #ffffff1a" }} onClick={() => { setCalendarDisplay(true) }}>
                     <p className="text-white font-15">{date && date.getDate() + " " + month[`${date.getMonth()}`] + ", " + date.getFullYear()}</p>
                     <FontAwesomeIcon icon={faCalendar} className="text-lg text-white" />
-                </div>
+                </div> */}
                 {
                     calendarDisplay && <div className="w-full top-8 ">
                         <Calendar onChange={setValue} value={value} tileDisabled={({ date, view }) =>
@@ -183,10 +190,13 @@ const CreateBooking = ({ setScreenNumber, setNewBooking}) => {
             </div>
             <div className="my-2.5">
                 <p className="font-15 ">Start Time</p>
-                <div className="relative flex flex-row items-center justify-between py-2" style={{ borderBottom: "solid 1px #ffffff1a" }} onClick={() => { setDisplayTimetable(true) }}>
+                {
+                    content ?<div className="relative flex flex-row items-center justify-between py-2" style={{ borderBottom: "solid 1px #ffffff1a" }} onClick={() => { setDisplayTimetable(true) }}>
                     <p className="text-white font-15">{time[startTime]}</p>
                     <FontAwesomeIcon icon={faClock} className="text-lg text-white" />
-                </div>
+                </div>:<div className="flex w-full h-8 detail-loading"></div>
+                }
+                
                 {
                     displayTimetable && <div className="flex flex-col bg-white" style={{ background: "#ffffff1a" }}>
                         {
@@ -207,9 +217,14 @@ const CreateBooking = ({ setScreenNumber, setNewBooking}) => {
                     </div>
                 </div> :<div className="my-2.5">
                     <p className="font-15 ">Duration</p>
-                    <div className="relative flex flex-row items-center justify-between py-2" style={{ borderBottom: "solid 1px #ffffff1a" }} onClick={() => { setDisplayDuration(true) }}>
+                    {
+                        content ?<div className="relative flex flex-row items-center justify-between py-2" style={{ borderBottom: "solid 1px #ffffff1a" }} onClick={() => { setDisplayDuration(true) }}>
                         <input type="text" className="text-white bg-transparent outline-none" style={{ border: "solid 0px black" }} defaultValue="0" onChange={(e) => { handleDuration(e.target.value) }} />
-                    </div>
+                    </div> :<div className="flex w-full h-8 detail-loading"></div>
+                    }
+                    {/* <div className="relative flex flex-row items-center justify-between py-2" style={{ borderBottom: "solid 1px #ffffff1a" }} onClick={() => { setDisplayDuration(true) }}>
+                        <input type="text" className="text-white bg-transparent outline-none" style={{ border: "solid 0px black" }} defaultValue="0" onChange={(e) => { handleDuration(e.target.value) }} />
+                    </div> */}
                 </div>
             }
             <div className="line"></div>

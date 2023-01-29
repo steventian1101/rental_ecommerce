@@ -2,6 +2,7 @@ import { query, where, getDocs, collection } from "firebase/firestore";
 import { db } from "../../lib/initFirebase";
 import { useState, useEffect } from "react";
 import CardCarousel from "./cardCarousel";
+import Link from "next/link";
 const Itemcard = ({ details, setItemID }) => {
     const [ownerData, setOwnerData] = useState(null);
     const getOwnerDetail = async (email) => {
@@ -22,7 +23,7 @@ const Itemcard = ({ details, setItemID }) => {
             details && ownerData && ownerData.length > 0?<div className="relative ownerItemcard">
             <CardCarousel imgArray = { details.item_photos} id={details.objectID} setItemID={setItemID}/>
             <p className="text-white itemcardname overflow-ellipsis">{ details.item_name}</p>
-            <p className="itemcardownernameandprice">{ ownerData && ownerData.length > 0 && ownerData[0]["nick_name"]}</p>
+            <Link href={`/rentalOwner?id=${ownerData[0]["nick_name"]}`}><p className="underline itemcardownernameandprice">{ ownerData && ownerData.length > 0 && ownerData[0]["nick_name"]}</p></Link>
             <p className="itemcardownernameandprice mb-2.5">Min. { "$"+Number(details["item_charge"]).toFixed(2)+"/"+details.item_charge_rate}</p>
         </div>:<div className="ownerItemcard">
             <div className="carousel">

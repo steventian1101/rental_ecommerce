@@ -26,8 +26,7 @@ import MobileSuccessNotification from "./mobileSuccessNotification";
 import date from "date-and-time"
 
 const Detail = ({ id, setSideBar, setDetail, setItemID, setLogin }) => {
-
-
+    console.log("here", id)
     const [content, setContent] = useState(null);
     const [viewnumber, setViewnumber] = useState(null);
     const [owner, setOwner] = useState(null);
@@ -147,7 +146,8 @@ const Detail = ({ id, setSideBar, setDetail, setItemID, setLogin }) => {
     }
     const handleReserve = () => {
         if(result != 0)
-        {    const notificationRef = collection(db,"notifications");
+        {    
+            const notificationRef = collection(db,"notifications");
             addDoc(notificationRef, { 
                 to:ownerData[0].user_email,
                 notificationContent:userDetail[0].first_name + " " + userDetail[0].last_name +" has requested to rent your " + content["item_name"],
@@ -173,6 +173,9 @@ const Detail = ({ id, setSideBar, setDetail, setItemID, setLogin }) => {
     const handlefinish = () => {
         setReserve(true)
     }
+    useEffect(()=>{
+     setDisabledates(new Date())
+    },[])
     useEffect(() => {
         detailRef.current.scrollTo({ top: 0, behavior: 'smooth' });
         setContent(null);
@@ -311,7 +314,7 @@ const Detail = ({ id, setSideBar, setDetail, setItemID, setLogin }) => {
                         {
                             reserve ? <div className="stickyReserve">
                                 <p className="text-lg text-white overflow-ellipsis bold itemname">{content && content["item_name"]}</p>
-                                <p className="text-white font-15 mb-2.5">{ownerData && ownerData.length > 0 && ownerData[0]["nick_name"]}</p>
+                                <Link href={`/rentalOwner?id=${ownerData && ownerData.length > 0 &&  ownerData[0]["nick_name"]}`}><p className="text-white font-15 mb-2.5 underline">{ownerData && ownerData.length > 0 && ownerData[0]["nick_name"]}</p></Link>
                                 {
                                     userCredential.email ? <div>
                                         <div style={{ marginTop: "10px", marginBottom: "20px", height: "1px", background: "#ffffff1a" }}></div>
@@ -420,7 +423,7 @@ const Detail = ({ id, setSideBar, setDetail, setItemID, setLogin }) => {
                             <img src={ownerData && ownerData[0]["profile_img"]} style={{ height: "50px", width: "50px", marginRight: "15px", borderRadius: "100px" }} className="object-cover " />
                         </div>
                         <div className="flex flex-col">
-                            <p className="text-white font-18 bold">{ownerData && ownerData[0].nick_name}</p>
+                        <Link href={`/rentalOwner?id=${ownerData && ownerData.length > 0 && ownerData[0]["nick_name"]}`}><p className="text-white underline font-18 bold">{ownerData && ownerData[0].nick_name}</p></Link>
                             <p className="text-white">4.97 Google Ratings (52)</p>
                         </div>
                     </div>
@@ -432,7 +435,7 @@ const Detail = ({ id, setSideBar, setDetail, setItemID, setLogin }) => {
                         }
                     </div>
                 </div>
-                <div className="fixed bottom-0 left-0 flex items-center justify-between w-full h-20 bg-black detailsticky">
+                <div className="fixed bottom-0 left-0 flex items-center justify-between w-full h-20 bg-black detailsticky" style={{ zIndex:"10002"}}>
                     <div className="flex flex-col">
                         <div className="flex flex-row items-center" onClick={() => { handleUpdateSidebar()}}>
                             <p className="flex flex-row items-center text-white underline bg-black cursor-pointer font-14">{startdate.getDate() + " " + month[startdate.getMonth()] + "-" + enddate.getDate() + " " + month[enddate.getMonth()]}</p>

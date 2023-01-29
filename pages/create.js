@@ -3,7 +3,7 @@ import CreateItem from "../components/owner/createItem"
 export default function CreatePage () {
      return(
         <>
-        <Header/>
+        <Header search={true}/>
         <CreateItem/>
         </>
      )

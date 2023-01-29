@@ -154,7 +154,7 @@ const Complete = ({ setSideBar, id, ownerdata, customerdata, itemdata, booking }
             </div>
             <div className="line"></div>
             <div>
-                <p className="mb-5 text-white font-18 bold">Customer's Info</p>
+                <p className="mb-5 text-white font-18 bold">Potential Payment</p>
                 <div style={{ marginBottom: "15px" }}>
                     <p className="text-white font-15">Total Charge:</p>
                     <p className="font-20" style={{ color: "#e39457", marginBottom: "30px" }}>${Number(booking.result).toFixed(2)} AUD</p>
