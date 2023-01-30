@@ -42,10 +42,8 @@ const CreateItem = () => {
                 contentType: 'image/jpeg'
             };
             uploadBytes(storageRef, profileImgs[i]).then((snapshot) => {
-                console.log('Uploaded a blob or file!');
                 getDownloadURL(storageRef).then((downloadUrl) => {  
-                    j++;                 
-                    console.log(j);
+                    j++;    
                     temp.push(downloadUrl);
                     setImgArray(temp);
                     if(j == profileImgs.length){
@@ -58,7 +56,6 @@ const CreateItem = () => {
     }
     const handleSave = () =>{
         addDoc(listCollectionRef, { item_photos:imgArray, item_name:itemInfo.itemname, item_desc:itemInfo.itemDesc,item_location:itemInfo.location, item_search_tags:"", item_charge:chargeRate.price, item_charge_rate:chargeRate.charge_rate_type, item_rating:0, review_number:0, item_reviews:"", item_views:0, insurance:chargeRate.insurance, rental_owner:userCredential.email, createdTime:time }).then(response => {
-            console.log(response);
             router.push("/profile");
         }).catch(error => {
                console.log(error.message)
@@ -88,16 +85,6 @@ const CreateItem = () => {
         setDrawSidebar(temp);
       }
     }, [sideBar]);
-    
-    useEffect(()=>{
-        console.log(chargeRate);
-    },[chargeRate]);
-    useEffect(()=>{
-        console.log(profileImgs);
-    },[profileImgs.length]);
-    useEffect(()=>{
-        console.log(itemInfo);
-    },[itemInfo]);
     useEffect(()=>{
          last && handleSave();
     },[last])

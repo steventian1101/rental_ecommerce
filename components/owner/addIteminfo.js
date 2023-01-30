@@ -21,10 +21,7 @@ const AddItemInfo = ({ setSideBar, setItemInfo}) => {
     const listCollectionRef = collection(db, "users")
 
     const handleComplete = () => {
-        console.log("okay")
-        console.log(location)
         if (itemname != "" && location != "" && itemDesc != "" && itemTag != "") {
-           
             let temp = {
                 "itemname": itemname,
                 "location": location,
@@ -69,9 +66,6 @@ const AddItemInfo = ({ setSideBar, setItemInfo}) => {
             setColor('#f66')
         }
     }
-    useEffect(() => {
-        console.log(itemDesc)
-    }, [itemDesc]);
 
     const getDetail = async (email) => {
         let temp = [];
@@ -79,25 +73,20 @@ const AddItemInfo = ({ setSideBar, setItemInfo}) => {
         const querySnapshot = await getDocs(q);
         querySnapshot.forEach((doc) => {
             let tempArray = doc.data();
-            console.log(tempArray)
             if (typeof (tempArray["user_address"]) == "string") {
-                console.log("okay")
                 temp.push(tempArray["user_address"]);
                 setLocation(temp[0])
             }
             if (typeof (tempArray["user_address"]) == "object") {
-                console.log("object");
                 for (let i in tempArray["user_address"]) {
                     temp.push(tempArray["user_address"][i]);
                 }
                 setLocation(temp[0])
             }
         });
-        console.log(temp)
         setTempdata(temp);
     }
     useEffect(()=>{
-        console.log(userCredential.email)
         userCredential.email && getDetail(userCredential.email);
     },[]);
 

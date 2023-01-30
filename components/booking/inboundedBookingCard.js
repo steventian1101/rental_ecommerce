@@ -136,18 +136,14 @@ const InboundedBookingCard = ({ booking, inbounded, setSideBar, setLoading}) => 
         if (itemdata.item_charge_rate == "week") {
             const start = booking.start_date + " " + time[booking.start_time] + ":" + "00 ";
             const duration = Math.abs(booking.result / (1.35 * itemdata.item_charge));
-            console.log(duration)
             const end = date.addDays(new Date(start), duration * 7)
-            console.log(end)
             setEnddate(end)
             // YYYY/MM/DD HH:mm:ss 
         }
         if (itemdata.item_charge_rate == "month") {
             const start = booking.start_date+ " " + time[booking.start_time] + ":" + "00 ";
             const duration = Math.abs(booking.result / (1.35 * itemdata.item_charge));
-            console.log(duration)
             const end = date.addMonths(new Date(start), duration)
-            console.log(end)
             setEnddate(end)
             // YYYY/MM/DD HH:mm:ss 
         }

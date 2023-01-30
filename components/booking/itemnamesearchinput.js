@@ -32,10 +32,6 @@ const ItemNameSearchInput = ({ setId }) => {
         setId(any);
         setDisplayalgoliaresult(false)
     }
-    useEffect(() => {
-        console.log(hits)
-        //  hits && hits.length > 0 && setDisplayalgoliaresult(true);
-    }, [hits]);
     const handleScroll = (e) => {
         const bottom = e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
         if (bottom) { showMore() }
@@ -48,7 +44,6 @@ const ItemNameSearchInput = ({ setId }) => {
     });
     const add = () => {
         if (((window.innerHeight + window.scrollY) >= document.body.offsetHeight)) {
-            console.log("pka")
             showMore();
         }
     };

@@ -49,7 +49,6 @@ const time = [
 ];
 const duration = [1, 2, 3];
 const Use = ({ setSideBar, id, ownerdata, customerdata, itemdata, booking }) => {
-    console.log(id, ownerdata, customerdata)
     const [groupbuttons, setGroupbuttons] = useState(false);
     const { userCredential } = useAuth();
     useEffect(() => {

@@ -36,10 +36,6 @@ const EditItem = ({ query }) => {
     const [infoUpload, setInfoUpload] = useState(false);
     const [chargeRateUpload, setChargeRateUpload] = useState(false);
     const router = useRouter();
-
-
-    console.log(query)
-
     const handleComplete = () => {
         const temp = [];
         setTime(serverTimestamp());
@@ -53,10 +49,8 @@ const EditItem = ({ query }) => {
                     contentType: 'image/jpeg'
                 };
                 uploadBytes(storageRef, profileImgs[i]).then((snapshot) => {
-                    console.log('Uploaded a blob or file!');
                     getDownloadURL(storageRef).then((downloadUrl) => {
                         j++;
-                        console.log(j);
                         temp.push(downloadUrl);
                         setImgArray(temp);
                         if (j == profileImgs.length) {
@@ -149,16 +143,6 @@ const EditItem = ({ query }) => {
             setDrawSidebar(temp);
         }
     }, [sideBar]);
-
-    useEffect(() => {
-        console.log(chargeRate);
-    }, [chargeRate]);
-    useEffect(() => {
-        console.log(profileImgs);
-    }, [profileImgs.length]);
-    useEffect(() => {
-        console.log(itemInfo);
-    }, [itemInfo]);
     useEffect(() => {
         last && handleSave();
     }, [last]);
@@ -179,7 +163,6 @@ const EditItem = ({ query }) => {
         imgUpload && handleComplete();
     }, [imgUpload]);
     useEffect(()=>{
-        console.log(".........................", infoUpload)
         infoUpload && uploadInfo();
     },[infoUpload]);
     useEffect(()=>{
