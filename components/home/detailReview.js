@@ -36,14 +36,14 @@ const DetailReview = ({ useremail, date, content}) => {
             temp.push(doc.data());
         });
         setSrc(temp[0]["profile_img"]);
-        setUsername(temp[0]["first_name"] + " " + temp[0]["last_name"]);
+        setUsername(temp[0]["first_name"] + " " + temp[0]["last_name"])
     }
     return (
         <div className="flex flex-row items-start w-full" style={{ marginBottom:"30px"}}>
             <div className="detailReviewAvatar">
                 <img src={src} className="object-cover w-full h-full" style={{ borderRadius: "100px" }} />
             </div>
-            <div className="flex flex-col" style={{width:"80%"}}>
+            <div className="flex flex-col reviewcontent">
                 <div className="flex flex-row" style={{ marginBottom: "5px" }}>
                     <p className="bold font-15" style={{ paddingRight: "10px", borderRight: "solid 1px #ffffff1a" }}>{username}</p>
                     <p className=" font-15" style={{ paddingLeft: "10px" }}> {time && month[time.getMonth()] +", " + time.getFullYear()} </p>

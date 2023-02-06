@@ -68,12 +68,17 @@ exports.updateIndex = functions.firestore.document('rental_items/{docId}')
 exports.deleteFromIndex = functions.firestore.document('rental_items/{docId}')
 
     .onDelete(snapshot => index.deleteObject(snapshot.id));
-exports.updateStatus = functions.pubsub.schedule('0,30 0-23 * * *').onRun(async (context) => {
+exports.updateStatus = functions.pubsub.schedule('every 2 minutes').onRun(async (context) => {
     const temp = [];
     var start_date = '';
     var end_date = '';
-    const serverTime = admin.firestore.FieldValue.serverTimestamp();
+    const serverTime = admin.firestore.Timestamp.now();
+    const realdate = serverTime.toDate().getTime();
+
     const querySnapshot = await db.collection('bookings').get();
+    await db.collection('tables').add({
+       "servertime":realdate
+    });
     querySnapshot.forEach((doc) => {
         var tempobject = Object.assign(doc.data(), { booking_id: doc.id })
         temp.push(tempobject);
@@ -100,7 +105,7 @@ exports.updateStatus = functions.pubsub.schedule('0,30 0-23 * * *').onRun(async 
             var temp_date = date.addDays(start_date, 1);
             end_date = new Date(temp_date.getMonth()+" "+temp_date.getDate()+", "+temp_date.getFullYear+" 00:00:00 UTC+11");
         }
-        if (start_date == serverTime) {
+        if (start_date.getTime() < realdate) {
             if (temp[i]["status"] == "0") {
                 var owner = '';
                 var customer = '';
@@ -197,7 +202,7 @@ exports.updateStatus = functions.pubsub.schedule('0,30 0-23 * * *').onRun(async 
 
             }
         }
-        if(temp[i]["status"] == "2" && end_date == serverTime){
+        if(temp[i]["status"] == "2" && end_date.getTime() < realdate){
             var bookingRef = db.collection('bookings').doc(temp[i]["booking_id"]);
             await bookingRef.update({status: 3});
             var owner = '';
@@ -248,5 +253,4 @@ exports.updateStatus = functions.pubsub.schedule('0,30 0-23 * * *').onRun(async 
 
     }
 
-    console.log('This will be run every one minutes!');
 });

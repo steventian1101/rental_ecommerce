@@ -222,9 +222,6 @@ const CreateBooking = ({ setScreenNumber, setNewBooking}) => {
                         <input type="text" className="text-white bg-transparent outline-none" style={{ border: "solid 0px black" }} defaultValue="0" onChange={(e) => { handleDuration(e.target.value) }} />
                     </div> :<div className="flex w-full h-8 detail-loading"></div>
                     }
-                    {/* <div className="relative flex flex-row items-center justify-between py-2" style={{ borderBottom: "solid 1px #ffffff1a" }} onClick={() => { setDisplayDuration(true) }}>
-                        <input type="text" className="text-white bg-transparent outline-none" style={{ border: "solid 0px black" }} defaultValue="0" onChange={(e) => { handleDuration(e.target.value) }} />
-                    </div> */}
                 </div>
             }
             <div className="line"></div>

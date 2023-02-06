@@ -5,7 +5,6 @@ import { faCircleXmark } from "@fortawesome/free-regular-svg-icons"
 import { useState, useEffect } from "react";
 
 const EditItemImg = ({ setSideBar, setProfileImgs, previousImgs, setPreviousImgs, setImgUpload}) => {
-    console.log(previousImgs)
     const [previewImages, setPreviewImages] = useState([]);
     const [files, setFiles] = useState([]);
     const [drawPreview, setDrawPreview] = useState([]);
@@ -18,14 +17,12 @@ const EditItemImg = ({ setSideBar, setProfileImgs, previousImgs, setPreviousImgs
             setImgUpload(true);
     }
     const handlefile = (e) => {
-        console.log(e.target.files[0])
         var src = URL.createObjectURL(e.target.files[0]);
         var temp = e.target.files[0];
         setPreviewImages([...previewImages, src]);
         setFiles([...files, temp]);
     }
     useEffect(() => {
-        console.log(files, previewImages)
         let temp = [];
         for (let i in previewImages) {
             temp.push(<div className="relative" key={i}> <img src={previewImages[i]} style={{ width: "100%", height: "180px", borderRadius: "8px", marginTop: "30px", objectFit: "cover" }} /><div className="absolute flex items-center justify-center cursor-pointer" style={{ top: "5%", right: "3%", width: "30px", height: "30px", borderRadius: "100px" }} onClick={() => { handleDelete(i) }}><FontAwesomeIcon icon={faCircleXmark} className="text-black fontIcon" style={{ fontSize: "20px" }} /></div></div>)

@@ -29,18 +29,15 @@ const Location = ({ setSideBar }) => {
         querySnapshot.forEach((doc) => {
             let tempArray = doc.data();
             if (typeof (tempArray["user_address"]) == "string") {
-                console.log("okay")
                 temp.push(tempArray["user_address"]);
             }
             if (typeof (tempArray["user_address"]) == "object") {
-                console.log("object");
                 for (let i in tempArray["user_address"]) {
                     temp.push(tempArray["user_address"][i]);
                 }
             }
 
         });
-        console.log(temp)
         setTempdata(temp);
     }
     const addressValidation = (any) => {
@@ -60,7 +57,6 @@ const Location = ({ setSideBar }) => {
         }
     }
     const handledelete = (index) => {
-        console.log(index)
         tempdata.splice(index, 1);
         setTempdata([...tempdata]);
 
@@ -73,7 +69,6 @@ const Location = ({ setSideBar }) => {
 
     }
     const updateUserAddress = async (email) => {
-        console.log(email)
         let docID;
         const listCollectionRef = collection(db, 'users');
         let q = query(listCollectionRef, where("user_email", "==", email));

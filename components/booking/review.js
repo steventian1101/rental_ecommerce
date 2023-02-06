@@ -66,7 +66,6 @@ const Review = ({booking, ownerdata, customerdata}) =>{
     }
     const getratingstars = () =>{
         if(userCredential.email ==  booking.owner_email){
-            console.log("here2")
             if (booking.customer_rating == 0) {
                 
                 setRatingdiv(<div className="flex flex-row">
@@ -98,7 +97,6 @@ const Review = ({booking, ownerdata, customerdata}) =>{
                     </div>)
             }
             if (booking.customer_rating == 3) {
-                console.log("here3")
                 setRatingdiv(
                     <div className="flex flex-row">
                         <FontAwesomeIcon icon={faStar} className="mr-1 text-lg text-white" />

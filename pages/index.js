@@ -7,7 +7,6 @@ export default function IndexPage() {
   const router = useRouter();
   const { query } = router.query;
   const link = router.pathname;
-  console.log(link);
   const [search, setSearch] = useState(false);
   useEffect(() => {
     window.addEventListener("scroll", detectScroll);

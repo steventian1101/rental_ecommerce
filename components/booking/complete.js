@@ -100,7 +100,7 @@ const Complete = ({ setSideBar, id, ownerdata, customerdata, itemdata, booking }
     }
     return (
         <section className="overflow-auto bookingpending">
-            <div style={{ height: "50px"}} className="flex flex-row  cursor-pointer mb-2.5 justify-between items-center"><FontAwesomeIcon icon={faArrowLeftLong} className="text-2xl text-white" onClick={() => { setSideBar(null) }} /><div className="flex items-center justify-center w-10 h-10" style={{ borderRadius: "100px", border: "solid 1px white" }}><FontAwesomeIcon icon={faPencil} className="text-lg text-white" /></div></div>
+            <div style={{ height: "50px"}} className="flex flex-row  cursor-pointer mb-2.5 justify-between items-center"><FontAwesomeIcon icon={faArrowLeftLong} className="text-2xl text-white" onClick={() => { setSideBar(null) }} /></div>
             <p className="loginText complete">BOOKING COMPLETE</p>
             <p className="mb-10 loginDetail ellipsis">Booking Number: <span className="font-15 bold">{booking["booking_id"].toUpperCase()}</span></p>
             <div className="relative">

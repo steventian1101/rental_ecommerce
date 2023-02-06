@@ -19,7 +19,6 @@ const Payment = ({ setSideBar }) => {
     const [email, setEmail] = useState(null);
     const [tempData, setTempdata] = useState([]);
     const fullnameValidation = (any) => {
-        console.log(any)
         let str = /(^[A-Za-z]{3,16})([ ]{0,1})([A-Za-z]{3,16})?([ ]{0,1})?([A-Za-z]{3,16})?([ ]{0,1})?([A-Za-z]{3,16})/;
         setFullnamevalidation(str.test(any))
         if (str.test(any)) {
@@ -27,7 +26,6 @@ const Payment = ({ setSideBar }) => {
         }
     }
     const creditValidation = (any) => {
-        console.log(any)
         let str = /[^0-9]+/;
         setCreditvalidation(str.test(any));
         if (str.test(any)) {
@@ -69,11 +67,9 @@ const Payment = ({ setSideBar }) => {
         querySnapshot.forEach((doc) => {
             temp.push(doc.data());
         });
-        console.log(temp)
         setTempdata(temp);
     }
     const getDetailAndUpdate = async (email) => {
-        console.log(email)
         let docID;
         const listCollectionRef = collection(db, 'users');
         let q = query(listCollectionRef, where("user_email", "==", email));

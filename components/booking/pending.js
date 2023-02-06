@@ -51,7 +51,6 @@ const time = [
 ];
 const duration = [1, 2, 3];
 const Pending = ({ setSideBar, id, ownerdata, customerdata, itemdata, booking, setLoading }) => {
-    console.log(id, ownerdata, customerdata, itemdata)
     const [groupbuttons, setGroupbuttons] = useState(false);
     const { userCredential } = useAuth();
     useEffect(() => {
@@ -81,8 +80,8 @@ const Pending = ({ setSideBar, id, ownerdata, customerdata, itemdata, booking, s
             });
         const notificationRef = collection(db, "notifications");
         addDoc(notificationRef, {
-            to: newBooking.email,
-            notificationContent: userDetail[0].nick_name + " has accepted your booking of " + newBooking["item_name"],
+            to: booking.customer_email,
+            notificationContent: ownerdata[0].nick_name + " has accepted your booking of " + itemdata["item_name"],
             show: false,
             time: serverTimestamp(),
             status: 2
@@ -110,7 +109,7 @@ const Pending = ({ setSideBar, id, ownerdata, customerdata, itemdata, booking, s
     }
     return (
         <section className="overflow-auto bookingpending">
-            <div style={{ height: "50px", marginBottom: "10px" }} className="flex flex-row  cursor-pointer mb-2.5 justify-between items-center"><FontAwesomeIcon icon={faArrowLeftLong} className="text-2xl text-white" onClick={() => { setSideBar(null) }} /><div className="flex items-center justify-center w-10 h-10" style={{ borderRadius: "100px", border: "solid 1px white" }}><FontAwesomeIcon icon={faPencil} className="text-lg text-white" /></div></div>
+            <div style={{ height: "50px", marginBottom: "10px" }} className="flex flex-row  cursor-pointer mb-2.5 justify-between items-center"><FontAwesomeIcon icon={faArrowLeftLong} className="text-2xl text-white" onClick={() => { setSideBar(null) }} /></div>
             <p className="loginText pending">PENDING REQUEST</p>
             <p className="mb-10 loginDetail ellipsis">Booking Number: <span className="font-15 bold">{booking["booking_id"].toUpperCase()}</span></p>
             <div className="relative">

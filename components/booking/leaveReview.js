@@ -15,8 +15,6 @@ const LeaveReview = ({ booking, customerdata, ownerdata, itemdata, setReviewbord
     const [ratingstars, setRatingstars] = useState(null);
     const [reviewtitle, setReviewtitle] = useState(null);
     const [text, setText] = useState('');
-    console.log("customere data", customerdata)
-
     useEffect(() => {
         userCredential.email && getratingtitle();
         userCredential.email && setreviewtitle();

@@ -6,9 +6,7 @@ import { useState } from "react";
 export default function RentalOwnerPage () {
     const [login, setLogin] = useState(false);
     const router = useRouter();
-    console.log(router)
     const { id } = router.query;
-    console.log(id)
     return(
         <>
         <Header search={true} setLogin={setLogin} login={login}/>

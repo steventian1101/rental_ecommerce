@@ -68,6 +68,14 @@
   font-size: 20px;
   line-height: 27px;
 }
+.animationinput{
+  animation-name: inputanimation;
+  animation-duration: 0.5s;
+}
+@keyframes inputanimation {
+  from {width: 0px;}
+  to {width: 100%}
+}
 
 .navbar {
   position: relative;
@@ -357,6 +365,16 @@ input:-webkit-autofill:active {
   border-radius: 30px;
   height: 40px;
 }
+.clickBarSearch {
+  width: 100%;
+  border: 1px solid #333;
+  padding: 10px;
+  border-radius: 30px;
+  height: 40px;
+}
+.clickBarSearch input{
+  border-width: 0px !important;
+}
 
 .stickyBarSearch input {
   border-width: 0px !important;
@@ -384,6 +402,9 @@ input:-webkit-autofill:active {
   to {
     background-position-x: -200%;
   }
+}
+.reviewcontent{
+  width: 80%;
 }
 
 .detail-loading {
@@ -1097,6 +1118,12 @@ input::placeholder {
 }
 
 @media screen and (max-width: 479px) {
+  .reviewcontent{
+    width: 100%;
+  }
+  .detailReviewAvatar{
+    display: none;
+  }
   .paymentRequire{
     font-size: 12px!important;
   }

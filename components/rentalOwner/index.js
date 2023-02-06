@@ -24,11 +24,9 @@ const RentalOwner = ({ id, setLogin }) => {
     useEffect(() => {
         setDetail(null);
         setSideBar(null);
-        console.log(itemID)
         itemID && itemID.length > 0 && drawDetail(itemID);
     }, [itemID]);
     const drawDetail = () => {
-        console.log(itemID, "///////////////")
         setSideBar(<SidebarBack setSideBar={setSideBar} setDetail={setDetail} />);
         setDetail(<Detail id={itemID} setSideBar={setSideBar} setDetail={setDetail} setItemID={setItemID} setLogin={setLogin} setPayment={setPayment} />)
     }
@@ -42,7 +40,6 @@ const RentalOwner = ({ id, setLogin }) => {
         querySnapshot.forEach((doc) => {
             temp.push(doc.data());
         });
-        console.log(temp)
         setTempdata(temp);
     }
     useEffect(() => {
@@ -55,7 +52,6 @@ const RentalOwner = ({ id, setLogin }) => {
         querySnapshot.forEach((doc) => {
             var tempobject = Object.assign(doc.data(), { item_id: doc.id })
             temp.push(tempobject);
-            console.log(doc.id)
         });
         setItems(temp);
     }
@@ -93,9 +89,6 @@ const RentalOwner = ({ id, setLogin }) => {
                         reviewNumbers.rating +" Star (" + reviewNumbers.reviewNumber+" Reviews)"
                     }</button>
                 }
-              {/* {  <button className="ownerRating">{tempData && tempData.length > 0 ? tempData[0].item_rating : "0"} star(0 reviews)</button>} */}
-
-
             </div>
             <div style={{ width: "90vw", background: "#ffffff33", height: "1px", marginRight: "auto", marginLeft: "auto", marginTop: "40px", marginBottom: "70px" }}></div>
             <div className="flex flex-row flex-wrap justify-center w-full ownerItemBoard">

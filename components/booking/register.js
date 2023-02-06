@@ -35,16 +35,12 @@ const Register = ({ sideBar, setSideBar }) => {
     const [previewImage, setPreviewImage] = useState('');
     const [completeLoading, setCompleteLoading] = useState(false);
     const listCollectionRef = collection(db, "users")
-    useEffect(() => {
-        console.log(email)
-    }, [email])
     const emailValidation = (any) => {
         if ((any.indexOf("@") > -1) && (any.indexOf(".") > -1)) {
             setEmail(any)
             setEmailvalidation(true);
         }
         else {
-            console.log("incorrect")
             setEmailvalidation(false)
         }
     }
@@ -54,7 +50,6 @@ const Register = ({ sideBar, setSideBar }) => {
             setPasswordvalidation(true);
         }
         else {
-            console.log("incorrect")
             setPasswordvalidation(false)
         }
     }
@@ -65,7 +60,6 @@ const Register = ({ sideBar, setSideBar }) => {
             setFirstnamevalidation(true);
         }
         else {
-            console.log("incorrect")
             setFirstnamevalidation(false)
         }
     }
@@ -76,7 +70,6 @@ const Register = ({ sideBar, setSideBar }) => {
             setLastnamevalidation(true);
         }
         else {
-            console.log("incorrect")
             setLastnamevalidation(false)
         }
     }
@@ -86,7 +79,6 @@ const Register = ({ sideBar, setSideBar }) => {
             setNicknamevalidation(true);
         }
         else {
-            console.log("incorrect")
             setNicknamevalidation(false)
         }
     }
@@ -111,7 +103,6 @@ const Register = ({ sideBar, setSideBar }) => {
     }
     const handleComplete = async () => {
         setCompleteLoading(true)
-        console.log(emailvalidation, passwordvalidation);
         if (emailvalidation && passwordvalidation) {
             let temp = [];
             let q = query(listCollectionRef, where("user_email", "==", email));
@@ -144,18 +135,15 @@ const Register = ({ sideBar, setSideBar }) => {
     }
     const handleRegister = () => {
         if (file && emailvalidation && passwordvalidation && firstnamevalidation && lastnamevalidation && nicknameValidation && phonevalidation && addressvalidation) {
-            console.log(file)
             const storageRef = ref(storage, `images/${email + ".jpg"}`);
             const metadata = {
                 contentType: 'image/jpeg'
             };
             setLoading(true);
             uploadBytes(storageRef, file).then((snapshot) => {
-                console.log('Uploaded a blob or file!');
                 getDownloadURL(storageRef).then((downloadUrl) => {
                     setImgurl(downloadUrl);
                     setPreviewImage('');
-                    console.log(downloadUrl);
                 });
             });
         }
@@ -164,7 +152,6 @@ const Register = ({ sideBar, setSideBar }) => {
 
     }
     useEffect(() => {
-       console.log(imgurl);
        if(imgurl != "" && emailvalidation && passwordvalidation && firstnamevalidation && lastnamevalidation && nicknameValidation && phonevalidation && addressvalidation){
        addDoc(listCollectionRef, { user_email: email, first_name: firstname, profile_img:imgurl, last_name:lastname, nick_name:nickname, user_phone:phone, user_address:address }).then(response => {
          createUser(auth, email, password);

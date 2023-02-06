@@ -29,7 +29,6 @@ const Owner = () => {
         querySnapshot.forEach((doc) => {
             temp.push(doc.data());
         });
-        console.log(temp)
         setTempdata(temp);
     }
     const getRentalItems = async (email) => {
@@ -39,13 +38,9 @@ const Owner = () => {
         querySnapshot.forEach((doc) => {
             var tempobject = Object.assign(doc.data(), { item_id: doc.id })
             temp.push(tempobject);
-            console.log(doc.id)
         });
         setItems(temp);
     }
-    useEffect(() => {
-        console.log(items)
-    }, [items]);
     return (
         <section className="w-full my-20 bg-black owner">
             <div className="relative w-full" style={{ height: "400px" }}>

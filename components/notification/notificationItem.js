@@ -14,7 +14,6 @@ const NotificationItem = ({notification}) =>{
     },[]);
     const getTime = () =>{
         let notify;
-        console.log(notification.time.toDate(), new Date())
         const duration = timediff(new Date(notification.time.toDate()) , new Date,'Hm');
         if(duration.hours == "0"){
              notify = duration.minutes+ " min ";
@@ -42,7 +41,6 @@ const NotificationItem = ({notification}) =>{
         }
     }
     const handleClick = () =>{
-        console.log("I have already showned.")
         const docRef = doc(db, "notifications", notification.objectID);
         const newdata = {
             show: true,
@@ -54,11 +52,10 @@ const NotificationItem = ({notification}) =>{
                 console.log(error);
             });
         router.push('/booking');
-        window.location.reload();
     }
 
        return(
-        <div className="flex flex-row items-start notificationItem" onClick={handleClick}>
+        <div className="flex flex-row items-start cursor-pointer notificationItem" onClick={handleClick}>
             <div style={{ width:"30px", height:"30px", background:background, borderRadius:"100px", marginRight:"15px"}} className="flex items-center justify-center">
                 <img src='/logo/blacklogo.svg' />
             </div>

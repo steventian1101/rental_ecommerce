@@ -24,7 +24,6 @@ const Notification = ({sideBar, setSideBar}) => {
                 var tempobject = Object.assign(doc.data(), { objectID: doc.id })
                 temp.push(tempobject)
             })
-            console.log(temp);
             setNotifications(temp);
         }
 

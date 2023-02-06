@@ -17,6 +17,7 @@
     "date-and-time": "^2.4.2",
     "firebase-admin": "^11.4.1",
     "firebase-functions": "^3.18.0",
+    "stripe": "^11.9.1",
     "timediff": "^1.1.1"
   },
   "devDependencies": {

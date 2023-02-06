@@ -18,7 +18,6 @@ const Textarea = ({title, placeholder, status, change, type, value}) => {
     },[status])
     useEffect(()=>{
      let temp = value.replaceAll("<br>","\n");
-     console.log(temp)
      change(temp)
      setDesc(temp)
     },[value])

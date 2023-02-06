@@ -28,7 +28,6 @@ import { getRatingAndReviewNumbersForOwner } from "../../utils/getRatingAndRevie
 import date from "date-and-time"
 
 const Detail = ({ id, setSideBar, setDetail, setItemID, setLogin }) => {
-    console.log("here", id)
     const [content, setContent] = useState(null);
     const [viewnumber, setViewnumber] = useState(null);
     const [owner, setOwner] = useState(null);
@@ -186,6 +185,9 @@ const Detail = ({ id, setSideBar, setDetail, setItemID, setLogin }) => {
     useEffect(() => {
         detailRef.current.scrollTo({ top: 0, behavior: 'smooth' });
         setContent(null);
+        setStartDate(new Date());
+        setEnddate(new Date());
+        setDurationIndex(0);
         id && getDetail(id);
         id && getReviews(id);
         userCredential.email && getUserDetail(userCredential.email);

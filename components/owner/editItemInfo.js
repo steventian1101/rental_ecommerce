@@ -9,7 +9,6 @@ import Textarea from "./textarea"
 import back from "../../utils/handleBack"
 
 const EditItemInfo = ({ setSideBar, setItemInfo, prevName, prevLocation, prevItemDesc, prevItemTag, setInfoUpload}) => {
-    console.log(prevItemDesc)
     const [itemnamevalidation, setItemnamevalidation] = useState(true);
     const [itemname, setItemname] = useState('');
     const [location, setLocation] = useState('');
@@ -21,11 +20,9 @@ const EditItemInfo = ({ setSideBar, setItemInfo, prevName, prevLocation, prevIte
     const [tempdata, setTempdata] = useState(null);
     const { userCredential} = useAuth();
     const listCollectionRef = collection(db, "users");
-    console.log(prevLocation)
     
 
     const handleComplete = () => {
-        console.log(itemname, location, itemDesc, itemTag)
         if (itemname != "" && location != "" && itemDesc != "" && itemTag != "") {
             let temp = {
                 "itemname": itemname,
@@ -59,7 +56,6 @@ const EditItemInfo = ({ setSideBar, setItemInfo, prevName, prevLocation, prevIte
         }
     }
     const locationValidation = (any) => {
-        console.log(any)
         if (any != "") {
             setLocationvalidation(true);
             setLocation(any);
@@ -69,7 +65,6 @@ const EditItemInfo = ({ setSideBar, setItemInfo, prevName, prevLocation, prevIte
         }
     }
     const handleTextarea = (any) => {
-        console.log(any)
         if (any!= "") {
             setItemdescvalidation(true);
             setItemDesc(any.replace(/\n/g, "<br>"));
@@ -78,9 +73,6 @@ const EditItemInfo = ({ setSideBar, setItemInfo, prevName, prevLocation, prevIte
             setItemdescvalidation(false);
         }
     }
-    useEffect(() => {
-        console.log(itemDesc)
-    }, [itemDesc]);
 
     const getDetail = async (email) => {
         let temp = [];
@@ -88,23 +80,18 @@ const EditItemInfo = ({ setSideBar, setItemInfo, prevName, prevLocation, prevIte
         const querySnapshot = await getDocs(q);
         querySnapshot.forEach((doc) => {
             let tempArray = doc.data();
-            console.log(tempArray)
             if (typeof (tempArray["user_address"]) == "string") {
-                console.log("okay")
                 temp.push(tempArray["user_address"]);
             }
             if (typeof (tempArray["user_address"]) == "object") {
-                console.log("object");
                 for (let i in tempArray["user_address"]) {
                     temp.push(tempArray["user_address"][i]);
                 }
             }
         });
-        console.log(temp)
         setTempdata(temp);
     }
     useEffect(()=>{
-        console.log(userCredential.email)
         userCredential.email && getDetail(userCredential.email);
     },[]);
     useEffect(()=>{

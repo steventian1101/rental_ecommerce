@@ -30,6 +30,7 @@ export default function Header({ login, setLogin, search }) {
   const [nickname, setNickname] = useState('');
   const [dropbox, setDropbox] = useState(false);
   const [tempdata, setTempdata] = useState([]);
+  const [searchShow, setSearchShow] = useState(false);
   let i = 0;
   useEffect(() => {
     if (login) {
@@ -102,62 +103,54 @@ export default function Header({ login, setLogin, search }) {
   }, [tempdata]);
   useEffect(() => {
     window.addEventListener('keydown', (e) => {
-        if (e.keyCode === 13) {
-           if(document.getElementById("homeSearch").value != null){
-            let text = document.getElementById('homeSearch').value;
-            if (text != "") {
-                let url = '/?query=' + text
-                location.href = url
-            }
-           }
+      if (e.keyCode === 13) {
+        if (document.getElementById("homeSearch").value != null) {
+          let text = document.getElementById('homeSearch').value;
+          if (text != "") {
+            let url = '/?query=' + text
+            location.href = url
+          }
         }
+      }
     })
-}, [])
+  }, []);
+  const handleSearchClick = () => {
+    setSearchShow(true);
+  }
+
   return (
     <>
       {
-        drawbackground ? <NavBarBack /> : <></>
+        drawbackground ? <NavBarBack setSideBar={setSideBar}/> : <></>
       }
-      <section className="fixed w-full bg-black" style={{ zIndex:"10000"}}>
+      <section className="fixed w-full bg-black" style={{ zIndex: "10000" }}>
         <div className='flex flex-row items-end justify-between navbar'>
           <Link href='/'>
             <div className='flex flex-row items-center' style={{ height: "40px" }}>
               <img src="/logo/logo.svg" className='mr-2.5 w-full' />
               <p className='text-white logo-title'>Sdrop.</p>
-            </div>
-          </Link>
-          {/* <div className='flex flex-row'>
-          <p className='mx-5 text-white cursor-pointer'>Login</p>
-          <p className='text-white cursor-pointer'>Sign Up</p>
-        </div>
-        <div className="flex flex-row">
-          <div className="flex flex-row items-center justify-around mr-0 stickyBarSearch">
-            <FontAwesomeIcon icon={faSearch} className="mx-3 mr-0 text-xl font-thin text-white" />
-            <input type="text" className="w-full p-0.5 mx-2 text-base text-white bg-transparent outline-none mr-0" id="home" placeholder="e.g.SnowBoards" />
+            </div></Link>
+           {
+            searchShow &&  <div className="flex flex-row items-center justify-around mr-0 clickBarSearch " >
+            <FontAwesomeIcon icon={faSearch} className="mx-3 mr-0 text-xl font-thin text-white" onClick={()=>{ setSearchShow(false)}}/>
+            <input type="text" className="w-full p-0.5 mx-2 text-base text-white bg-transparent outline-none mr-0" id="homeSearch" placeholder="e.g.SnowBoards" />
           </div>
-          <div className="flex items-center justify-center navbarIcon">
-            <FontAwesomeIcon icon={ faCalendarCheck} style={{ color:"white", fontSize:"18px"}}/>
-          </div>
-          <div className="flex items-center justify-center navbarIcon">
-            <FontAwesomeIcon icon={ faBell} style={{ color:"white", fontSize:"18px"}}/>
-          </div>
-          <div className="flex items-center justify-center w-10 h-10 mx-2.5" style={{ position:"relative"}}>
-            <img src="https://uploads-ssl.webflow.com/5efdc8a4340de947404995b4/638de93ece20b775d2dc039f_6%20Haircut%20Trends%20for%20Late%202021.jpg" style={{ width:"100%",objectFit:"cover", borderRadius:"100px"}} className="w-10 h-10 overflow-hidden"/>
-          </div>
-        </div> */}
-          <div className="flex flex-row items-center">
+           }
+            <div className="flex flex-row items-center">
             {
-              search && <div className="flex flex-row">
-              <div className="flex flex-row items-center justify-around mr-0 stickyBarSearch">
-                <FontAwesomeIcon icon={faSearch} className="mx-3 mr-0 text-xl font-thin text-white" />
-                <input type="text" className="w-full p-0.5 mx-2 text-base text-white bg-transparent outline-none mr-0" id="homeSearch" placeholder="e.g.SnowBoards" />
+              search && !searchShow &&  <div className="flex flex-row">
+                <div className="flex flex-row items-center justify-around mr-0 stickyBarSearch">
+                  <FontAwesomeIcon icon={faSearch} className="mx-3 mr-0 text-xl font-thin text-white" />
+                  <input type="text" className="w-full p-0.5 mx-2 text-base text-white bg-transparent outline-none mr-0 animationinput" id="homeSearch" placeholder="e.g.SnowBoards" />
+                </div>
+                <div className="flex items-center justify-center navbarIcon searchIcon" onClick={handleSearchClick}>
+                  <FontAwesomeIcon icon={faSearch} style={{ color: "white", fontSize: "18px" }} />
+                </div>
               </div>
-              <div className="flex items-center justify-center navbarIcon searchIcon">
-                <FontAwesomeIcon icon={faSearch} style={{ color: "white", fontSize: "18px" }} />
-              </div>
-            </div>
             }
-            {
+           {
+            !searchShow && <>
+             {
               authenticated ? <div className="flex flex-row justify-end w-full">
                 <div className="flex items-center justify-center navbarIcon">
                   <Link href="/booking"><FontAwesomeIcon icon={faCalendarCheck} style={{ color: "white", fontSize: "18px" }} /></Link>
@@ -165,9 +158,6 @@ export default function Header({ login, setLogin, search }) {
                 <div className="flex items-center justify-center navbarIcon">
                   <FontAwesomeIcon icon={faBell} style={{ color: "white", fontSize: "18px" }} onClick={() => { setSideBar(4) }} />
                 </div>
-                {/* <div className="flex items-center justify-center navbarIcon">
-              <FontAwesomeIcon icon={faSearch} style={{ color: "white", fontSize: "18px" }}  />
-            </div> */}
                 <div className="flex items-center justify-center w-10 h-10 mx-2.5" style={{ position: "relative" }} onMouseEnter={() => { handleEnter() }}>
                   {
                     profileImg != "" ? <Link href="/profile"> <img src={profileImg} style={{ width: "100%", objectFit: "cover", borderRadius: "100px" }} className="w-10 h-10 overflow-hidden" /></Link> :
@@ -203,7 +193,8 @@ export default function Header({ login, setLogin, search }) {
                 <p className='mx-5 text-white cursor-pointer' onClick={() => { setSideBar(1) }}>Login</p>
                 <p className='text-white cursor-pointer' onClick={() => { setSideBar(2) }}>Sign Up</p>
               </div>
-            }
+            }</> 
+           }
 
           </div>
         </div>
