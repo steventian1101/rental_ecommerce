@@ -5,6 +5,7 @@ import { useState, useEffect } from "react"
 import { useAuth } from "../../context/useAuth"
 import { updateDoc, deleteField, doc, collection, addDoc, query, orderBy, where, getDocs } from "firebase/firestore";
 import { db } from "../../lib/initFirebase"
+import { getFunctions, httpsCallable } from "firebase/functions"
 const Payment = ({ setSideBar }) => {
     const { userCredential } = useAuth();
     const [fullname, setFullname] = useState('');
@@ -71,19 +72,25 @@ const Payment = ({ setSideBar }) => {
     }
     const getDetailAndUpdate = async (email) => {
         let docID;
+        let customerID;
         const listCollectionRef = collection(db, 'users');
         let q = query(listCollectionRef, where("user_email", "==", email));
         const querySnapshot = await getDocs(q);
         querySnapshot.forEach((doc) => {
             docID = doc.id;
+            customerID = doc.data()["customer_id"];
         });
         const docRef = doc(db, "users", docID);
-        const data = {
-            full_name: deleteField(),
-            credit_card_number: deleteField(),
-            expire_date: deleteField(),
-            cvv: deleteField()
-        };
+        const creditPaymentData = {
+            customer_id:customerID,
+            card_number:credit,
+            expiry_month:expireDate.split("/")[0],
+            expiry_year:expireDate.split("/")[1],
+            cvv:cvv
+        }
+        console.log(creditPaymentData);
+        createPayment(creditPaymentData);
+        setLoading(false);
         const newdata = {
             full_name: fullname,
             credit_card_number: credit,
@@ -103,6 +110,15 @@ const Payment = ({ setSideBar }) => {
         userCredential.email && setEmail(userCredential.email);
         userCredential.email && getDetail(userCredential.email);
     }, [userCredential]);
+    const createPayment = async (detail) =>{
+        const functions = getFunctions();
+        const createPaymentMethod = httpsCallable(functions, 'createPaymentMethod');
+        await createPaymentMethod({ data: detail }).then((result)=>{
+            console.log(result)
+            
+        });
+
+    }
     return (
         <section className="overflow-auto addProfileInfo">
             <div style={{ height: "50px", marginBottom: "10px" }} className="flex flex-row items-center cursor-pointer"><FontAwesomeIcon icon={faArrowLeftLong} className="text-2xl text-white" onClick={() => setSideBar(0)} /></div>

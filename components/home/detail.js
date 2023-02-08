@@ -26,6 +26,7 @@ import MobileSuccessNotification from "./mobileSuccessNotification";
 import getRatingAndReviewNumbers from "../../utils/getRatingAndReviewsNumber";
 import { getRatingAndReviewNumbersForOwner } from "../../utils/getRatingAndReviewsNumber";
 import date from "date-and-time"
+import { getFunctions, httpsCallable } from "firebase/functions";
 
 const Detail = ({ id, setSideBar, setDetail, setItemID, setLogin }) => {
     const [content, setContent] = useState(null);
@@ -150,23 +151,37 @@ const Detail = ({ id, setSideBar, setDetail, setItemID, setLogin }) => {
         setUserDetail(temp);
 
     }
-    const handleReserve = () => {
+    const handleReserve = async () => {
         if(result != 0)
         {    
+            const detail = {
+                customer_id:userDetail[0]["customer_id"],
+                total:result
+            }
+            console.log(detail);
+            const functions = getFunctions();
+            const createPaymentIntent = httpsCallable(functions, 'createPaymentIntent');
             const notificationRef = collection(db,"notifications");
+            const paymentintent = await createPaymentIntent({data:detail});
+            console.log(paymentintent)
+            const confirmPaymentIntent = httpsCallable(functions, 'confirmPaymentIntent');
+            const confirmIntent = await confirmPaymentIntent({data:detail});
+            console.log(confirmIntent);
+            
+            return;
             addDoc(notificationRef, { 
                 to:ownerData[0].user_email,
                 notificationContent:userDetail[0].first_name + " " + userDetail[0].last_name +" has requested to rent your " + content["item_name"],
                 show:false,
                 time:serverTimestamp(),
-                status:1
+                status:0
             }).then(response => {
             }).catch(error => {
                 console.log(error)
             });
             
             const listCollectionRef = collection(db, "bookings")
-            addDoc(listCollectionRef, { item_id: id, start_date: month[Number(startdate.getMonth())] + "," + startdate.getDate() + "," + startdate.getFullYear(), start_time: startTime, customer_email: userCredential.email, phone_number: userDetail[0].user_phone, result: result, driving_license: "", full_name: userDetail[0].full_name, credit: userDetail[0].credit_card_number, cvv: userDetail[0].cvv, expireDate: userDetail[0].expire_date, owner_email: content.rental_owner, status: 0, createdTime: serverTimestamp() }).then(response => {
+            addDoc(listCollectionRef, { item_id: id, start_date: month[Number(startdate.getMonth())] + "," + startdate.getDate() + "," + startdate.getFullYear(), start_time: startTime, customer_email: userCredential.email, phone_number: userDetail[0].user_phone, result: result, driving_license: "", full_name: userDetail[0].full_name, credit: userDetail[0].credit_card_number, cvv: userDetail[0].cvv, expireDate: userDetail[0].expire_date, owner_email: content.rental_owner, status: 0, createdTime: serverTimestamp(),               paymentIntent:paymentintent.data.id }).then(response => {
                 setReserve(false);
             }).catch(error => {
             });

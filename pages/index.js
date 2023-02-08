@@ -30,7 +30,7 @@ export default function IndexPage() {
   
   return (
     <>
-      <Header login = { login } setLogin={ setLogin} search={search}/>
+      <Header login = { login } setLogin={ setLogin} search={search} searchText= {query}/>
       {
          query && <Search searchText = {query} setLogin={ setLogin} />
       }

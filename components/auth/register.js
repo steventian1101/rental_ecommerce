@@ -11,8 +11,9 @@ import { collection, addDoc, query, orderBy, where, getDocs } from "firebase/fir
 import { useAuth } from "../../context/useAuth";
 import { auth } from "../../lib/initFirebase";
 import { GoogleAuthProvider } from "firebase/auth";
+import { getFunctions, httpsCallable } from "firebase/functions"
 const Register = ({ sideBar, setSideBar }) => {
-    const provider =  new GoogleAuthProvider();
+    const provider = new GoogleAuthProvider();
     const { createUser, googleAuth } = useAuth();
     const [complete, setComplete] = useState(false);
     const [email, setEmail] = useState('');
@@ -34,6 +35,7 @@ const Register = ({ sideBar, setSideBar }) => {
     const [addressvalidation, setAddressvalidation] = useState(true);
     const [previewImage, setPreviewImage] = useState('');
     const [completeLoading, setCompleteLoading] = useState(false);
+    const [customerID, setCustomerID] = useState(null);
     const listCollectionRef = collection(db, "users");
     const emailValidation = (any) => {
         if ((any.indexOf("@") > -1) && (any.indexOf(".") > -1)) {
@@ -74,7 +76,7 @@ const Register = ({ sideBar, setSideBar }) => {
         }
     }
     const nicknameValidation = (any) => {
-        if (any.length> 2) {
+        if (any.length > 2) {
             setNickname(any)
             setNicknamevalidation(true);
         }
@@ -110,17 +112,18 @@ const Register = ({ sideBar, setSideBar }) => {
             querySnapshot.forEach((doc) => {
                 temp.push(doc.data());
             });
-            if(temp.length != 0){
+            if (temp.length != 0) {
                 setEmailvalidation(false)
                 setCompleteLoading(false)
-                return ;
+                return;
             }
-            else{
-                setComplete(true)
-                setCompleteLoading(false)
+            else {
+                getCustomerID();
+                // setComplete(true)
+                // setCompleteLoading(false)
             }
         }
-        else{
+        else {
             setCompleteLoading(false)
         }
         if (!emailvalidation || !passwordvalidation) {
@@ -147,26 +150,51 @@ const Register = ({ sideBar, setSideBar }) => {
                 });
             });
         }
-        else{
+        else {
         }
 
     }
     useEffect(() => {
-       if(imgurl != "" && emailvalidation && passwordvalidation && firstnamevalidation && lastnamevalidation && nicknameValidation && phonevalidation && addressvalidation){
-       addDoc(listCollectionRef, { user_email: email, first_name: firstname, profile_img:imgurl, last_name:lastname, nick_name:nickname, user_phone:phone, user_address:address }).then(response => {
-         createUser(auth, email, password);
-         setFile(null);
-       }).catch(error => {
-            console.log(error.message)
-          });
-       }
+        if (imgurl != "" && emailvalidation && passwordvalidation && firstnamevalidation && lastnamevalidation && nicknameValidation && phonevalidation && addressvalidation) {
+            uploadCustomer();
+            addDoc(listCollectionRef, { user_email: email, first_name: firstname, profile_img: imgurl, last_name: lastname, nick_name: nickname, user_phone: phone, user_address: address, customer_id:customerID }).then(response => {
+                createUser(auth, email, password);
+                setFile(null);
+            }).catch(error => {
+                console.log(error.message)
+            });
+        }
     }, [imgurl])
-    const handleGoogle = () =>{
+    const handleGoogle = () => {
         googleAuth(auth, provider)
+    }
+    const uploadCustomer = async ()=>{
+        const functions = getFunctions();
+        const uploadStripeCustomer = httpsCallable(functions, 'uploadStripeCustomer');
+        const detail = {
+            customer_phone:phone,
+            customer_email:email,
+            customer_name:nickname,
+            customer_id:customerID,
+
+        }
+        await uploadStripeCustomer({ data: detail }).then((result)=>{
+            
+        });
+
+    }
+    const getCustomerID = async () => {
+        const functions = getFunctions();
+        const createStripeCustomer = httpsCallable(functions, 'createStripeCustomer');
+        await createStripeCustomer().then((result) => {
+            setCustomerID(result.data);
+            setComplete(true);
+            setCompleteLoading(false);
+        })
     }
     return (
         <>{
-            loading?<Loading/>:<></>
+            loading ? <Loading /> : <></>
         }
             {complete ? <section className="overflow-auto addProfileInfo">
                 <p className="loginText" style={{ marginTop: "60px" }}>Add Your Profile Info.</p>
@@ -184,11 +212,11 @@ const Register = ({ sideBar, setSideBar }) => {
                     </div> : <></>
                 }
                 <div style={{ marginTop: "30px", marginBottom: "30px", width: "100%", height: "1px", background: "#ffffff4a" }} value={""}></div>
-                <AuthInput title={"First Name"} status={firstnamevalidation} placeholder={"E.g.John"} change={firstnameValidation} type={"text"} value={""}/>
-                <AuthInput title={"Last Name"} status={lastnamevalidation} placeholder={"E.g.Doe"} change={lastnameValidation} type={"text"} value={""}/>
-                <AuthInput title={"SDrop Nickname"} status={nicknamevalidation} placeholder={"E.g.John Doe Rentals"} change={nicknameValidation} type={"text"} value={""}/>
-                <AuthInput title={"Phone Number"} status={phonevalidation} placeholder={"E.g.+61 488 789"} change={phoneValidation} type={"text"} value={""}/>
-                <AuthInput title={"Address"} status={addressvalidation} placeholder={"E.g.20 Echidna Ave, 2035, Australia"} change={addressValidation} type={"text"} value={""}/>
+                <AuthInput title={"First Name"} status={firstnamevalidation} placeholder={"E.g.John"} change={firstnameValidation} type={"text"} value={""} />
+                <AuthInput title={"Last Name"} status={lastnamevalidation} placeholder={"E.g.Doe"} change={lastnameValidation} type={"text"} value={""} />
+                <AuthInput title={"SDrop Nickname"} status={nicknamevalidation} placeholder={"E.g.John Doe Rentals"} change={nicknameValidation} type={"text"} value={""} />
+                <AuthInput title={"Phone Number"} status={phonevalidation} placeholder={"E.g.+61 488 789"} change={phoneValidation} type={"text"} value={""} />
+                <AuthInput title={"Address"} status={addressvalidation} placeholder={"E.g.20 Echidna Ave, 2035, Australia"} change={addressValidation} type={"text"} value={""} />
                 <div className="registerButton">
                     <button className="flex items-center justify-center" onClick={() => { handleRegister() }}>COMPLETE</button>
                 </div>
@@ -197,22 +225,22 @@ const Register = ({ sideBar, setSideBar }) => {
                 <p className="loginText">SIGN UP.</p>
                 <div className="registerTextBack"></div>
                 <p className="loginDetail">Login to Sydney's largest rental platform</p>
-                <button className="flex flex-row items-center justify-center w-full text-white rounded-lg" style={{ fontSize: "15px", fontFamily: "poppins-light", border: "solid 1px #ffffff4d", height: "45px" }} onClick={()=>{ handleGoogle()}} ><img src="https://uploads-ssl.webflow.com/5efdc8a4340de947404995b4/638da718ba38ef5f02dcb35a_google.svg" style={{ marginRight: "10px" }}  />Sign Up With Google</button>
+                <button className="flex flex-row items-center justify-center w-full text-white rounded-lg" style={{ fontSize: "15px", fontFamily: "poppins-light", border: "solid 1px #ffffff4d", height: "45px" }} onClick={() => { handleGoogle() }} ><img src="https://uploads-ssl.webflow.com/5efdc8a4340de947404995b4/638da718ba38ef5f02dcb35a_google.svg" style={{ marginRight: "10px" }} />Sign Up With Google</button>
                 <div className="flex flex-row items-center justify-between my-5 mb-5">
                     <div style={{ width: "100px", height: "1px", background: "#ffffff4d" }}></div>
                     <p style={{ fontSize: "15px", fontFamily: "poppins-light", color: "white" }}>OR</p>
                     <div style={{ width: "100px", height: "1px", background: "#ffffff4d" }}></div>
                 </div>
-                <AuthInput title={"Email Address"} status={emailvalidation} placeholder={"E.g.johndoe@gmail.com"} change={emailValidation} type={"text"} value={""}/>
-                <AuthInput title={"Password"} status={passwordvalidation} placeholder={"Min 8 Characters"} change={passwordValidation} type={"password"} value={""}/>
+                <AuthInput title={"Email Address"} status={emailvalidation} placeholder={"E.g.johndoe@gmail.com"} change={emailValidation} type={"text"} value={""} />
+                <AuthInput title={"Password"} status={passwordvalidation} placeholder={"Min 8 Characters"} change={passwordValidation} type={"password"} value={""} />
                 {/* <div className="flex flex-col loginForm">
                 <p style={{ fontSize: "15px", fontFamily: "poppins-light", lineHeight: "20px" }} className="text-white">Email Address</p>
                 <input type="email" className="w-full emailInput focus:bg-transparent" placeholder="E.g.johndoe@gmail.com" onChange={(e)=>setEmail(e.target.value)}/>
             </div> */}
                 <div className="registerButton">
-                  {
-                    completeLoading?  <button className="flex items-center justify-center cursor-wait">COMPLETE</button>:  <button className="flex items-center justify-center" onClick={() => handleComplete()}>COMPLETE</button>
-                  }
+                    {
+                        completeLoading ? <button className="flex items-center justify-center cursor-wait">COMPLETE</button> : <button className="flex items-center justify-center" onClick={() => handleComplete()}>COMPLETE</button>
+                    }
                 </div>
                 <div><p className="text-white cursor-pointer hover:underline" onClick={() => setSideBar(1)} style={{ fontFamily: "poppins-light", marginBottom: "3px", fontSize: "15px" }} >Remembered your account? Login here.</p></div>
             </section>}

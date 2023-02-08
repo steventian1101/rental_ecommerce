@@ -25,6 +25,7 @@ const CardCarousel = ({ imgArray, timeduration, id, setItemID }) => {
     const temp = [];
     const imgRef = useRef();
     useEffect(() => {
+        setDrawImg(null)
         for (let k in imgArray) {
             temp.push(<img src={imgArray[k]} className="carousel_img" ref={imgRef} key={k} />);
         }

@@ -19,7 +19,7 @@ import { async } from "@firebase/util";
 import Link from "next/link"
 import NavBarBack from "./navBarBack";
 
-export default function Header({ login, setLogin, search }) {
+export default function Header({ login, setLogin, search,searchText    }) {
   const listCollectionRef = collection(db, "users")
   const { authenticated, userCredential, logOut } = useAuth();
   const [sideBar, setSideBar] = useState(0);
@@ -124,16 +124,16 @@ export default function Header({ login, setLogin, search }) {
         drawbackground ? <NavBarBack setSideBar={setSideBar}/> : <></>
       }
       <section className="fixed w-full bg-black" style={{ zIndex: "10000" }}>
-        <div className='flex flex-row items-end justify-between navbar'>
+        <div className='flex flex-row items-center items-end justify-between navbar'>
           <Link href='/'>
             <div className='flex flex-row items-center' style={{ height: "40px" }}>
               <img src="/logo/logo.svg" className='mr-2.5 w-full' />
               <p className='text-white logo-title'>Sdrop.</p>
             </div></Link>
            {
-            searchShow &&  <div className="flex flex-row items-center justify-around mr-0 clickBarSearch " >
+            search && searchShow &&  <div className="flex flex-row items-center justify-around mr-0 clickBarSearch " >
             <FontAwesomeIcon icon={faSearch} className="mx-3 mr-0 text-xl font-thin text-white" onClick={()=>{ setSearchShow(false)}}/>
-            <input type="text" className="w-full p-0.5 mx-2 text-base text-white bg-transparent outline-none mr-0" id="homeSearch" placeholder="e.g.SnowBoards" />
+            <input type="text" className="w-full p-0.5 mx-2 text-base text-white bg-transparent outline-none mr-0" id="homeSearch" placeholder="e.g.SnowBoards" defaultValue={searchText}/>
           </div>
            }
             <div className="flex flex-row items-center">
