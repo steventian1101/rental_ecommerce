@@ -8,7 +8,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import Loading from "../auth/loading";
 
-const CardCarousel = ({ imgArray, timeduration, id, setItemID }) => {
+const CardCarousel = ({ imgArray, timeduration, id }) => {
     const [index, setIndex] = useState(0);
     const [direction, setDirection] = useState(0);
     const [imgStyle, setImgStyle] = useState([]);
@@ -25,12 +25,11 @@ const CardCarousel = ({ imgArray, timeduration, id, setItemID }) => {
     const temp = [];
     const imgRef = useRef();
     useEffect(() => {
-        setDrawImg(null)
         for (let k in imgArray) {
             temp.push(<img src={imgArray[k]} className="carousel_img" ref={imgRef} key={k} />);
         }
         setDrawImg(temp);
-    }, [])
+    }, [id])
     const handlePrev = () => {
         if (index == imgArray.length - 1) {
             return;
@@ -112,7 +111,7 @@ const CardCarousel = ({ imgArray, timeduration, id, setItemID }) => {
         {
             loading?<Loading/>:<></>
         }
-        <div className="relative overflow-hidden carousel" onTouchStart={(e) => handleTouchStart(e)} onTouchMove={(e) => handleTouchMove(e)} >
+        <div className="relative overflow-hidden cursor-pointer carousel" onTouchStart={(e) => handleTouchStart(e)} onTouchMove={(e) => handleTouchMove(e)} >
             {
                 timeduration ? <div className="flex flex-row items-center justify-center timestamp">
                     <img src="https://uploads-ssl.webflow.com/5efdc8a4340de947404995b4/638d826a1f96abf10d6d4a87_runer-silhouette-running-fast.svg" style={{ height: "18px", marginRight: "5px", width: "auto" }} />
@@ -128,9 +127,9 @@ const CardCarousel = ({ imgArray, timeduration, id, setItemID }) => {
             <button id="next" type="button" style={{ position: "absolute", right: "0px", width: "40px", height: "100%", background: "transparent", zIndex: "100" }} onClick={() => {
                 handlePrev()
             }}></button>
-            <div style={imgStyle} className="flex w-full h-full" onClick={()=>{ setItemID(id)}}>
+           <Link href={`/item?id=${id}`}> <div style={imgStyle} className="flex w-full h-full" >
                 {drawImg}
-            </div>
+            </div></Link>
 
         </div>
         </>

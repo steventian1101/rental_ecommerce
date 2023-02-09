@@ -19,7 +19,7 @@ import { async } from "@firebase/util";
 import Link from "next/link"
 import NavBarBack from "./navBarBack";
 
-export default function Header({ login, setLogin, search,searchText    }) {
+export default function Header({ login, setLogin, search, navbarSearch}) {
   const listCollectionRef = collection(db, "users")
   const { authenticated, userCredential, logOut } = useAuth();
   const [sideBar, setSideBar] = useState(0);
@@ -106,6 +106,7 @@ export default function Header({ login, setLogin, search,searchText    }) {
       if (e.keyCode === 13) {
         if (document.getElementById("homeSearch").value != null) {
           let text = document.getElementById('homeSearch').value;
+          localStorage.setItem("searchText",text)
           if (text != "") {
             let url = '/?query=' + text
             location.href = url
@@ -124,7 +125,7 @@ export default function Header({ login, setLogin, search,searchText    }) {
         drawbackground ? <NavBarBack setSideBar={setSideBar}/> : <></>
       }
       <section className="fixed w-full bg-black" style={{ zIndex: "10000" }}>
-        <div className='flex flex-row items-center items-end justify-between navbar'>
+        <div className='flex flex-row items-end justify-between navbar'>
           <Link href='/'>
             <div className='flex flex-row items-center' style={{ height: "40px" }}>
               <img src="/logo/logo.svg" className='mr-2.5 w-full' />
@@ -132,18 +133,18 @@ export default function Header({ login, setLogin, search,searchText    }) {
             </div></Link>
            {
             search && searchShow &&  <div className="flex flex-row items-center justify-around mr-0 clickBarSearch " >
-            <FontAwesomeIcon icon={faSearch} className="mx-3 mr-0 text-xl font-thin text-white" onClick={()=>{ setSearchShow(false)}}/>
-            <input type="text" className="w-full p-0.5 mx-2 text-base text-white bg-transparent outline-none mr-0" id="homeSearch" placeholder="e.g.SnowBoards" defaultValue={searchText}/>
+            <FontAwesomeIcon icon={faSearch} className="mx-3 mr-0 text-xl font-thin text-white cursor-pointer" onClick={()=>{ setSearchShow(false)}}/>
+            <input type="text" className="w-full p-0.5 mx-2 text-base text-white bg-transparent outline-none mr-0" id="homeSearch" placeholder="e.g.SnowBoards" defaultValue={localStorage.getItem("searchText")}/>
           </div>
            }
             <div className="flex flex-row items-center">
             {
               search && !searchShow &&  <div className="flex flex-row">
                 <div className="flex flex-row items-center justify-around mr-0 stickyBarSearch">
-                  <FontAwesomeIcon icon={faSearch} className="mx-3 mr-0 text-xl font-thin text-white" />
-                  <input type="text" className="w-full p-0.5 mx-2 text-base text-white bg-transparent outline-none mr-0 animationinput" id="homeSearch" placeholder="e.g.SnowBoards" />
+                  <FontAwesomeIcon icon={faSearch} className="mx-3 mr-0 text-xl font-thin text-white cursor-pointer" />
+                  <input type="text" className="w-full p-0.5 mx-2 text-base text-white bg-transparent outline-none mr-0 animationinput" id="homeSearch" placeholder="e.g.SnowBoards" defaultValue={localStorage.getItem("searchText")}/>
                 </div>
-                <div className="flex items-center justify-center navbarIcon searchIcon" onClick={handleSearchClick}>
+                <div className="flex items-center justify-center cursor-pointer navbarIcon searchIcon" onClick={handleSearchClick}>
                   <FontAwesomeIcon icon={faSearch} style={{ color: "white", fontSize: "18px" }} />
                 </div>
               </div>
@@ -152,10 +153,10 @@ export default function Header({ login, setLogin, search,searchText    }) {
             !searchShow && <>
              {
               authenticated ? <div className="flex flex-row justify-end w-full">
-                <div className="flex items-center justify-center navbarIcon">
+                <div className="flex items-center justify-center cursor-pointer navbarIcon">
                   <Link href="/booking"><FontAwesomeIcon icon={faCalendarCheck} style={{ color: "white", fontSize: "18px" }} /></Link>
                 </div>
-                <div className="flex items-center justify-center navbarIcon">
+                <div className="flex items-center justify-center cursor-pointer navbarIcon">
                   <FontAwesomeIcon icon={faBell} style={{ color: "white", fontSize: "18px" }} onClick={() => { setSideBar(4) }} />
                 </div>
                 <div className="flex items-center justify-center w-10 h-10 mx-2.5" style={{ position: "relative" }} onMouseEnter={() => { handleEnter() }}>
@@ -190,8 +191,8 @@ export default function Header({ login, setLogin, search,searchText    }) {
                   }
                 </div>
               </div> : <div className='flex flex-row'>
-                <p className='mx-5 text-white cursor-pointer' onClick={() => { setSideBar(1) }}>Login</p>
-                <p className='text-white cursor-pointer' onClick={() => { setSideBar(2) }}>Sign Up</p>
+                <Link href= "/login"><p className='mx-5 text-white cursor-pointer'>Login</p></Link>
+                <Link href = "/register"><p className='text-white cursor-pointer'>Sign Up</p></Link>
               </div>
             }</> 
            }

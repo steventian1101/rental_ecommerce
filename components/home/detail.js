@@ -27,15 +27,16 @@ import getRatingAndReviewNumbers from "../../utils/getRatingAndReviewsNumber";
 import { getRatingAndReviewNumbersForOwner } from "../../utils/getRatingAndReviewsNumber";
 import date from "date-and-time"
 import { getFunctions, httpsCallable } from "firebase/functions";
+import { useRouter } from "next/router";
 
-const Detail = ({ id, setSideBar, setDetail, setItemID, setLogin }) => {
+const Detail = ({ id }) => {
     const [content, setContent] = useState(null);
     const [viewnumber, setViewnumber] = useState(null);
     const [owner, setOwner] = useState(null);
     const [ownerData, setOwnerData] = useState(null);
     const [value, setValue] = useState(new Date());
     const [disabledDates, setDisabledates] = useState([new Date()]);
-    const [startdate, setStartDate] = useState(new Date());
+    const [startdate, setStartDate] = useState(date.addDays(new Date(),1));
     const [enddate, setEnddate] = useState(new Date());
     const [calendarDisplay, setCalendarDisplay] = useState(true);
     const [startTime, setStartTime] = useState(0);
@@ -55,6 +56,7 @@ const Detail = ({ id, setSideBar, setDetail, setItemID, setLogin }) => {
     const detailRef = useRef();
     const [reviewNumbers, setReviewNumbers] = useState(null);
     const [ownerReview, setOwnerReview] = useState(null);
+    const router =  useRouter();
     const month = [
         "January",
         "February",
@@ -101,11 +103,6 @@ const Detail = ({ id, setSideBar, setDetail, setItemID, setLogin }) => {
     }
     const handleDuration = (index) => {
         setDurationIndex(index)
-    }
-    const handleback = () => {
-        setSideBar(<></>)
-        setDetail(<></>)
-        setItemID(null);
     }
     const getDetail = async (id) => {
         const docRef = doc(db, "rental_items", id);
@@ -154,21 +151,7 @@ const Detail = ({ id, setSideBar, setDetail, setItemID, setLogin }) => {
     const handleReserve = async () => {
         if(result != 0)
         {    
-            const detail = {
-                customer_id:userDetail[0]["customer_id"],
-                total:result
-            }
-            console.log(detail);
-            const functions = getFunctions();
-            const createPaymentIntent = httpsCallable(functions, 'createPaymentIntent');
             const notificationRef = collection(db,"notifications");
-            const paymentintent = await createPaymentIntent({data:detail});
-            console.log(paymentintent)
-            const confirmPaymentIntent = httpsCallable(functions, 'confirmPaymentIntent');
-            const confirmIntent = await confirmPaymentIntent({data:detail});
-            console.log(confirmIntent);
-            
-            return;
             addDoc(notificationRef, { 
                 to:ownerData[0].user_email,
                 notificationContent:userDetail[0].first_name + " " + userDetail[0].last_name +" has requested to rent your " + content["item_name"],
@@ -181,7 +164,7 @@ const Detail = ({ id, setSideBar, setDetail, setItemID, setLogin }) => {
             });
             
             const listCollectionRef = collection(db, "bookings")
-            addDoc(listCollectionRef, { item_id: id, start_date: month[Number(startdate.getMonth())] + "," + startdate.getDate() + "," + startdate.getFullYear(), start_time: startTime, customer_email: userCredential.email, phone_number: userDetail[0].user_phone, result: result, driving_license: "", full_name: userDetail[0].full_name, credit: userDetail[0].credit_card_number, cvv: userDetail[0].cvv, expireDate: userDetail[0].expire_date, owner_email: content.rental_owner, status: 0, createdTime: serverTimestamp(),               paymentIntent:paymentintent.data.id }).then(response => {
+            addDoc(listCollectionRef, { item_id: id, start_date: month[Number(startdate.getMonth())] + "," + startdate.getDate() + "," + startdate.getFullYear(), start_time: startTime, customer_email: userCredential.email, phone_number: userDetail[0].user_phone, result: result, driving_license: "", full_name: userDetail[0].full_name, credit: userDetail[0].credit_card_number, cvv: userDetail[0].cvv, expireDate: userDetail[0].expire_date, owner_email: content.rental_owner, status: 0, createdTime: serverTimestamp()}).then(response => {
                 setReserve(false);
             }).catch(error => {
             });
@@ -200,7 +183,7 @@ const Detail = ({ id, setSideBar, setDetail, setItemID, setLogin }) => {
     useEffect(() => {
         detailRef.current.scrollTo({ top: 0, behavior: 'smooth' });
         setContent(null);
-        setStartDate(new Date());
+        setStartDate(date.addDays(new Date(), 1));
         setEnddate(new Date());
         setDurationIndex(0);
         id && getDetail(id);
@@ -231,10 +214,6 @@ const Detail = ({ id, setSideBar, setDetail, setItemID, setLogin }) => {
     useEffect(() => {
         owner && ownerDetail(owner);
     }, [owner]);
-    const handleLogin = () => {
-        handleback();
-        setLogin(true);
-    }
     useEffect(() => {
         content && getTotal(Number(durationIndex));
     }, [durationIndex, content?.item_charge])
@@ -303,10 +282,14 @@ const Detail = ({ id, setSideBar, setDetail, setItemID, setLogin }) => {
             setEnddate(new Date(start_time))
         }
     }
+    const handleback = () => {
+        let url = "/?query=" + localStorage.getItem("searchText");
+        router.push(url);
+    }
     return (
         <section className="fixed top-0 right-0 z-50 bg-white detail" ref={detailRef}>
             <div className="relative">
-                <div style={{ height: "50px", marginBottom: "10px" }} className="flex flex-row items-center cursor-pointer" onClick={handleback}><FontAwesomeIcon icon={faArrowLeftLong} className="text-2xl text-white" /></div>
+                <div style={{ height: "50px", marginBottom: "10px" }} className="flex flex-row items-center cursor-pointer"><FontAwesomeIcon icon={faArrowLeftLong} className="text-2xl text-white" onClick = {()=>{handleback()}} /></div>
                 {
                     content && <DetailCarousel imgArray={content["item_photos"]} id={id} />
                 }
@@ -314,7 +297,7 @@ const Detail = ({ id, setSideBar, setDetail, setItemID, setLogin }) => {
                     <div className="flex flex-col flex-wrap detailpart">
                         <p className="text-white detailTitle">{content && content["item_name"]}</p>
                         <div className="flex flex-row flex-wrap">
-                            <p className="text-white font-15 mb-2.5 flex flex-row justify-center items-center" style={{ borderRight: "solid 1px #ffffff4d", padding: "0px 10px 0px 0px", marginRight: "10px" }}><FontAwesomeIcon icon={faStar} className="mr-2.5 text-sm text-white" />{reviewNumbers && reviewNumbers.reviewNumber != "0" && reviewNumbers["rating"] + ' - ' + reviewNumbers["reviewNumber"] + " Reviews"}</p>
+                            <p className="text-white font-15 mb-2.5 flex flex-row justify-center items-center" style={{ borderRight: "solid 1px #ffffff4d", padding: "0px 10px 0px 0px", marginRight: "10px" }}><FontAwesomeIcon icon={faStar} className="mr-2.5 text-sm text-white" />{reviewNumbers && reviewNumbers.reviewNumber != "0" ? reviewNumbers["rating"] + ' - ' + reviewNumbers["reviewNumber"] + " Reviews":"0.0 - 0 Reviews"}</p>
                             <p className="text-white font-15 mb-2.5" style={{ borderRight: "solid 1px #ffffff4d", padding: "0px 10px 0px 0px", marginRight: "10px" }}>20 mins away</p>
                             <p className="text-white font-15 mb-2.5 flex flex-row justify-center items-center" style={{ borderRight: "solid 0px #ffffff4d", padding: "0px 10px 0px 0px", marginRight: "10px" }}><FontAwesomeIcon icon={faEye} className="mr-2.5 text-sm text-white" />{content && (Number(content["item_views"]) + 1) + " views "}</p>
                         </div>
@@ -435,7 +418,7 @@ const Detail = ({ id, setSideBar, setDetail, setItemID, setLogin }) => {
                                             </div>
                                         }
                                     </div> : <div>
-                                        <button className="flex justify-center w-full text-white rounded-lg font-15 bold" style={{ marginBottom: "20px", padding: "15px 10px", background: "#0052cc" }} onClick={handleLogin}>LOGIN TO RESERVE</button>
+                                        <Link href="/login"><button className="flex justify-center w-full text-white rounded-lg font-15 bold" style={{ marginBottom: "20px", padding: "15px 10px", background: "#0052cc" }}>LOGIN TO RESERVE</button></Link>
                                         <p className="text-white">Charge Rate</p>
                                         <p className="text-white font-18 bold">{content && "$" + Number(content.item_charge).toFixed(2) + "/" + content.item_charge_rate}</p>
                                     </div>
@@ -466,7 +449,7 @@ const Detail = ({ id, setSideBar, setDetail, setItemID, setLogin }) => {
                     <div className="flex flex-row flex-wrap">
                         {
                             similarData && similarData.length > 0 && similarData.map((hit, index) => (
-                                <Itemcard details={hit} key={index} setItemID={setItemID} />
+                                <Itemcard details={hit} key={index} />
                             ))
                         }
                     </div>

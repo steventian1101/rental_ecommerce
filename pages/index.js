@@ -7,7 +7,9 @@ export default function IndexPage() {
   const router = useRouter();
   const { query } = router.query;
   const link = router.pathname;
+  console.log(router)
   const [search, setSearch] = useState(false);
+  const [navbarSearch, setNavbarSearch] = useState('');
   useEffect(() => {
     window.addEventListener("scroll", detectScroll);
     return () => {
@@ -23,19 +25,17 @@ export default function IndexPage() {
     }
   }
   useEffect(()=>{
-        if(router.query.login == "true"){
-          setLogin(true)
-        }
-  },[router.query?.login])
+        setNavbarSearch(router.query.query)
+  },[router.query?.query])
   
   return (
     <>
-      <Header login = { login } setLogin={ setLogin} search={search} searchText= {query}/>
+      <Header login = { login } setLogin={ setLogin} search={search} navbarSearch={navbarSearch}/>
       {
-         query && <Search searchText = {query} setLogin={ setLogin} />
+         query && <Search searchText = {query} setLogin={ setLogin} setNavbarSearch={setNavbarSearch}/>
       }
       {
-        link &&  !query &&  <Search searchText = {""} setLogin={ setLogin}/>
+        link &&  !query &&  <Search searchText = {""} setLogin={ setLogin} setNavbarSearch={setNavbarSearch}/>
       }
       
     </>

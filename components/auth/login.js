@@ -8,7 +8,8 @@ import { db } from "../../lib/initFirebase";
 import { collection, addDoc, query, orderBy, where, getDocs } from "firebase/firestore";
 import Loading from "./loading";
 import { GoogleAuthProvider } from "firebase/auth";
-const Login = ({ setSideBar }) => {
+import Link from "next/link";
+const Login = () => {
     const listCollectionRef = collection(db, "users")
     const provider = new GoogleAuthProvider();
     const { signIn, googleAuth, userCredential, error, errorRemove} = useAuth();
@@ -20,7 +21,7 @@ const Login = ({ setSideBar }) => {
     const [warning, setWarning] = useState(null);
     const [drawwarning, setDrawwarning] = useState(false);
     const emailValidation = (any) => {
-        if ((any.indexOf("@") > -1) && (any.indexOf(".") > -1)) {
+        if ((any.indexOf("@") > -1) && (any.indexOf(".") > -1) || any == '') {
             setEmail(any)
             setEmailvalidation(true);
         }
@@ -29,7 +30,7 @@ const Login = ({ setSideBar }) => {
         }
     }
     const passwordValidation = (any) => {
-        if (any.length > 7) {
+        if (any.length > 7 || any == "") {
             setPassword(any)
             setPasswordvalidation(true);
         }
@@ -74,7 +75,7 @@ const Login = ({ setSideBar }) => {
     },[warning])
     return (
         <section className="login">
-            <div style={{ height: "50px", marginBottom: "10px" }} className="flex flex-row items-center cursor-pointer"><FontAwesomeIcon icon={faArrowLeftLong} className="text-2xl text-white" onClick={() => setSideBar(0)} /></div>
+            <Link href="/"><div style={{ height: "50px", marginBottom: "10px" }} className="flex flex-row items-center cursor-pointer"><FontAwesomeIcon icon={faArrowLeftLong} className="text-2xl text-white" /></div></Link>
             <p className="loginText">LOGIN.</p>
             <div className="loginTextBack"></div>
             <p className="loginDetail">Login to Sydney's largest rental platform</p>
@@ -97,9 +98,9 @@ const Login = ({ setSideBar }) => {
                     loading?<button className="flex items-center justify-center cursor-wait">LOGIN</button>:<button className="flex items-center justify-center" onClick={() => { handleLogin() }}>LOGIN</button>
                 }
             </div>
-            <div><p className="text-white cursor-pointer hover:underline" onClick={() => { setSideBar(2) }} style={{ fontFamily: "poppins-light", marginBottom: "3px", fontSize: "15px" }} >Don't have an account? Sign up here.</p></div>
-            <div>
-                <p className="text-white cursor-pointer hover:underline" onClick={() => { setSideBar(3) }} style={{ fontFamily: "poppins-light", fontSize: "15px" }}>Forgot your password? Reset it here.</p></div>
+           <Link href='/register'> <div><p className="text-white cursor-pointer hover:underline" style={{ fontFamily: "poppins-light", marginBottom: "3px", fontSize: "15px" }} >Don't have an account? Sign up here.</p></div></Link>
+            <Link href='/resetPassword'><div>
+                <p className="text-white cursor-pointer hover:underline"  style={{ fontFamily: "poppins-light", fontSize: "15px" }}>Forgot your password? Reset it here.</p></div></Link>
         </section>
 
     )

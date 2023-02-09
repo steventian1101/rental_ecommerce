@@ -12,6 +12,7 @@ import { useAuth } from "../../context/useAuth";
 import { auth } from "../../lib/initFirebase";
 import { GoogleAuthProvider } from "firebase/auth";
 import { getFunctions, httpsCallable } from "firebase/functions"
+import Link from "next/link";
 const Register = ({ sideBar, setSideBar }) => {
     const provider = new GoogleAuthProvider();
     const { createUser, googleAuth } = useAuth();
@@ -38,7 +39,7 @@ const Register = ({ sideBar, setSideBar }) => {
     const [customerID, setCustomerID] = useState(null);
     const listCollectionRef = collection(db, "users");
     const emailValidation = (any) => {
-        if ((any.indexOf("@") > -1) && (any.indexOf(".") > -1)) {
+        if ((any.indexOf("@") > -1) && (any.indexOf(".") > -1) || any == '') {
             setEmail(any)
             setEmailvalidation(true);
         }
@@ -47,7 +48,7 @@ const Register = ({ sideBar, setSideBar }) => {
         }
     }
     const passwordValidation = (any) => {
-        if (any.length > 7) {
+        if (any.length > 7 || any == '') {
             setPassword(any)
             setPasswordvalidation(true);
         }
@@ -57,7 +58,7 @@ const Register = ({ sideBar, setSideBar }) => {
     }
     const firstnameValidation = (any) => {
         let str = /([A-Z]{1})\)?([a-z]{1,})$/;
-        if (str.test(any)) {
+        if (str.test(any) || any == '') {
             setFirstname(any)
             setFirstnamevalidation(true);
         }
@@ -67,7 +68,7 @@ const Register = ({ sideBar, setSideBar }) => {
     }
     const lastnameValidation = (any) => {
         let str = /([A-Z]{1})\)?([a-z]{1,})$/;
-        if (str.test(any)) {
+        if (str.test(any) || any == '') {
             setLastname(any)
             setLastnamevalidation(true);
         }
@@ -76,7 +77,7 @@ const Register = ({ sideBar, setSideBar }) => {
         }
     }
     const nicknameValidation = (any) => {
-        if (any.length > 2) {
+        if (any.length > 2 || any == '') {
             setNickname(any)
             setNicknamevalidation(true);
         }
@@ -86,7 +87,7 @@ const Register = ({ sideBar, setSideBar }) => {
     }
     const phoneValidation = (any) => {
         let str = /^\+?([61]{2})\)?[ ]?([0-9]{3})[ ]?([0-9]{3})[ ]?([0-9]{3})$/;
-        if (str.test(any)) {
+        if (str.test(any) || any == '') {
             setPhone(any)
             setPhonevalidation(true);
         } else {
@@ -96,7 +97,7 @@ const Register = ({ sideBar, setSideBar }) => {
     }
     const addressValidation = (any) => {
         let str = /([0-9A-Za-z])[,]?([0-9])[,]?[| ]?\bAustralia\b$/;
-        if (str.test(any)) {
+        if (str.test(any) || any == '') {
             setAddress(any)
             setAddressvalidation(true);
         } else {
@@ -221,7 +222,7 @@ const Register = ({ sideBar, setSideBar }) => {
                     <button className="flex items-center justify-center" onClick={() => { handleRegister() }}>COMPLETE</button>
                 </div>
             </section> : <section className="register">
-                <div style={{ height: "50px", marginBottom: "10px" }} className="flex flex-row items-center cursor-pointer"><FontAwesomeIcon icon={faArrowLeftLong} className="text-2xl text-white" onClick={() => setSideBar(0)} /></div>
+                <Link href = "/"><div style={{ height: "50px", marginBottom: "10px" }} className="flex flex-row items-center cursor-pointer"><FontAwesomeIcon icon={faArrowLeftLong} className="text-2xl text-white"/></div></Link>
                 <p className="loginText">SIGN UP.</p>
                 <div className="registerTextBack"></div>
                 <p className="loginDetail">Login to Sydney's largest rental platform</p>
@@ -242,7 +243,7 @@ const Register = ({ sideBar, setSideBar }) => {
                         completeLoading ? <button className="flex items-center justify-center cursor-wait">COMPLETE</button> : <button className="flex items-center justify-center" onClick={() => handleComplete()}>COMPLETE</button>
                     }
                 </div>
-                <div><p className="text-white cursor-pointer hover:underline" onClick={() => setSideBar(1)} style={{ fontFamily: "poppins-light", marginBottom: "3px", fontSize: "15px" }} >Remembered your account? Login here.</p></div>
+                <Link href='/login'><div><p className="text-white cursor-pointer hover:underline" style={{ fontFamily: "poppins-light", marginBottom: "3px", fontSize: "15px" }} >Remembered your account? Login here.</p></div></Link>
             </section>}
         </>
     )

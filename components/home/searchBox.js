@@ -15,7 +15,7 @@ const useDebounce = (func, milliseconds) => {
         timer = setTimeout(func, time, event)
     }
 }
-export default function SearchBox({ searchText }) {
+export default function SearchBox({ searchText, setNavbarSearch }) {
     const [text, setText] = useState(null);
     const memoizedSearch = useCallback((query, search) => {
       search(query);
@@ -24,16 +24,18 @@ export default function SearchBox({ searchText }) {
         queryHook: memoizedSearch,
     });
     const handleChange = useDebounce((event) => {
+        setNavbarSearch(event.target.value)
+        let temptext = event.target.value;
+        console.log("localstorage setitem function")
+        localStorage.setItem('searchText', temptext);
         refine(event.target.value)
     },500)
     useEffect(()=>{
+        console.log("localstorage setitem useEffect")
          refine(searchText)
          setText(searchText)
+         localStorage.setItem('searchText', text);
     },[text])
-   
-    
-    
-
     return (
         <div className="flex flex-row items-center justify-around searchBox" >
             <FontAwesomeIcon icon={faSearch} className="text-xl text-white " />

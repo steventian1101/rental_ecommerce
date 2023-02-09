@@ -4,7 +4,8 @@ import { useState, useEffect} from "react"
 import { auth } from "../../lib/initFirebase"
 import { sendPasswordResetEmail } from "firebase/auth"
 import AuthInput from "./authInput"
-const ResetPassword = ({ setSideBar, sidebar}) =>{
+import Link from "next/link"
+const ResetPassword = () =>{
     const [emailvalidation, setEmailvalidation] = useState(true);
     const [email, setEmail] = useState('');
     const [loading, setLoading] = useState(false);
@@ -23,7 +24,7 @@ const ResetPassword = ({ setSideBar, sidebar}) =>{
 
     }
     const emailValidation = (any) => {
-        if ((any.indexOf("@") > -1) && (any.indexOf(".") > -1)) {
+        if ((any.indexOf("@") > -1) && (any.indexOf(".") > -1) || any == '') {
             setEmail(any)
             setEmailvalidation(true);
         }
@@ -33,7 +34,7 @@ const ResetPassword = ({ setSideBar, sidebar}) =>{
     }
  return(
     <section className="passwordReset">
-            <div style={{ height: "50px", marginBottom:"10px" }} className="flex flex-row items-center cursor-pointer"><FontAwesomeIcon icon={faArrowLeftLong} className="text-2xl text-white"  onClick={ () =>setSideBar(0)}/></div>
+           <Link href='/'><div style={{ height: "50px", marginBottom:"10px" }} className="flex flex-row items-center cursor-pointer"><FontAwesomeIcon icon={faArrowLeftLong} className="text-2xl text-white"/></div></Link>
             <p className="loginText">FORGOT PASSWORD.</p>
             <div className="passwordResetTextBack"></div>
             <p className="loginDetail">Don't worry, we'll send a password resetlink to the email address that was with us.</p>

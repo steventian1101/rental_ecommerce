@@ -350,3 +350,29 @@ async function confirmIntent() {
     );
     return confirmpaymentIntent
 }
+exports.createSetupIntent = functions.https.onRequest(async (req, res) => {
+    cors(req, res, () => {
+       var amount = Number(req.body.data.data.amount);
+       var cus_id = req.body.data.data.customer_id;
+       createSetupIn(cus_id, amount).then((result)=>{
+        res.status(200).send({ data: result })
+       }).catch((error) => {
+        res.status(200).send({ error: error.message })
+      });
+    })
+});
+async function createSetupIn (cus_id, amount) {
+    try {
+        // Create a SetupIntent for the customer
+        const setupIntent = await stripe.setupIntents.create({
+          customer: cus_id,
+          payment_method_types: ['card'],
+          usage: 'off_session',
+        });
+    
+        return setupIntent;
+      } catch (error) {
+        console.error(error);
+        return error;
+      }
+}

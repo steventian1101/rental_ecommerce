@@ -6,6 +6,7 @@ import { useAuth } from "../../context/useAuth"
 import { updateDoc, deleteField, doc, collection, addDoc, query, orderBy, where, getDocs } from "firebase/firestore";
 import { db } from "../../lib/initFirebase"
 import { getFunctions, httpsCallable } from "firebase/functions"
+import { useRouter } from "next/router"
 const Payment = ({ setSideBar }) => {
     const { userCredential } = useAuth();
     const [fullname, setFullname] = useState('');
@@ -19,6 +20,8 @@ const Payment = ({ setSideBar }) => {
     const [loading, setLoading] = useState(false);
     const [email, setEmail] = useState(null);
     const [tempData, setTempdata] = useState([]);
+    const router = useRouter();
+    console.log(router)
     const fullnameValidation = (any) => {
         let str = /(^[A-Za-z]{3,16})([ ]{0,1})([A-Za-z]{3,16})?([ ]{0,1})?([A-Za-z]{3,16})?([ ]{0,1})?([A-Za-z]{3,16})/;
         setFullnamevalidation(str.test(any))

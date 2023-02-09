@@ -9,6 +9,7 @@ import DetailCarousel from "../home/detailCarousel";
 import { useState, useEffect } from "react";
 import { collection, serverTimestamp, doc, updateDoc, deleteDoc, addDoc } from "firebase/firestore";
 import { db } from "../../lib/initFirebase";
+import { httpsCallable, getFunctions } from "firebase/functions";
 const month = {
     "0": "January",
     "1": "February",
@@ -64,7 +65,17 @@ const Pending = ({ setSideBar, id, ownerdata, customerdata, itemdata, booking, s
             setGroupbuttons(false);
         }
     }
-    const handleAccept = () => {
+    const handleAccept = async () => {
+        const detail = {
+            amount: booking.result,
+            customer_id:customerdata[0].customer_id,
+        }
+        console.log(detail);
+        const functions = getFunctions();
+        const createSetupIntent = httpsCallable(functions, 'createSetupIntent');
+        const setupIntent = await createSetupIntent({data:detail});
+        console.log(setupIntent);
+        return;
         const docRef = doc(db, "bookings", booking.booking_id);
         const newdata = {
             status: 1

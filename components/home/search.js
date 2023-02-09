@@ -5,7 +5,7 @@ import SearchBox from "./searchBox"
 import SearchResult from "./searchResult"
 import Detail from "./detail"
 import SidebarBack from "../sidebarBack"
-const Search = ({searchText, setLogin}) => {
+const Search = ({searchText, setNavbarSearch}) => {
     const [itemID, setItemID] = useState(null);
     const [detail, setDetail] = useState([]);
     const [sideBar, setSideBar] = useState([]);
@@ -39,7 +39,7 @@ const Search = ({searchText, setLogin}) => {
             </div>
             <p className="m-auto mb-6 text-lg font-light text-center text-white homeDetail" style={{ marginTop: "6px" }}>Explore Sydney's Largest Rental Directory.</p>
             <InstantSearch searchClient={searchClient} indexName='items'>
-                <SearchBox searchText = {searchText}/>
+                <SearchBox searchText = {searchText} setNavbarSearch={setNavbarSearch}/>
                 <SearchResult setItemID={setItemID} searchText={searchText}/>
             </InstantSearch>
         </section>

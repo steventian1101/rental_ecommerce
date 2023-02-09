@@ -1,6 +1,7 @@
 import Itemcard from "./itemcard"
 import { useInfiniteHits } from 'react-instantsearch-hooks-web'
 import { useEffect } from "react";
+import ItemcardLoading from "./itemcardLoading";
 const SearchResult = ({ setItemID, searchText }) => {
     const { hits,
         currentPageHits,
@@ -17,18 +18,33 @@ const SearchResult = ({ setItemID, searchText }) => {
         }
     })
     const handleScroll = () => {
-        if (((window.innerHeight + window.scrollY) >= document.body.offsetHeight)) {
+        if (((window.innerHeight + window.scrollY) == document.body.offsetHeight)) {
             showMore();
         }
     };
+
     return (
-        <div className="flex flex-row flex-wrap justify-center searchResult">
-            {
-                hits && hits.length > 0 && hits.map((hit, index) => (
-                    <Itemcard details={hit} key={index} setItemID={setItemID} />
-                ))
-            }
-        </div>
+        <>
+        {
+            hits && hits.length > 0
+                ?
+                    <div className="flex flex-row flex-wrap justify-center searchResult">
+                        {
+                            hits.map((hit, index) => (
+                                <Itemcard details={hit} key={index} setItemID={setItemID} />
+                            ))
+                        }
+                    </div>
+                :
+                    <div className="flex flex-row flex-wrap justify-center searchResult">
+                        {
+                            new Array(20).map(() => (
+                                <ItemcardLoading />
+                            ))
+                        }
+                    </div>
+        }
+        </>
     )
 
 }
