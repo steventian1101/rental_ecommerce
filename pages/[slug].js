@@ -7,6 +7,7 @@ import Search from '../components/home/search';
 import Header from '../components/navbar';
 import SidebarBack from '../components/sidebarBack';
 import Detail from '../components/home/detail';
+import HomeBack from '../components/home/homeBack';
 
 const Page = () => {
     const router = useRouter();
@@ -25,9 +26,12 @@ const Page = () => {
             setSideBar(<ResetPassword />)
         }
         if(slug == 'item'){
-            setSideBar(<Detail id={ id }/>)
+            setSideBar(<Detail id ={ id }/>)
         }
-    }, [slug])
+        if(slug == null){
+            setSideBar(null)
+        }
+    }, [slug, id])
 
     return (
         <>
@@ -35,8 +39,8 @@ const Page = () => {
                       sideBar
             }
             <Header/>
-            <Search searchText = { localStorage.getItem("searchText")}/>
-            <SidebarBack/>
+            <Search searchText = {typeof window !== "undefined" && "localStorage" in window &&   localStorage.getItem("searchText")?localStorage.getItem("searchText"):""}/>
+            <HomeBack/>
         </>
     );
 };

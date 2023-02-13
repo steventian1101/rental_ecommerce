@@ -213,7 +213,7 @@ p {
 
 .notification {
   position: fixed;
-  z-index: 10001;
+  z-index: 100000000;
   top: 0px;
   right: 0px;
   height: 100vh;
@@ -427,7 +427,7 @@ input:-webkit-autofill:active {
   padding-bottom: 100px;
   margin-left: auto;
   margin-right: auto;
-  height: 100%;
+  height: 100vh;
 
 }
 
@@ -588,7 +588,11 @@ p {
 }
 
 .createitembuttonbar {
-  margin-top: 350px;
+  position: fixed;
+  max-width: 1315px;
+  width: 90vw;
+  bottom: 0px;
+  height: 150px;
 }
 
 .createitembutton {
@@ -861,6 +865,10 @@ input::placeholder {
 }
 
 @media screen and (max-width: 991px) {
+  .createitembuttonbar{
+    height: 100px;
+    width: 80vw;
+  }
   .detailpart {
     width: 52%;
   }
@@ -938,6 +946,10 @@ input::placeholder {
 }
 
 @media screen and (max-width: 767px) {
+  .createitembuttonbar{
+    height: 60px; 
+  }
+  
   .mobilesuccessnoti{
     display: flex;
   }
@@ -987,10 +999,6 @@ input::placeholder {
   .createitembutton {
     width: 50px;
     height: 50px;
-  }
-
-  .createitembuttonbar {
-    margin-top: 10px;
   }
 
   .ownerItemcard .carousel {
@@ -1118,6 +1126,10 @@ input::placeholder {
 }
 
 @media screen and (max-width: 479px) {
+  .createitembuttonbar{
+    width: 85vw;
+    height: 60px;
+  }
   .reviewcontent{
     width: 100%;
   }

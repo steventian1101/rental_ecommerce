@@ -203,7 +203,6 @@ const BookingCard = ({ booking, inbounded, setSideBar,setLoading }) => {
             <div className="flex flex-col">
                 <p className="flex text-white">Start: {(booking.start_date).split(",")[0] + " " + (booking.start_date).split(",")[1] + ", " + (booking.start_date).split(",")[2]+" "+ time[booking.start_time]}</p>
                 <p className="flex text-white">End: {enddate && month[enddate.getMonth()] + " " + enddate.getDate() + ", " + enddate.getFullYear() + " " + String(enddate.getHours()).padStart(2, "0") + ":" + String(enddate.getMinutes()).padStart(2, "0")}</p>
-                <p className="flex text-white">Charge: +${booking.result.toFixed(2)}</p>
 
             </div>
         </div>

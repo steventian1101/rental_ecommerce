@@ -53,6 +53,8 @@ const Ready = ({ setSideBar, id, ownerdata, customerdata, itemdata, booking }) =
     const { userCredential } = useAuth();
     useEffect(() => {
         userCredential.email && selectButtons()
+        console.log(booking.result);
+        console.log(itemdata.item_charge)
     }, []);
     const selectButtons = () => {
         if (userCredential.email == booking.owner_email) {

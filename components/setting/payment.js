@@ -7,7 +7,8 @@ import { updateDoc, deleteField, doc, collection, addDoc, query, orderBy, where,
 import { db } from "../../lib/initFirebase"
 import { getFunctions, httpsCallable } from "firebase/functions"
 import { useRouter } from "next/router"
-const Payment = ({ setSideBar }) => {
+import Link from "next/link"
+const Payment = () => {
     const { userCredential } = useAuth();
     const [fullname, setFullname] = useState('');
     const [credit, setCredit] = useState('');
@@ -24,28 +25,28 @@ const Payment = ({ setSideBar }) => {
     console.log(router)
     const fullnameValidation = (any) => {
         let str = /(^[A-Za-z]{3,16})([ ]{0,1})([A-Za-z]{3,16})?([ ]{0,1})?([A-Za-z]{3,16})?([ ]{0,1})?([A-Za-z]{3,16})/;
-        setFullnamevalidation(str.test(any))
+        setFullnamevalidation(str.test(any) || any == "")
         if (str.test(any)) {
             setFullname(any)
         }
     }
     const creditValidation = (any) => {
-        let str = /[^0-9]+/;
-        setCreditvalidation(str.test(any));
+        let str =  /(?:\d[ -]*?){16}/;
+        setCreditvalidation(str.test(any) || any == "");
         if (str.test(any)) {
             setCredit(any)
         }
     }
     const expireValidation = (any) => {
         let str = /^(0[1-9]|1[0-2])\/\d{2}$/;
-        setExpirevalidation(str.test(any));
+        setExpirevalidation(str.test(any) || any == "");
         if (str.test(any)) {
             setExpireDate(any);
         }
     }
     const cvvValidation = (any) => {
         let str = /^[0-9]{3,4}$/;
-        setCvvvalidation(str.test(any));
+        setCvvvalidation(str.test(any) || any == "");
         if (str.test(any)) {
             setCvv(any);
         }
@@ -61,6 +62,12 @@ const Payment = ({ setSideBar }) => {
             setExpirevalidation(false);
             setCvvvalidation(false);
             setLoading(false);
+        }
+        if (typeof window !== "undefined" && "localStorage" in window && localStorage.getItem("loginNextUrl")) {
+            let url = localStorage.getItem("beforeAddPayment");
+            router.push(url);
+        } else {
+            router.push('/setting/payment');
         }
     }
     const getDetail = async (email) => {
@@ -85,11 +92,11 @@ const Payment = ({ setSideBar }) => {
         });
         const docRef = doc(db, "users", docID);
         const creditPaymentData = {
-            customer_id:customerID,
-            card_number:credit,
-            expiry_month:expireDate.split("/")[0],
-            expiry_year:expireDate.split("/")[1],
-            cvv:cvv
+            customer_id: customerID,
+            card_number: credit,
+            expiry_month: expireDate.split("/")[0],
+            expiry_year: expireDate.split("/")[1],
+            cvv: cvv
         }
         console.log(creditPaymentData);
         createPayment(creditPaymentData);
@@ -113,18 +120,20 @@ const Payment = ({ setSideBar }) => {
         userCredential.email && setEmail(userCredential.email);
         userCredential.email && getDetail(userCredential.email);
     }, [userCredential]);
-    const createPayment = async (detail) =>{
+    const createPayment = async (detail) => {
         const functions = getFunctions();
         const createPaymentMethod = httpsCallable(functions, 'createPaymentMethod');
-        await createPaymentMethod({ data: detail }).then((result)=>{
+        await createPaymentMethod({ data: detail }).then((result) => {
             console.log(result)
-            
+
         });
 
     }
     return (
         <section className="overflow-auto addProfileInfo">
-            <div style={{ height: "50px", marginBottom: "10px" }} className="flex flex-row items-center cursor-pointer"><FontAwesomeIcon icon={faArrowLeftLong} className="text-2xl text-white" onClick={() => setSideBar(0)} /></div>
+            <Link href='/setting'>
+                <div style={{ height: "50px", marginBottom: "10px" }} className="flex flex-row items-center cursor-pointer"><FontAwesomeIcon icon={faArrowLeftLong} className="text-2xl text-white" /></div>
+            </Link>
             <p className="loginText">PAYMENT METHOD</p>
             <p className="loginDetail">Add all the customer's information</p>
             <AuthInput title={"Full Name"} status={fullnamevalidation} placeholder={"E.g.John Doe"} change={fullnameValidation} type={"text"} value={tempData && tempData.length > 0 ? tempData[0].full_name : ''} />

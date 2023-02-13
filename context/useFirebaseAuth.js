@@ -18,11 +18,13 @@ export default function useFirebaseAuth() {
     const listCollectionRef = collection(db, "users")
     const signIn = (auth, email, password) => {
         signInWithEmailAndPassword(auth, email, password).then((userCredential) => {
-            console.log(userCredential);
-            setUserCredential(userCredential)
-            console.log("okay good !!!!");
-             router.push('/');
-            window.location.reload();  
+            setUserCredential(userCredential.user)
+            if (typeof window !== "undefined" && "localStorage" in window && localStorage.getItem("loginNextUrl")) {
+                let url = localStorage.getItem("loginNextUrl");
+                router.push(url);
+            } else {
+                router.push('/');
+            }
         }).catch((error) => {
             setError(error.message)
             console.log(error.message)
@@ -32,7 +34,6 @@ export default function useFirebaseAuth() {
         createUserWithEmailAndPassword(auth, email, password).then((userCredential) => {
             console.log(userCredential.user.uid);
             router.push('/');
-            window.location.reload();
         }).catch((error) => {
             console.log(error.message)
         });
@@ -113,9 +114,9 @@ export default function useFirebaseAuth() {
             }
         });
     }, []);
-    useEffect(()=>{
-      console.log(email)
-    },[userCredential])
+    useEffect(() => {
+        console.log(email)
+    }, [userCredential])
     const errorRemove = (error) => {
         setError(error);
     }

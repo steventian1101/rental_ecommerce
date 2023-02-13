@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeftLong } from "@fortawesome/free-solid-svg-icons";
 import AuthInput from "../auth/authInput";
 import { useState, useEffect } from "react";
-const AddChargeRate = ({ setSideBar, setChargeRate}) => {
+const AddChargeRate = ({ setSideBar, setChargeRate, chargeRate}) => {
     const [charge, setCharge] = useState(0);
     const [chargevalidation, setChargevalidation] = useState(true);
     const [hour, setHour] = useState(true);
@@ -13,14 +13,17 @@ const AddChargeRate = ({ setSideBar, setChargeRate}) => {
     const [own, setOwn] = useState(false);
     const [cover, setCover] = useState(false);
     const chargeValidation = (any) => {
-        if (any != 0) {
+        if (any === '' || (any.match(/^\d+$/) && parseInt(any, 10) > 0)) {
             setCharge(any);
-            setChargevalidation(true);
-        }
-        else {
-            setChargevalidation(false);
+            setChargevalidation(true);}
+        else{
+            setChargevalidation(false)
         }
     }
+    useEffect(()=>{
+       chargeRate && chargeRate.charge_rate_type && handleClick(chargeRate.charge_rate_type);
+       chargeRate && chargeRate.insurance != "none" && handleInsurance(chargeRate.insurance);
+    },[])
     const handleClick = (type) => {
         if (type == "hour") {
             setHour(true);
@@ -114,7 +117,7 @@ const AddChargeRate = ({ setSideBar, setChargeRate}) => {
             <div style={{ height: "50px", marginBottom: "10px" }} className="flex flex-row items-center cursor-pointer"><FontAwesomeIcon icon={faArrowLeftLong} className="text-2xl text-white" onClick={() => setSideBar(0)} /></div>
             <p className="loginText">ADD THE CHARGE RATE</p>
             <p className="loginDetail">Time to make some money and make sure you're item is covered!</p>
-            <AuthInput title={"Item's Charge Rate"} status={chargevalidation} placeholder={"E.g.5 AUD"} change={chargeValidation} type={"number"} value={""} />
+            <AuthInput title={"Item's Charge Rate"} status={chargevalidation} placeholder={"E.g.5 AUD"} change={chargeValidation} type={"number"} value={chargeRate && chargeRate.price ? chargeRate.price:""} />
             <div>
                 <div className="flex flex-row justify-between chargeraterecordbutton">
                     <p className="text-white">Per Hour</p>

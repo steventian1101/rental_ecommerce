@@ -1,5 +1,6 @@
-import Header from "../components/navbar"
-import RentalOwner from "../components/rentalOwner"
+
+import Header from "../../components/navbar"
+import RentalOwner from "../../components/rentalOwner"
 import { useRouter } from "next/router"
 import { useState } from "react";
 

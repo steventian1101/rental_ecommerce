@@ -71,11 +71,6 @@ const Pending = ({ setSideBar, id, ownerdata, customerdata, itemdata, booking, s
             customer_id:customerdata[0].customer_id,
         }
         console.log(detail);
-        const functions = getFunctions();
-        const createSetupIntent = httpsCallable(functions, 'createSetupIntent');
-        const setupIntent = await createSetupIntent({data:detail});
-        console.log(setupIntent);
-        return;
         const docRef = doc(db, "bookings", booking.booking_id);
         const newdata = {
             status: 1

@@ -16,6 +16,7 @@ import { useRouter } from "next/router";
 import EditItemImg from "./editItemImg";
 import EditChargeRate from "./editChargeRate";
 import back from "../../utils/handleBack";
+import CreateBack from "./createBack";
 const EditItem = ({ query }) => {
     const [sideBar, setSideBar] = useState(0);
     const [drawSidebar, setDrawSidebar] = useState([]);
@@ -202,7 +203,7 @@ const EditItem = ({ query }) => {
             </div>
             }
             {
-                sideBar != 0 ? <SidebarBack /> : <></>
+                sideBar != 0 ? <CreateBack setSideBar={ setSideBar} /> : <></>
             }
             {
                 drawSidebar

@@ -5,8 +5,10 @@
   "main": "index.js",
   "scripts": {
     "dev": "next",
-    "build": "next build && next export && firebase deploy --only hosting",
-    "start": "next start"
+    "build": "next build",
+    "export": "next export",
+    "start": "next start",
+    "deploy": "yarn build && yarn export && firebase deploy --only hosting"
   },
   "repository": {
     "type": "git",

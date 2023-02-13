@@ -66,7 +66,7 @@ const Booking = () => {
     const getallinboundedbooking  = async (email) =>{
         let temp = [];
         const listCollectionRef = collection(db, "bookings");
-        let q = query(listCollectionRef, where("owner_email", "==", email), orderBy("status","asc"), orderBy("createdTime","asc"));
+        let q = query(listCollectionRef, where("owner_email", "==", email), orderBy("status","asc"), orderBy("createdTime","desc"));
         const querysnapshot =  await getDocs(q);
         querysnapshot.forEach((doc)=>{
             var tempobject = Object.assign(doc.data(), { booking_id: doc.id })
@@ -77,7 +77,7 @@ const Booking = () => {
     const getallcilentbooking  = async (email) =>{
         let temp = [];
         const listCollectionRef = collection(db, "bookings");
-        let q = query(listCollectionRef, where("customer_email", "==", email), orderBy("status","asc"), orderBy("createdTime","asc"));
+        let q = query(listCollectionRef, where("customer_email", "==", email), orderBy("status","asc"), orderBy("createdTime","desc"));
         const querysnapshot =  await getDocs(q);
         querysnapshot.forEach((doc)=>{
             var tempobject = Object.assign(doc.data(), { booking_id: doc.id })
@@ -90,6 +90,7 @@ const Booking = () => {
           userCredential.email && setEmail(userCredential.email)
     },[userCredential?.email]);
     useEffect(()=>{
+        setBookings(null);
         email && inbounded && getallinboundedbooking(userCredential.email);
         email && !inbounded && getallcilentbooking(userCredential.email);
     },[email]);

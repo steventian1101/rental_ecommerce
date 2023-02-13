@@ -1,15 +1,16 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faPlus } from "@fortawesome/free-solid-svg-icons"
-import AuthInput from "./authInput"
+import AuthInput from "../auth/authInput"
 import { faArrowLeftLong } from "@fortawesome/free-solid-svg-icons"
 import { useState, useEffect } from "react"
 import { useAuth } from "../../context/useAuth";
 import { db } from "../../lib/initFirebase"
 import { storage } from "../../lib/initFirebase";
 import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
-import Loading from "./loading";
+import Loading from "../auth/loading"
+import Link from "next/link"
 import { updateDoc,deleteField,doc,collection, addDoc, query, orderBy, where, getDocs } from "firebase/firestore";
-const InputProfileInfo = ({ setSideBar }) => {
+const Profile = () => {
     const [firstname, setFirstname] = useState('');
     const [lastname, setLastname] = useState('');
     const [nickname, setNickname] = useState('');
@@ -212,4 +213,4 @@ const InputProfileInfo = ({ setSideBar }) => {
     )
 
 }
-export default InputProfileInfo
+export default Profile

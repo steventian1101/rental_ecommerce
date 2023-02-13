@@ -3,13 +3,12 @@ import { faArrowLeftLong } from "@fortawesome/free-solid-svg-icons"
 import { faLocationDot } from "@fortawesome/free-solid-svg-icons"
 import InputProfileInfo from "../auth/inputProfileInfo"
 import { useState, useEffect } from "react"
-import SidebarBack from "../sidebarBack"
 import Payment from "./payment"
 import Location from "./location"
 import { useRouter } from "next/router"
-import Booking from "../booking"
 import NavBarBack from "../navBarBack"
 import back from "../../utils/handleBack"
+import Link from "next/link"
 const Setting = () => {
     const [sideBar, setSideBar]= useState(0);
     const [drawSidebar, setDrawSidebar] = useState([]);
@@ -51,18 +50,21 @@ const Setting = () => {
             <p className="loginText settingTitle">Settings</p>
             <p className="loginDetail" style={{ marginBottom: "30px" }}>Complete the sections below to add your item to the platform.</p>
             <div className="flex flex-row w-full setting_box_pan">
-                <div className="flex flex-col setting_box" onClick={()=>{ setSideBar(1)}}>
+                <Link href='/setting/profile'><div className="flex flex-col setting_box">
                     <img src='/logo/person.svg' className="settingItemImg" />
                     <p className="text-white">Profile Info</p>
-                </div>
+                </div></Link>
+                <Link href='/setting/payment'>
                 <div className="flex flex-col setting_box" onClick={()=>{ setSideBar(2)}}>
                     <img src='/logo/money.svg' className="settingItemImg" />
                     <p className="text-white">Payment</p>
-                </div>
+                </div></Link>
+                <Link href='/setting/location'>
                 <div className="flex flex-col setting_box" onClick={()=>{ setSideBar(3)}}>
                     <FontAwesomeIcon icon={ faLocationDot} className="settingLocationImg"/>
                     <p className="text-white">Add Location</p>
                 </div>
+                </Link>
             </div>
         </section>
         {

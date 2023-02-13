@@ -19,7 +19,7 @@ const SearchResult = ({ setItemID, searchText }) => {
     })
     const handleScroll = () => {
         if (((window.innerHeight + window.scrollY) == document.body.offsetHeight)) {
-            showMore();
+           hits &&  showMore();
         }
     };
 

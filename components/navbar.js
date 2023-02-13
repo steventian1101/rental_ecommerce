@@ -1,12 +1,7 @@
 import { useAuth } from "../context/useAuth"
-import Login from "./auth/login";
-import SidebarBack from "./sidebarBack";
 import { useState, useEffect } from "react";
-import Register from "./auth/register";
-import ResetPassword from "./auth/resetPassword";
-import InputProfileInfo from "./auth/inputProfileInfo";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHandsAmericanSignLanguageInterpreting, faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { faBell } from "@fortawesome/free-regular-svg-icons";
 import { faCalendarCheck } from "@fortawesome/free-regular-svg-icons";
 import { faGear } from "@fortawesome/free-solid-svg-icons";
@@ -15,11 +10,10 @@ import Notification from "./notification/notification";
 import { auth } from "../lib/initFirebase";
 import { db } from "../lib/initFirebase";
 import { collection, addDoc, query, orderBy, where, getDocs } from "firebase/firestore";
-import { async } from "@firebase/util";
 import Link from "next/link"
 import NavBarBack from "./navBarBack";
 
-export default function Header({ login, setLogin, search, navbarSearch}) {
+export default function Header({ search }) {
   const listCollectionRef = collection(db, "users")
   const { authenticated, userCredential, logOut } = useAuth();
   const [sideBar, setSideBar] = useState(0);
@@ -31,47 +25,7 @@ export default function Header({ login, setLogin, search, navbarSearch}) {
   const [dropbox, setDropbox] = useState(false);
   const [tempdata, setTempdata] = useState([]);
   const [searchShow, setSearchShow] = useState(false);
-  let i = 0;
-  useEffect(() => {
-    if (login) {
-      setSideBar(1);
-      setLogin(false);
-    }
-  }, [login])
-  useEffect(() => {
-    i++;
-    let temp = [];
-    if (sideBar == 0) {
-      setDrawbackground(false);
-      temp.push(<></>);
-      setDrawSidebar(temp);
-    }
-    if (sideBar == 1) {
-      setDrawbackground(true);
-      temp.push(<Login setSideBar={setSideBar} key={i} />);
-      setDrawSidebar(temp);
-    }
-    if (sideBar == 2) {
-      setDrawbackground(true);
-      temp.push(<Register sideBar={sideBar} setSideBar={setSideBar} key={i} />);
-      setDrawSidebar(temp);
-    }
-    if (sideBar == 3) {
-      setDrawbackground(true);
-      temp.push(<ResetPassword sideBar={sideBar} setSideBar={setSideBar} key={i} />);
-      setDrawSidebar(temp);
-    }
-    if (sideBar == 4) {
-      setDrawbackground(true);
-      temp.push(<Notification sideBar={sideBar} setSideBar={setSideBar} key={i} />);
-      setDrawSidebar(temp);
-    }
-    if (sideBar == 5) {
-      setDrawbackground(true);
-      temp.push(<InputProfileInfo sideBar={sideBar} setSideBar={setSideBar} key={i} />);
-      setDrawSidebar(temp);
-    }
-  }, [sideBar])
+  const [notify, setNotify] = useState(false);
   const handleProfileImage = async (email) => {
     let temp = [];
     let q = query(listCollectionRef, where("user_email", "==", email));
@@ -83,7 +37,7 @@ export default function Header({ login, setLogin, search, navbarSearch}) {
   }
   useEffect(() => {
     userCredential.email && setCredentialEmail(userCredential.email)
-  }, [userCredential])
+  }, [userCredential?.email])
   useEffect(() => {
     credentialEmail != "" && handleProfileImage(credentialEmail)
   }, [credentialEmail])
@@ -107,7 +61,7 @@ export default function Header({ login, setLogin, search, navbarSearch}) {
         if (document.getElementById("homeSearch").value != null) {
           let text = document.getElementById('homeSearch').value;
           localStorage.setItem("searchText",text)
-          if (text != "") {
+          if (text != "") { 
             let url = '/?query=' + text
             location.href = url
           }
@@ -118,11 +72,20 @@ export default function Header({ login, setLogin, search, navbarSearch}) {
   const handleSearchClick = () => {
     setSearchShow(true);
   }
+  const handleNotify = () =>{
+    setDrawbackground(true);
+    setNotify(true);
+    
+    
+  }
 
   return (
     <>
       {
-        drawbackground ? <NavBarBack setSideBar={setSideBar}/> : <></>
+        drawbackground ? <NavBarBack setDrawbackground ={setDrawbackground} setNotify={ setNotify}/> : <></>
+      }
+      {
+        notify?<Notification setDrawbackground = {setDrawbackground} setNotify={ setNotify}/>:<></>
       }
       <section className="fixed w-full bg-black" style={{ zIndex: "10000" }}>
         <div className='flex flex-row items-end justify-between navbar'>
@@ -134,7 +97,7 @@ export default function Header({ login, setLogin, search, navbarSearch}) {
            {
             search && searchShow &&  <div className="flex flex-row items-center justify-around mr-0 clickBarSearch " >
             <FontAwesomeIcon icon={faSearch} className="mx-3 mr-0 text-xl font-thin text-white cursor-pointer" onClick={()=>{ setSearchShow(false)}}/>
-            <input type="text" className="w-full p-0.5 mx-2 text-base text-white bg-transparent outline-none mr-0" id="homeSearch" placeholder="e.g.SnowBoards" defaultValue={localStorage.getItem("searchText")}/>
+            <input type="text" className="w-full p-0.5 mx-2 text-base text-white bg-transparent outline-none mr-0" id="homeSearch" placeholder="e.g.SnowBoards" defaultValue={typeof window !== "undefined" && "localStorage" in window && localStorage.getItem("searchText")}/>
           </div>
            }
             <div className="flex flex-row items-center">
@@ -142,7 +105,7 @@ export default function Header({ login, setLogin, search, navbarSearch}) {
               search && !searchShow &&  <div className="flex flex-row">
                 <div className="flex flex-row items-center justify-around mr-0 stickyBarSearch">
                   <FontAwesomeIcon icon={faSearch} className="mx-3 mr-0 text-xl font-thin text-white cursor-pointer" />
-                  <input type="text" className="w-full p-0.5 mx-2 text-base text-white bg-transparent outline-none mr-0 animationinput" id="homeSearch" placeholder="e.g.SnowBoards" defaultValue={localStorage.getItem("searchText")}/>
+                  <input type="text" className="w-full p-0.5 mx-2 text-base text-white bg-transparent outline-none mr-0 animationinput" id="homeSearch" placeholder="e.g.SnowBoards" defaultValue={typeof window !== "undefined" && "localStorage" in window && localStorage.getItem("searchText")}/>
                 </div>
                 <div className="flex items-center justify-center cursor-pointer navbarIcon searchIcon" onClick={handleSearchClick}>
                   <FontAwesomeIcon icon={faSearch} style={{ color: "white", fontSize: "18px" }} />
@@ -157,7 +120,7 @@ export default function Header({ login, setLogin, search, navbarSearch}) {
                   <Link href="/booking"><FontAwesomeIcon icon={faCalendarCheck} style={{ color: "white", fontSize: "18px" }} /></Link>
                 </div>
                 <div className="flex items-center justify-center cursor-pointer navbarIcon">
-                  <FontAwesomeIcon icon={faBell} style={{ color: "white", fontSize: "18px" }} onClick={() => { setSideBar(4) }} />
+                  <FontAwesomeIcon icon={faBell} style={{ color: "white", fontSize: "18px" }} onClick={() => { handleNotify () }} />
                 </div>
                 <div className="flex items-center justify-center w-10 h-10 mx-2.5" style={{ position: "relative" }} onMouseEnter={() => { handleEnter() }}>
                   {
@@ -175,7 +138,7 @@ export default function Header({ login, setLogin, search, navbarSearch}) {
                         </div>
                         <div className="flex flex-col">
                           <p className="text-white" style={{ fontSize: "15px" }}>{nickname}</p>
-                          <p className="text-white underline cursor-pointer" style={{ fontSize: "15px" }} onClick={() => { setSideBar(5) }}>Edit Profile</p>
+                          <Link href='/setting/profile'><p className="text-white underline cursor-pointer" style={{ fontSize: "15px" }}>Edit Profile</p></Link>
                         </div>
                       </div>
                       <div style={{ width: "100%", height: "1px", marginTop: "15px", marginBottom: "5px", background: "#ffffff33" }}></div>
@@ -199,9 +162,6 @@ export default function Header({ login, setLogin, search, navbarSearch}) {
 
           </div>
         </div>
-        {
-          drawSidebar
-        }
       </section>
     </>
   )

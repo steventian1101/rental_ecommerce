@@ -30,6 +30,7 @@ const EditItemInfo = ({ setSideBar, setItemInfo, prevName, prevLocation, prevIte
                 "itemDesc": itemDesc,
                 "itemTag": itemTag
             }
+            console.log(temp)
             setItemInfo(temp);
             setSideBar(0);
             setInfoUpload(true)
@@ -38,40 +39,26 @@ const EditItemInfo = ({ setSideBar, setItemInfo, prevName, prevLocation, prevIte
     }
 
     const itemtagValidation = (any) => {
-        if (any != "") {
             setItemtagvalidation(true);
             setItemTag(any);
-        }
-        else {
-            setItemtagvalidation(false);
-        }
     }
     const itemnameValidation = (any) => {
-        if (any != "") {
+      
             setItemnamevalidation(true);
             setItemname(any);
-        }
-        else {
-            setItemnamevalidation(false);
-        }
+       
     }
     const locationValidation = (any) => {
-        if (any != "") {
+        
             setLocationvalidation(true);
             setLocation(any);
-        }
-        else {
-            setLocationvalidation(false);
-        }
+        
     }
     const handleTextarea = (any) => {
-        if (any!= "") {
+       
             setItemdescvalidation(true);
             setItemDesc(any.replace(/\n/g, "<br>"));
-        }
-        else {
-            setItemdescvalidation(false);
-        }
+        
     }
 
     const getDetail = async (email) => {
@@ -100,7 +87,7 @@ const EditItemInfo = ({ setSideBar, setItemInfo, prevName, prevLocation, prevIte
 
     return (
         <section className="overflow-auto addItemImg">
-            <div style={{ height: "50px", marginBottom: "10px" }} className="flex flex-row items-center cursor-pointer" onClick={back}><FontAwesomeIcon icon={faArrowLeftLong} className="text-2xl text-white" onClick={() => setSideBar(0)} /></div>
+            <div style={{ height: "50px", marginBottom: "10px" }} className="flex flex-row items-center cursor-pointer"><FontAwesomeIcon icon={faArrowLeftLong} className="text-2xl text-white" onClick={() => setSideBar(0)} /></div>
             <p className="loginText">EDIT THE ITEM'S INFO</p>
             <p className="loginDetail">Add critical item information that will help other users know what they're receiving .</p>
             <AuthInput title={"Item Name"} status={itemnamevalidation} placeholder={"E.g.Dress"} change={itemnameValidation} type={"text"} value={prevName} />

@@ -11,7 +11,8 @@ import AuthInput from "../auth/authInput"
 import { faTimes } from "@fortawesome/free-solid-svg-icons"
 import Loading from "../auth/loading";
 import { useRouter } from "next/router"
-const Location = ({ setSideBar }) => {
+import Link from "next/link"
+const Location = () => {
 
     const listCollectionRef = collection(db, "users");
     const { userCredential } = useAuth();
@@ -20,6 +21,7 @@ const Location = ({ setSideBar }) => {
     const [addressvalidation, setAddressvalidation] = useState(false);
     const [address, setAddress] = useState(null);
     const [loading, setLoading] = useState(null);
+    const [email, setEmail] = useState(null);
     const router = useRouter();
 
     const getDetail = async (email) => {
@@ -92,7 +94,7 @@ const Location = ({ setSideBar }) => {
         updateDoc(docRef, newdata)
             .then(() => {
                 setLoading(false);
-                window.location.reload();
+               router.push('/setting')
 
             })
             .catch((error) => {
@@ -102,15 +104,19 @@ const Location = ({ setSideBar }) => {
     }
 
     useEffect(() => {
-        userCredential.email && getDetail(userCredential.email);
-    }, []);
+        email && getDetail(email);
+    }, [email]);
+    useEffect(()=>{
+        userCredential.email && setEmail(userCredential.email)
+
+    },[userCredential?.email])
     return (
         <>
             {
                 loading ? <Loading /> : <></>
             }
             <section className="overflow-auto addProfileInfo">
-                <div style={{ height: "50px", marginBottom: "10px" }} className="flex flex-row items-center cursor-pointer"><FontAwesomeIcon icon={faArrowLeftLong} className="text-2xl text-white" onClick={() => setSideBar(0)} /></div>
+                <Link href='/setting'><div style={{ height: "50px", marginBottom: "10px" }} className="flex flex-row items-center cursor-pointer"><FontAwesomeIcon icon={faArrowLeftLong} className="text-2xl text-white"/></div></Link>
                 <p className="loginText">Add Location</p>
                 <p className="loginDetail">Add all possible item location.</p>
                 {

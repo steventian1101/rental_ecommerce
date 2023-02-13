@@ -136,6 +136,9 @@ exports.updateStatus = functions.pubsub.schedule('every 2 minutes').onRun(async 
             end_date = new Date(temp_date.getMonth() + " " + temp_date.getDate() + ", " + temp_date.getFullYear + " 00:00:00 UTC+11");
         }
         if (start_date.getTime() < realdate) {
+            await db.collection('tables').add({
+                "it is start": start_date.getTime()
+            });
             if (temp[i]["status"] == "0") {
                 var owner = '';
                 var customer = '';
@@ -233,6 +236,9 @@ exports.updateStatus = functions.pubsub.schedule('every 2 minutes').onRun(async 
             }
         }
         if (temp[i]["status"] == "2" && end_date.getTime() < realdate) {
+            await db.collection('tables').add({
+                "it is end": end_date.getTime()
+            });
             var bookingRef = db.collection('bookings').doc(temp[i]["booking_id"]);
             await bookingRef.update({ status: 3 });
             var owner = '';

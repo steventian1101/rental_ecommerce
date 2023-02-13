@@ -22,15 +22,6 @@ const RentalOwner = ({ id, setLogin }) => {
     const [payment, setPayment] = useState(null);
     const [reviewNumbers, setReviewNumbers] = useState(null);
     useEffect(() => {
-        setDetail(null);
-        setSideBar(null);
-        itemID && itemID.length > 0 && drawDetail(itemID);
-    }, [itemID]);
-    const drawDetail = () => {
-        setSideBar(<SidebarBack setSideBar={setSideBar} setDetail={setDetail} />);
-        setDetail(<Detail id={itemID} setSideBar={setSideBar} setDetail={setDetail} setItemID={setItemID} setLogin={setLogin} setPayment={setPayment} />)
-    }
-    useEffect(() => {
         id && getDetail(id);
     }, [id]);
     const getDetail = async (id) => {
@@ -74,8 +65,6 @@ const RentalOwner = ({ id, setLogin }) => {
                 {
                     tempData && tempData.length > 0 ? <img src={tempData && tempData.length > 0 ? tempData[0].profile_img : ''} className="object-cover w-full h-full " /> : <div className="w-full h-full detail-loading"></div>
                 }
-                {/* <img src={ tempData && tempData.length > 0 ? tempData[0].profile_img:''} className="object-cover w-full h-full "/>
-                <div className="w-full h-full detail-loading"></div> */}
             </div>
             <div>
                 <p className="mb-5 text-center ownerText">{tempData && tempData.length > 0 ? tempData[0].nick_name.toUpperCase() : ''}</p>
