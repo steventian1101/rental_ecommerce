@@ -21,7 +21,7 @@ const Itemcard = ({ details, setItemID }) => {
     return (
         <>{
             details && ownerData && ownerData.length > 0?<div className="relative ownerItemcard">
-            <CardCarousel imgArray = { details.item_photos} id={details.objectID}/>
+            <CardCarousel imgArray = { details.item_photos} id={details.objectID} location = {details.item_location}/>
             <p className="text-white itemcardname overflow-ellipsis">{ details.item_name}</p>
             <Link href={`/rentalOwner?id=${ownerData[0]["nick_name"]}`}><p className="underline itemcardownernameandprice">{ ownerData && ownerData.length > 0 && ownerData[0]["nick_name"]}</p></Link>
             <p className="itemcardownernameandprice mb-2.5">Min. { "$"+Number(details["item_charge"]).toFixed(2)+"/"+details.item_charge_rate}</p>

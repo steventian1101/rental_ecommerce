@@ -44,7 +44,7 @@ const Location = () => {
     }
     const addressValidation = (any) => {
         let str = /([0-9A-Za-z])[,]?([0-9])[,]?[| ]?\bAustralia\b$/;
-        if (str.test(any)) {
+        if (str.test(any) || any != ''  ) {
             setAddress(any)
             setAddressvalidation(true);
         } else {

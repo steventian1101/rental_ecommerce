@@ -16,6 +16,12 @@ export default function IndexPage() {
       window.removeEventListener("scroll", detectScroll);
     }
   });
+  useEffect(()=>{
+      localStorage.setItem('searchText',"");
+      localStorage.setItem('loginNextUrl',"");
+      localStorage.setItem('beforeAddPayment',"");
+  },[])
+  
   const detectScroll = () => {
     if (window.pageYOffset >= 300) {
       setSearch(true);

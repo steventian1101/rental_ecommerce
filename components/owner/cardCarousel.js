@@ -8,7 +8,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import Loading from "../auth/loading";
 
-const CardCarousel = ({ imgArray, timeduration, id }) => {
+const CardCarousel = ({ imgArray, timeduration, id, location}) => {
     const [index, setIndex] = useState(0);
     const [direction, setDirection] = useState(0);
     const [imgStyle, setImgStyle] = useState([]);

@@ -133,7 +133,7 @@ const CreateItem = () => {
             <div className="createitembuttonbar">
                 <div className="flex justify-end w-full">
                     {
-                        profileImgs != "" && itemInfo && chargeRate ? <div className="createitembutton" onClick={() => handleComplete()}>
+                        profileImgs != "" && itemInfo && chargeRate ? <div className="flex items-center justify-center createitembutton" onClick={() => handleComplete()}>
                             <FontAwesomeIcon icon={faArrowRightLong} className="text-white fontIcon" />
                         </div> : <div className="flex items-center justify-center createitembutton opacity-30">
                             <FontAwesomeIcon icon={faArrowRightLong} className="text-white fontIcon" />

@@ -47,12 +47,12 @@ const EditItemImg = ({ setSideBar, setProfileImgs, previousImgs, setPreviousImgs
             <div style={{ height: "50px", marginBottom: "10px" }} className="flex flex-row items-center cursor-pointer"><FontAwesomeIcon icon={faArrowLeftLong} className="text-2xl text-white" onClick={() => setSideBar(0)} /></div>
             <p className="loginText">ADD YOUR ITEM'S PHOTOS</p>
             <p className="loginDetail">We've seen that items with better photos, generally gets more interest. Don't hold back!</p>
-            <div className="flex flex-col items-center justify-center w-full" style={{ height: "180px", border: "1px solid #ffffff4a", borderRadius: "8px" }}>
+            <div className="relative flex flex-col items-center justify-center w-full" style={{ height: "180px", border: "1px solid #ffffff4a", borderRadius: "8px" }}>
                 <div className="relative flex flex-col items-center justify-center">
                     <FontAwesomeIcon icon={faPlus} style={{ fontSize: "30px", color: "white" }} />
                     <p className="text-white">Add Profile Photo</p>
-                    <input type="file" className="absolute flex w-full opacity-0 left-4" onChange={(e) => handlefile(e)}></input>
                 </div>
+                <input type="file" className="absolute flex w-full h-full opacity-0" onChange={(e) => handlefile(e)}></input>
             </div>
             <div style={{ marginTop: "30px", marginBottom: "30px", width: "100%", height: "1px", background: "#ffffff4a" }}></div>
             {

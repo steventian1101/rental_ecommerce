@@ -8,6 +8,8 @@ import { faCalendar } from "@fortawesome/free-solid-svg-icons"
 import { faClock } from "@fortawesome/free-solid-svg-icons"
 import { faPeopleGroup } from "@fortawesome/free-solid-svg-icons"
 import { getdisabledates } from "../../utils/getdisabledates"
+import date from "date-and-time"
+import addSubtractDate from "add-subtract-date"
 const month = [
     "January",
     "February",
@@ -49,17 +51,17 @@ const time = [
     "11:00 PM",
 ];
 const duration = [1, 2, 3];
-const CreateBooking = ({ setScreenNumber, setNewBooking}) => {
+const CreateBooking = ({ setScreenNumber, setNewBooking }) => {
     const [calendarDisplay, setCalendarDisplay] = useState(false);
     const [value, setValue] = useState(new Date());
-    const [date, setDate] = useState(new Date());
-    const [disabledDates, setDisabledates] = useState(new Date()); 
+    const [startDate, setStartDate] = useState(new Date());
+    const [disabledDates, setDisabledates] = useState([]);
     const [displayTimetable, setDisplayTimetable] = useState(false);
     const [startTime, setStartTime] = useState(0);
     const [content, setContent] = useState(null);
     const [number, setNumber] = useState(0);
     const [Id, setId] = useState(null);
-    const [durationIndex, setDurationIndex] = useState(0);
+    const [durationIndex, setDurationIndex] = useState(1);
     const [result, setResult] = useState(null);
     const [displayDuration, setDisplayDuration] = useState(false);
     const [email, setEmail] = useState(null);
@@ -68,9 +70,10 @@ const CreateBooking = ({ setScreenNumber, setNewBooking}) => {
     const [phonevalidation, setPhonevalidation] = useState(true);
     const [drivingvalidation, setDrivingvalidadtion] = useState(true);
     const [driving, setDriving] = useState(null);
+    const [firstTime, setFirstTime] = useState(0);
     const phoneValidation = (any) => {
         let str = /^\+?([61]{2})\)?[ ]?([0-9]{3})[ ]?([0-9]{3})[ ]?([0-9]{3})$/;
-        if (str.test(any)) {
+        if (str.test(any) || any == "") {
             setPhone(any)
             setPhonevalidation(true);
         } else {
@@ -79,17 +82,11 @@ const CreateBooking = ({ setScreenNumber, setNewBooking}) => {
 
     }
     const drivingValidation = (any) => {
-        if (any != "") {
-            setDrivingvalidadtion(true);
-            setDriving(any)
-        }
-        else {
-            setDrivingvalidadtion(false)
-        }
-
+        setDrivingvalidadtion(true);
+        setDriving(any)
     }
     useEffect(() => {
-        setDate(value);
+        setStartDate(value);
         setCalendarDisplay(false);
     }, [value]);
     const handleTime = (index) => {
@@ -115,7 +112,7 @@ const CreateBooking = ({ setScreenNumber, setNewBooking}) => {
     useEffect(() => {
     }, [result]);
     const emailValidation = (any) => {
-        if ((any.indexOf("@") > -1) && (any.indexOf(".") > -1)) {
+        if ((any.indexOf("@") > -1) && (any.indexOf(".") > -1) || any == "") {
             setEmail(any)
             setEmailvalidation(true);
         }
@@ -123,40 +120,72 @@ const CreateBooking = ({ setScreenNumber, setNewBooking}) => {
             setEmailvalidation(false)
         }
     }
-    const handleComplete = () =>{
-        
-       if(result && emailvalidation && phoneValidation && drivingvalidation){
-        const Info ={ 
-            "item_id":Id.objectID,
-            "start_date":month[Number(date.getMonth())]+","+date.getDate()+","+date.getFullYear(),
-            "start_time":startTime,
-            "email":email,
-            "phone_number":phone,
-            "driving_license":driving ,
-            "result":result, 
-            "item_name":Id.item_name  
+    const handleComplete = () => {
+
+        if (result && emailvalidation && phoneValidation && drivingvalidation) {
+            const Info = {
+                "item_id": Id.objectID,
+                "start_date": month[Number(startDate.getMonth())] + "," + startDate.getDate() + "," + startDate.getFullYear(),
+                "start_time": startTime,
+                "email": email,
+                "phone_number": phone,
+                "driving_license": driving,
+                "result": result,
+                "item_name": Id.item_name
+            }
+            setNewBooking(Info)
+            setScreenNumber(2);
         }
-        setNewBooking(Info)
-        setScreenNumber(2);
-       }
     }
-    useEffect(()=>{
-       let tempId = Id && Id.objectID
+    useEffect(() => {
+        let tempId = Id && Id.objectID
         tempId && getdisabledates(tempId, content)
             .then((data) => {
-                if (data.length > 0) {
-                    
-                    setDisabledates(data)
-                }
-                else {
-                    setDisabledates([new Date()])
-                }
+                setDisabledates(data)
             })
-    },[content]);
+    }, [content]);
+    useEffect(() => {
+        disabledDates && getStart(disabledDates);
+    }, [disabledDates]);
+    const handleDisableDates = ({ date, view }) => {
+        if (view === 'month' && disabledDates && disabledDates.length > 0) {
+            return disabledDates.some(disabledDate =>
+                (date.getFullYear() === disabledDate.getFullYear() &&
+                    date.getMonth() === disabledDate.getMonth() &&
+                    date.getDate() === disabledDate.getDate()) || date < addSubtractDate.subtract(new Date(), 1, "day")
+            )
+        }
+        if (view === 'month' && disabledDates.length == 0) {
+            return date < addSubtractDate.subtract(new Date(), 1, "day")
+        }
+    }
+    const getStart = (disabledDates) => {
+        const datesToday = disabledDates.map((disabledate) => {
+            return disabledate.getFullYear() == new Date().getFullYear() && disabledate.getMonth() == new Date().getMonth() && disabledate.getDate() == new Date().getDate();
+        });
+        const sum = datesToday.reduce((accumulator, currentValue) => {
+            return accumulator + currentValue;
+        }, 0);
+        console.log(sum)
+        if (!sum) {
+            setStartDate(new Date());
+            setStartTime(new Date().getHours() + 1);
+            setFirstTime(new Date().getHours() + 1);
+        }
+        if (sum) {
+            for (let i = 1; i < 300; i++) { // up to 30 days from today
+                const candidateDate = date.addDays(new Date(), i);
+                if (!disabledDates.some(disabledDate => disabledDate.getFullYear() === candidateDate.getFullYear() && disabledDate.getMonth() === candidateDate.getMonth() && disabledDate.getDate() === candidateDate.getDate())) {
+                    setStartDate(candidateDate)
+                    break;
+                }
+            }
+        }
+    }
 
     return (
         <section className="overflow-auto createbooking">
-            <div style={{ height: "50px", marginBottom: "10px" }} className="flex flex-row items-center cursor-pointer mb-2.5"><FontAwesomeIcon icon={faArrowLeftLong} className="text-2xl text-white" onClick={()=>{ setScreenNumber(0)}}/></div>
+            <div style={{ height: "50px", marginBottom: "10px" }} className="flex flex-row items-center cursor-pointer mb-2.5"><FontAwesomeIcon icon={faArrowLeftLong} className="text-2xl text-white" onClick={() => { setScreenNumber(0) }} /></div>
             <p className="loginText">NEW BOOKING</p>
             <p className="loginDetail">Add all the customer's information.</p>
             <div className="py-3">
@@ -166,10 +195,10 @@ const CreateBooking = ({ setScreenNumber, setNewBooking}) => {
             <div className="my-2.5">
                 <p className="font-15">Start Date</p>
                 {
-                    content? <div className="relative flex flex-row items-center justify-between py-2" style={{ borderBottom: "solid 1px #ffffff1a" }} onClick={() => { setCalendarDisplay(true) }}>
-                    <p className="text-white font-15">{date && date.getDate() + " " + month[`${date.getMonth()}`] + ", " + date.getFullYear()}</p>
-                    <FontAwesomeIcon icon={faCalendar} className="text-lg text-white" />
-                </div>:<div className="flex w-full h-8 detail-loading"></div>
+                    content ? <div className="relative flex flex-row items-center justify-between py-2" style={{ borderBottom: "solid 1px #ffffff1a" }} onClick={() => { setCalendarDisplay(true) }}>
+                        <p className="text-white font-15">{startDate && startDate.getDate() + " " + month[`${startDate.getMonth()}`] + ", " + startDate.getFullYear()}</p>
+                        <FontAwesomeIcon icon={faCalendar} className="text-lg text-white" />
+                    </div> : <div className="flex w-full h-8 detail-loading"></div>
                 }
                 {/* <div className="flex w-full h-8 detail-loading"></div>
                 <div className="relative flex flex-row items-center justify-between py-2" style={{ borderBottom: "solid 1px #ffffff1a" }} onClick={() => { setCalendarDisplay(true) }}>
@@ -178,30 +207,23 @@ const CreateBooking = ({ setScreenNumber, setNewBooking}) => {
                 </div> */}
                 {
                     calendarDisplay && <div className="w-full top-8 ">
-                        <Calendar onChange={setValue} value={value} tileDisabled={({ date, view }) =>
-                            (view === 'month') && // Block day tiles only
-                            disabledDates.some(disabledDate =>
-                                (date.getFullYear() === disabledDate.getFullYear() &&
-                                    date.getMonth() === disabledDate.getMonth() &&
-                                    date.getDate() === disabledDate.getDate()) || date < new Date()
-                            )} defaultActiveStartDate={new Date()} />
+                        <Calendar onChange={setValue} value={value} tileDisabled={handleDisableDates} defaultActiveStartDate={new Date()} />
                     </div>
                 }
             </div>
             <div className="my-2.5">
                 <p className="font-15 ">Start Time</p>
-                {
-                    content ?<div className="relative flex flex-row items-center justify-between py-2" style={{ borderBottom: "solid 1px #ffffff1a" }} onClick={() => { setDisplayTimetable(true) }}>
-                    <p className="text-white font-15">{time[startTime]}</p>
+                <div className="relative flex flex-row items-center justify-between py-2" style={{ borderBottom: "solid 1px #ffffff1a" }} onClick={() => { setDisplayTimetable(true) }}>
+                    {
+                        content && startDate ? <p className="text-white font-15">{time[startTime]}</p> : <div className="w-48 h-6 detail-loading"></div>
+                    }
                     <FontAwesomeIcon icon={faClock} className="text-lg text-white" />
-                </div>:<div className="flex w-full h-8 detail-loading"></div>
-                }
-                
+                </div>
                 {
                     displayTimetable && <div className="flex flex-col bg-white" style={{ background: "#ffffff1a" }}>
                         {
                             time.map((time, index) => (
-                                <p className="w-full px-2 py-1 text-white time" onClick={() => { handleTime(index) }}>{time}</p>
+                                index + 1 > firstTime && <p className="w-full px-2 py-1 text-white time" onClick={() => { handleTime(index) }} key={index}>{time}</p>
                             ))
                         }
 
@@ -215,12 +237,12 @@ const CreateBooking = ({ setScreenNumber, setNewBooking}) => {
                         <input type="text" className="text-white bg-transparent outline-none" style={{ border: "solid 0px black" }} defaultValue="0" onChange={(e) => { setNumber(e.target.value) }} />
                         <FontAwesomeIcon icon={faPeopleGroup} className="text-lg text-white" />
                     </div>
-                </div> :<div className="my-2.5">
+                </div> : <div className="my-2.5">
                     <p className="font-15 ">Duration</p>
                     {
-                        content ?<div className="relative flex flex-row items-center justify-between py-2" style={{ borderBottom: "solid 1px #ffffff1a" }} onClick={() => { setDisplayDuration(true) }}>
-                        <input type="text" className="text-white bg-transparent outline-none" style={{ border: "solid 0px black" }} defaultValue="0" onChange={(e) => { handleDuration(e.target.value) }} />
-                    </div> :<div className="flex w-full h-8 detail-loading"></div>
+                        content ? <div className="relative flex flex-row items-center justify-between py-2" style={{ borderBottom: "solid 1px #ffffff1a" }} onClick={() => { setDisplayDuration(true) }}>
+                            <input type="text" className="text-white bg-transparent outline-none" style={{ border: "solid 0px black" }} defaultValue="0" onChange={(e) => { handleDuration(e.target.value) }} />
+                        </div> : <div className="flex w-full h-8 detail-loading"></div>
                     }
                 </div>
             }
@@ -242,10 +264,10 @@ const CreateBooking = ({ setScreenNumber, setNewBooking}) => {
                     {
                         content ? <p className="mb-1 text-white ellipsis font-15">{Id && Id.item_name}</p> : <div className="h-5 mb-1 detail-loading"></div>
                     }
-                    <p className="mb-1 font-15 ellipsis">Start: {date && date.getDate() + " " + month[`${date.getMonth()}`] + ", " + date.getFullYear()} {time[startTime]}</p>
+                    <p className="mb-1 font-15 ellipsis">Start: {startDate && startDate.getDate() + " " + month[`${startDate.getMonth()}`] + ", " + startDate.getFullYear()} {time[startTime]}</p>
                     {
                         content ? <>{
-                            content.item_charge_rate != "person"?<p className="mb-1 text-white font-15">Duration: {durationIndex} {content.item_charge_rate}</p> : <p className="mb-1 text-white font-15">Members: {number} {content.item_charge_rate}</p>
+                            content.item_charge_rate != "person" ? <p className="mb-1 text-white font-15">Duration: {durationIndex} {content.item_charge_rate}</p> : <p className="mb-1 text-white font-15">Members: {number} {content.item_charge_rate}</p>
                         }</> : <div className="h-5 detail-loading"></div>
                     }
                 </div>

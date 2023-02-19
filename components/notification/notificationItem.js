@@ -4,6 +4,7 @@ import Link from "next/link";
 import { updateDoc, doc} from "firebase/firestore";
 import { db } from "../../lib/initFirebase";
 import { useRouter } from "next/router";
+import date from 'date-and-time'
 const NotificationItem = ({notification}) =>{
     const [background, setBackground] = useState("#ffffff");
     const [time, setTime] = useState(null);
@@ -14,12 +15,28 @@ const NotificationItem = ({notification}) =>{
     },[]);
     const getTime = () =>{
         let notify;
-        const duration = timediff(new Date(notification.time.toDate()) , new Date,'Hm');
-        if(duration.hours == "0"){
-             notify = duration.minutes+ " min ";
+        const currentDate = new Date();
+        const offsetInMinutes = currentDate.getTimezoneOffset();
+        console.log(offsetInMinutes);
+
+        console.log(new Date(notification.time.toDate()) , new Date());
+        const duration = timediff(new Date(notification.time.toDate()) , new Date(),'Hm');
+        if(offsetInMinutes == -660){
+            if(duration.hours-1 == "0"){
+                notify = duration.minutes+ " min ";
+           }
+           else{
+                notify = Number(duration.hours-1) + " hours " + duration.minutes+ " min ";
+           }
         }
-        else{
-             notify = duration.hours + " hours " + duration.minutes+ " min ";
+        if(offsetInMinutes == -600){
+            if(duration.hours == "0"){
+                notify = duration.minutes+ " min ";
+           }
+           else{
+                notify = duration.hours + " hours " + duration.minutes+ " min ";
+           }
+
         }
         setTime(notify);
     }

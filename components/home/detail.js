@@ -27,27 +27,27 @@ import { getRatingAndReviewNumbersForOwner } from "../../utils/getRatingAndRevie
 import date from "date-and-time"
 import { getFunctions, httpsCallable } from "firebase/functions";
 import { useRouter } from "next/router";
+import addSubtractDate from "add-subtract-date"
 
-const Detail = ({id}) => {
+const Detail = ({ id }) => {
     const [content, setContent] = useState(null);
     const [viewnumber, setViewnumber] = useState(null);
     const [owner, setOwner] = useState(null);
     const [ownerData, setOwnerData] = useState(null);
-    const [value, setValue] = useState(new Date());
+    const [value, setValue] = useState(null);
     const [disabledDates, setDisabledates] = useState([new Date()]);
-    const [startdate, setStartDate] = useState(date.addDays(new Date(), 1));
+    const [startdate, setStartDate] = useState(null);
     const [enddate, setEnddate] = useState(new Date());
     const [calendarDisplay, setCalendarDisplay] = useState(true);
     const [startTime, setStartTime] = useState(0);
     const [displayTimetable, setDisplayTimetable] = useState(false);
     const [displayDuration, setDisplayDuration] = useState(false);
-    const [durationIndex, setDurationIndex] = useState(0);
+    const [durationIndex, setDurationIndex] = useState(1);
     const [result, setResult] = useState(0);
     const { userCredential, authenticated } = useAuth();
     const [number, setNumber] = useState(0);
     const [reserve, setReserve] = useState(true);
     const [userDetail, setUserDetail] = useState(null);
-    const [data, setdata] = useState(null);
     const [reviews, setReviews] = useState(null);
     const [similarData, setSimilarData] = useState(null);
     const [updateMobileSideBar, setUpdateMobileSidebar] = useState(false);
@@ -55,6 +55,8 @@ const Detail = ({id}) => {
     const detailRef = useRef();
     const [reviewNumbers, setReviewNumbers] = useState(null);
     const [ownerReview, setOwnerReview] = useState(null);
+    const [firstTime, setFirstTime] = useState(0);
+    const [duration, setDuration] = useState(null);
     const router = useRouter();
     const month = [
         "January",
@@ -109,6 +111,15 @@ const Detail = ({id}) => {
         let tempdata = querySnapshot.data();
         setContent(tempdata);
         setOwner(tempdata.rental_owner);
+        getDuration(tempdata.item_location)
+    }
+    const getDuration = (location) =>{
+            let key = JSON.stringify(location);
+            let address = localStorage.getItem(key);
+            console.log(address)
+            if(address){
+                setDuration(address)
+            }
     }
     const ownerDetail = async (owner) => {
         const temp = [];
@@ -127,13 +138,10 @@ const Detail = ({id}) => {
         const querySnapshot = await getDocs(q);
         querySnapshot.forEach((doc) => {
             let tempdata = doc.data();
-            if (tempdata["customer_feedback"]) {
+            if (tempdata["owner_feedback"]) {
                 temp.push(tempdata);
             }
         });
-        for (let i in temp) {
-
-        }
         setReviews(temp);
     }
     const getUserDetail = async (email) => {
@@ -148,6 +156,7 @@ const Detail = ({id}) => {
 
     }
     const handleReserve = async () => {
+
         if (result != 0) {
             const notificationRef = collection(db, "notifications");
             addDoc(notificationRef, {
@@ -166,27 +175,25 @@ const Detail = ({id}) => {
                 setReserve(false);
             }).catch(error => {
             });
-
-
         }
-
-
     }
     const handlefinish = () => {
+        content && getdisabledates(id, content)
+            .then((data) => {
+                setDisabledates(data)
+            })
         setReserve(true)
     }
-    useEffect(() => {
-        setDisabledates(new Date())
-    }, [])
     useEffect(() => {
         console.log(id)
         detailRef.current.scrollTo({ top: 0, behavior: 'smooth' });
         setUserDetail(null);
         setContent(null);
         setOwner(null);
-        setStartDate(date.addDays(new Date(), 1));
-        setEnddate(new Date());
-        setDurationIndex(0);
+        setStartDate(null);
+        setFirstTime(null);
+        setEnddate(null);
+        setDurationIndex(1);
         id && getDetail(id);
         id && getReviews(id);
         userCredential.email && getUserDetail(userCredential.email);
@@ -209,7 +216,6 @@ const Detail = ({id}) => {
                 .catch((error) => {
                     console.log(error);
                 });
-
         }
     }, [viewnumber]);
     useEffect(() => {
@@ -231,15 +237,60 @@ const Detail = ({id}) => {
     useEffect(() => {
         content && getdisabledates(id, content)
             .then((data) => {
-                if (data.length > 0) {
-
-                    setDisabledates(data)
-                }
-                else {
-                    setDisabledates([new Date()])
-                }
+                setDisabledates(data)
             })
     }, [content]);
+    useEffect(()=>{
+        console.log(disabledDates)
+             disabledDates && getStart(disabledDates);      
+    },[disabledDates]);
+    const getStart = (disabledDates) =>{ 
+        const datesToday = disabledDates.map((disabledate) => {
+            return disabledate.getFullYear() == new Date().getFullYear() && disabledate.getMonth() == new Date().getMonth() && disabledate.getDate() == new Date().getDate() ;
+        });
+        const sum = datesToday.reduce((accumulator, currentValue) => {
+            return accumulator + currentValue;
+          }, 0);
+          console.log(sum)
+        if(!sum){
+            setStartDate(new Date());
+            setStartTime(new Date().getHours()+1);
+            setFirstTime(new Date().getHours()+1);
+        }
+        if(sum){
+            for (let i = 1; i < 300; i++) { // up to 30 days from today
+                const candidateDate = date.addDays(new Date(),i);
+                if (!disabledDates.some(disabledDate => disabledDate.getFullYear() === candidateDate.getFullYear() && disabledDate.getMonth() === candidateDate.getMonth() && disabledDate.getDate() === candidateDate.getDate())) {
+                  setStartDate(candidateDate)
+                  break;
+                }
+        }
+            // setStartDate(null)
+            // let check = false;
+            // let i = 1;
+            // while(check){
+            //     const newdate = date.addDays(new Date(),i);
+            //     i++;
+            //     if(i == 10) {
+            //         check = true;
+            //         console.log(newdate)
+            //     }
+            // }
+            
+        }
+    }
+    const handleDisableDates = ({ date, view }) => {
+        if (view === 'month' && disabledDates && disabledDates.length > 0) {
+            return disabledDates.some(disabledDate =>
+                (date.getFullYear() === disabledDate.getFullYear() &&
+                    date.getMonth() === disabledDate.getMonth() &&
+                    date.getDate() === disabledDate.getDate()) || date < addSubtractDate.subtract(new Date(), 1, "day")
+                    )
+                }
+        if(view === 'month' && disabledDates.length == 0){
+            return  date < addSubtractDate.subtract(new Date(), 1, "day")
+        }
+    }
     useEffect(() => {
         ownerData && getSimilarItems(ownerData[0]["user_email"]);
         ownerData && getRatingAndReviewNumbersForOwner(ownerData[0]["user_email"]).then((result) => {
@@ -262,6 +313,9 @@ const Detail = ({id}) => {
         setUpdateMobileSidebar(true)
     }
     const getenddate = (type, duration) => {
+        if(!startdate){
+            return;
+        }
         const start_time = new Date(startdate.getDate() + " " + month[`${startdate.getMonth()}`] + ", " + startdate.getFullYear() + " " + time[startTime]);
         if (type == "hour") {
             let temp = date.addHours(new Date(start_time), Number(duration));
@@ -284,48 +338,54 @@ const Detail = ({id}) => {
         }
     }
     const handleback = () => {
-        if (typeof window !== "undefined" && "localStorage" in window && localStorage.getItem("searchText")) 
-            { 
-                 let url = "/?query=" + localStorage.getItem("searchText");
-                 router.push(url);
-            }  
-        else{
+        if (typeof window !== "undefined" && "localStorage" in window && localStorage.getItem("searchText")) {
+            let url = "/?query=" + localStorage.getItem("searchText");
+            router.push(url);
+        }
+        else {
             router.push("/");
-        }      
+        }
     }
-        
     const handleLogin = () => {
         let url = router.asPath
         localStorage.setItem("loginNextUrl", url);
         router.push("/login");
     }
-    const handlePayment = () =>{
+    const handlePayment = () => {
         console.log("okay")
         let url = router.asPath;
-        localStorage.setItem("beforeAddPayment",url);
+        localStorage.setItem("beforeAddPayment", url);
         router.push("/setting/payment");
     }
     return (
         <section className="fixed top-0 right-0 z-50 bg-white detail" ref={detailRef}>
             <div className="relative">
                 <div style={{ height: "50px", marginBottom: "10px" }} className="flex flex-row items-center cursor-pointer"><FontAwesomeIcon icon={faArrowLeftLong} className="text-2xl text-white" onClick={() => { handleback() }} /></div>
-                {   
-                    content && <DetailCarousel imgArray={content["item_photos"]} id={id} />
+                {
+                    content ? <DetailCarousel imgArray={content["item_photos"]} id={id} />:<div className="w-full rounded-lg h-72 carousel sidebar-loading"></div>
                 }
                 <div className="flex flex-row flex-wrap justify-between pb-12" style={{ borderBottom: "solid 1px #ffffff1a" }}>
                     <div className="flex flex-col flex-wrap detailpart">
-                        <p className="text-white detailTitle">{content && content["item_name"]}</p>
+                        {
+                            content ? <p className="text-white detailTitle">{content["item_name"]}</p>:<div className="h-8 w-72 sidebar-loading detailTitle" style={{ marginBottom:"15px"}}></div>
+                        }
                         <div className="flex flex-row flex-wrap">
                             <p className="text-white font-15 mb-2.5 flex flex-row justify-center items-center" style={{ borderRight: "solid 1px #ffffff4d", padding: "0px 10px 0px 0px", marginRight: "10px" }}><FontAwesomeIcon icon={faStar} className="mr-2.5 text-sm text-white" />{reviewNumbers && reviewNumbers.reviewNumber != "0" ? reviewNumbers["rating"] + ' - ' + reviewNumbers["reviewNumber"] + " Reviews" : "0.0 - 0 Reviews"}</p>
-                            <p className="text-white font-15 mb-2.5" style={{ borderRight: "solid 1px #ffffff4d", padding: "0px 10px 0px 0px", marginRight: "10px" }}>20 mins away</p>
-                            <p className="text-white font-15 mb-2.5 flex flex-row justify-center items-center" style={{ borderRight: "solid 0px #ffffff4d", padding: "0px 10px 0px 0px", marginRight: "10px" }}><FontAwesomeIcon icon={faEye} className="mr-2.5 text-sm text-white" />{content && (Number(content["item_views"]) + 1) + " views "}</p>
+                            <p className="text-white font-15 mb-2.5" style={{ borderRight: "solid 1px #ffffff4d", padding: "0px 10px 0px 0px", marginRight: "10px" }}>{duration ? duration: "Not working"}</p>
+                            {
+                                content ? <p className="text-white font-15 mb-2.5 flex flex-row justify-center items-center" style={{ borderRight: "solid 0px #ffffff4d", padding: "0px 10px 0px 0px", marginRight: "10px" }}><FontAwesomeIcon icon={faEye} className="mr-2.5 text-sm text-white" />{(Number(content["item_views"]) + 1) + " views "}</p>:<div style={{borderRight: "solid 0px #ffffff4d", padding: "0px 10px 0px 0px", marginRight: "10px"
+                                }} className="w-24 h-5 sidebar-loading"></div>
+                            }
+                            {/* <p className="text-white font-15 mb-2.5 flex flex-row justify-center items-center" style={{ borderRight: "solid 0px #ffffff4d", padding: "0px 10px 0px 0px", marginRight: "10px" }}><FontAwesomeIcon icon={faEye} className="mr-2.5 text-sm text-white" />{(Number(content["item_views"]) + 1) + " views "}</p> */}
                         </div>
                         <div className="line"></div>
                         <div className="flex flex-col mb-2.5">
                             <p className="w-full text-white font-15 bold" style={{ marginBottom: "15px" }}>Description</p>
-                            {content && content["item_desc"].split("<br>").map((i, index) => {
+                            {content ? content["item_desc"].split("<br>").map((i, index) => {
                                 return i.trim() == "" ? <br /> : <p className="text-white font-15" key={index}>{i}</p>
-                            })}
+                            }): [...Array(6)].map((_, index) => (
+                                <div className = "w-full h-5 mb-2 sidebar-loading" key={index} ></div>
+                              ))}
                         </div>
                         <div className="line"></div>
                         {
@@ -345,7 +405,9 @@ const Detail = ({id}) => {
                         }
                         <div className="flex flex-col mb-2.5">
                             <p className="w-full text-white font-15 bold" style={{ marginBottom: "15px" }}>Item Location</p>
-                            <p className="flex flex-row items-center justify-start text-white font-15"><FontAwesomeIcon icon={faLocationDot} className="mr-2.5 text-sm text-white" /> {content && content["item_location"]}</p>
+                            {
+                                content ? <p className="flex flex-row items-center justify-start text-white font-15"><FontAwesomeIcon icon={faLocationDot} className="mr-2.5 text-sm text-white" /> {content["item_location"]}</p>:<div className="w-full h-5 sidebar-loading"></div>
+                            }
                         </div>
                     </div>
                     <div className="relative reservepan">
@@ -359,32 +421,31 @@ const Detail = ({id}) => {
                                         <div>
                                             <p className="font-15">Start Date</p>
                                             <div className="relative flex flex-row items-center justify-between py-2" style={{ borderBottom: "solid 1px #ffffff1a" }} onClick={() => { setCalendarDisplay(true) }}>
-                                                <p className="text-white font-15">{startdate && startdate.getDate() + " " + month[`${startdate.getMonth()}`] + ", " + startdate.getFullYear()}</p>
+                                                {/* <p className="text-white font-15">{startdate && startdate.getDate() + " " + month[`${startdate.getMonth()}`] + ", " + startdate.getFullYear()}</p> */}
+                                                {
+                                                    startdate ? <p className="text-white font-15">{startdate.getDate() + " " + month[`${startdate.getMonth()}`] + ", " + startdate.getFullYear()}</p>:<div className="w-48 h-6 sidebar-loading"></div>
+                                                }
                                                 <FontAwesomeIcon icon={faCalendar} className="text-lg text-white" />
                                             </div>
                                             {
                                                 calendarDisplay && <div className="w-full top-8 ">
-                                                    <Calendar onChange={setValue} value={value} tileDisabled={({ date, view }) =>
-                                                        (view === 'month') && disabledDates &&
-                                                        disabledDates.some(disabledDate =>
-                                                            (date.getFullYear() === disabledDate.getFullYear() &&
-                                                                date.getMonth() === disabledDate.getMonth() &&
-                                                                date.getDate() === disabledDate.getDate()) || date < new Date()
-                                                        )} defaultActiveStartDate={new Date()} />
+                                                    <Calendar onChange={setValue} value={value} tileDisabled={handleDisableDates} defaultActiveStartDate={new Date()} />
                                                 </div>
                                             }
                                         </div>
                                         <div className="my-2.5">
                                             <p className="font-15 ">Start Time</p>
                                             <div className="relative flex flex-row items-center justify-between py-2" style={{ borderBottom: "solid 1px #ffffff1a" }} onClick={() => { setDisplayTimetable(true) }}>
-                                                <p className="text-white font-15">{time[startTime]}</p>
+                                                {
+                                                    startdate ?  <p className="text-white font-15">{time[startTime]}</p>:<div className="w-48 h-6 sidebar-loading"></div>
+                                                }
                                                 <FontAwesomeIcon icon={faClock} className="text-lg text-white" />
                                             </div>
                                             {
                                                 displayTimetable && <div className="flex flex-col bg-white" style={{ background: "#ffffff1a" }}>
                                                     {
                                                         time.map((time, index) => (
-                                                            <p className="w-full px-2 py-1 text-white time" onClick={() => { handleTime(index) }}>{time}</p>
+                                                          index+1 > firstTime && <p className="w-full px-2 py-1 text-white time" onClick={() => { handleTime(index) }} key={index}>{time}</p>
                                                         ))
                                                     }
 
@@ -402,7 +463,7 @@ const Detail = ({id}) => {
                                             </div>
                                         }
                                         {
-                                            userDetail && userDetail.length > 0 && userDetail[0]["credit_card_number"] ? <button className="flex justify-center w-full text-white rounded-lg font-15 bold" style={{ marginTop: "30px", marginBottom: "35px", padding: "15px 10px", background: "#0052cc" }} onClick={() => { handleReserve() }}>RESERVE</button> : <button className="flex justify-center w-full text-white rounded-lg font-15 bold" style={{ marginTop: "30px", marginBottom: "35px", padding: "15px 10px", background: "#b02b4a" }} onClick={()=>{ handlePayment()}}>PAYMENT REQUIRE</button>
+                                            userDetail && userDetail.length > 0 && userDetail[0]["credit_card_number"] ? <button className="flex justify-center w-full text-white rounded-lg font-15 bold" style={{ marginTop: "30px", marginBottom: "35px", padding: "15px 10px", background: "#0052cc" }} onClick={() => { handleReserve() }}>RESERVE</button> : <button className="flex justify-center w-full text-white rounded-lg font-15 bold" style={{ marginTop: "30px", marginBottom: "35px", padding: "15px 10px", background: "#b02b4a" }} onClick={() => { handlePayment() }}>PAYMENT REQUIRE</button>
                                         }
                                         <p className="text-white font-15">Total Price</p>
                                         <p className="text-white font-18 bold"> $ {result ? result.toFixed(2) : "0.00"} AUD</p>
@@ -458,10 +519,15 @@ const Detail = ({id}) => {
                 <div className="flex flex-col w-full" style={{ marginTop: "45px" }}>
                     <div className="flex flex-row items-center" style={{ marginBottom: "30px" }}>
                         <div className="flex">
-                            <img src={ownerData && ownerData[0]["profile_img"]} style={{ height: "50px", width: "50px", marginRight: "15px", borderRadius: "100px" }} className="object-cover " />
+                            {
+                                ownerData && ownerData.length > 0 ?<img src={ownerData && ownerData[0]["profile_img"]} style={{ height: "50px", width: "50px", marginRight: "15px", borderRadius: "100px" }} className="object-cover " />:<div style={{ height: "50px", width: "50px", marginRight: "15px", borderRadius: "100px" }} className="sidebar-loading"></div>
+                            }
+                            {/* <img src={ownerData && ownerData[0]["profile_img"]} style={{ height: "50px", width: "50px", marginRight: "15px", borderRadius: "100px" }} className="object-cover " /> */}
                         </div>
                         <div className="flex flex-col">
-                            <Link href={`/rentalOwner?id=${ownerData && ownerData.length > 0 && ownerData[0]["nick_name"]}`}><p className="text-white underline font-18 bold">{ownerData && ownerData[0].nick_name}</p></Link>
+                            {
+                                ownerData && ownerData.length > 0 ? <Link href={`/rentalOwner?id=${ownerData && ownerData.length > 0 && ownerData[0]["nick_name"]}`}><p className="text-white underline font-18 bold">{ownerData && ownerData[0].nick_name}</p></Link>:<div className="w-56 h-6 mb-2 sidebar-loading"></div>
+                            }
                             <p className="text-white">4.97 Google Ratings (52)</p>
                         </div>
                     </div>
@@ -476,7 +542,10 @@ const Detail = ({id}) => {
                 <div className="fixed bottom-0 left-0 flex items-center justify-between w-full h-20 bg-black detailsticky" style={{ zIndex: "10002" }}>
                     <div className="flex flex-col">
                         <div className="flex flex-row items-center" onClick={() => { handleUpdateSidebar() }}>
-                            <p className="flex flex-row items-center text-white underline bg-black cursor-pointer font-14">{startdate.getDate() + " " + month[startdate.getMonth()] + "-" + enddate.getDate() + " " + month[enddate.getMonth()]}</p>
+                            {
+                                startdate && enddate ?  <p className="flex flex-row items-center text-white underline bg-black cursor-pointer font-14">{startdate && startdate.getDate() + " " + month[startdate.getMonth()] + "-" + enddate.getDate() + " " + month[enddate.getMonth()]}</p>:<div className="h-5 detail-loading w-36"></div>
+                            }
+                           
                             <FontAwesomeIcon icon={faPencil} className="text-base text-white" style={{ marginLeft: "7px" }} />
                         </div>
                         <p className="font-15 bold">${result && Number(result).toFixed(2)} Total</p>
@@ -484,12 +553,12 @@ const Detail = ({id}) => {
                     {
                         userCredential.email ? <div>
                             {
-                                userDetail && userDetail.length > 0 && userDetail[0]["credit_card_number"] ? <button className="detailstickybutton" onClick={() => { handleReserve() }}><p className="text-white font-15 bold">RESERVE</p></button> : <button className="detailstickybutton" style={{ background:"#b02b4a"}}onClick={()=>{ handlePayment()}}><p className="text-white font-15 bold paymentRequire">PAYMENT</p></button>
+                                userDetail && userDetail.length > 0 && userDetail[0]["credit_card_number"] ? <button className="detailstickybutton" onClick={() => { handleReserve() }}><p className="text-white font-15 bold">RESERVE</p></button> : <button className="detailstickybutton" style={{ background: "#b02b4a" }} onClick={() => { handlePayment() }}><p className="text-white font-15 bold paymentRequire">PAYMENT</p></button>
                             }</div> : <button className="detailstickybutton" onClick={handleLogin}><p className="text-white font-15 bold">LOGIN</p></button>
                     }
                 </div>
                 {
-                    updateMobileSideBar && <MobileReserve content={content} ownerData={ownerData} date={startdate} startTime={startTime} durationIndex={durationIndex} setUpdateMobileSidebar={setUpdateMobileSidebar} value={value} setValue={setValue} disabledDates={disabledDates} setDate={setStartDate} setDurationIndex={setDurationIndex} setStartTime={setStartTime} tempDuration={tempDuration} setTempDuration={setTempDuration} />
+                    updateMobileSideBar && <MobileReserve content={content} ownerData={ownerData} date={startdate} startTime={startTime} durationIndex={durationIndex} setUpdateMobileSidebar={setUpdateMobileSidebar} value={value} setValue={setValue} disabledDates={disabledDates} setDate={setStartDate} setDurationIndex={setDurationIndex} setStartTime={setStartTime} tempDuration={tempDuration} setTempDuration={setTempDuration} firstTime={ firstTime}/>
                 }
                 {
                     !reserve ? <MobileSuccessNotification handlefinish={handlefinish} /> : <></>

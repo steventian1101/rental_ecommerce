@@ -8,7 +8,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import Loading from "../auth/loading";
 
-const CardCarousel = ({ imgArray, timeduration, id }) => {
+const CardCarousel = ({ imgArray, timeduration, id, location }) => {
     const [index, setIndex] = useState(0);
     const [direction, setDirection] = useState(0);
     const [imgStyle, setImgStyle] = useState([]);
@@ -16,8 +16,8 @@ const CardCarousel = ({ imgArray, timeduration, id }) => {
     const [touchPosition, setTouchPosition] = useState(null);
     const [indicatorPan, setIndicatorPan] = useState([]);
     const [width, setWidth] = useState(null);
-    const router = useRouter();
     const [loading, setLoading] = useState(false);
+    const [duration, setDuration] = useState('');
     const handleTouchStart = (e) => {
         const touchDown = e.touches[0].clientX
         setTouchPosition(touchDown);
@@ -29,7 +29,20 @@ const CardCarousel = ({ imgArray, timeduration, id }) => {
             temp.push(<img src={imgArray[k]} className="carousel_img" ref={imgRef} key={k} />);
         }
         setDrawImg(temp);
+        getTime(location)
     }, [id])
+    const getTime = (location) =>{
+        let key = JSON.stringify(location);
+        let address = localStorage.getItem(key);
+        console.log(address)
+        if(address){
+            setDuration(address)
+        }
+        
+    }
+    useEffect(()=>{
+          console.log(duration)
+    },[duration])
     const handlePrev = () => {
         if (index == imgArray.length - 1) {
             return;
@@ -130,6 +143,17 @@ const CardCarousel = ({ imgArray, timeduration, id }) => {
            <Link href={`/item?id=${id}`}> <div style={imgStyle} className="flex w-full h-full" >
                 {drawImg}
             </div></Link>
+            <div className="absolute top-2 right-2">
+                {
+                    duration ? <div className="flex flex-row items-center w-auto px-2 py-2 bg-black rounded-md">
+                    <img src = "/logo/runner.svg" className="w-auto h-4 mr-2"/>
+                    <p className="text-white font-15">{duration}</p>
+                </div>:<div className="flex flex-row items-center w-auto px-2 py-2 bg-black rounded-md">
+                    <img src = "/logo/runner.svg" className="w-auto h-4 mr-2"/>
+                    <p className="text-white font-15">Not working</p>
+                </div>
+                }
+            </div>
 
         </div>
         </>

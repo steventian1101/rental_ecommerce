@@ -26,6 +26,7 @@
     "@fortawesome/free-regular-svg-icons": "^6.2.1",
     "@fortawesome/free-solid-svg-icons": "^6.2.1",
     "@fortawesome/react-fontawesome": "^0.2.0",
+    "add-subtract-date": "^1.0.15",
     "algoliasearch": "^4.14.3",
     "date-and-time": "^2.4.2",
     "dotenv": "^16.0.3",

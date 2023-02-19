@@ -13,31 +13,43 @@ const AddPayment = ({setScreenNumber, setNewPayment}) => {
     const [cvvvalidation, setCvvvalidation] = useState(true);
     const fullnameValidation = (any) => {
         let str = /(^[A-Za-z]{3,16})([ ]{0,1})([A-Za-z]{3,16})?([ ]{0,1})?([A-Za-z]{3,16})?([ ]{0,1})?([A-Za-z]{3,16})/;
-        setFullnamevalidation(str.test(any))
-        if (str.test(any)) {
-            setFullname(any)
+        if (str.test(any) || any == "") {
+            setFullname(any);
+            setFullnamevalidation(true);
+        }
+        else{
+            setFullnamevalidation(false)
         }
 
     }
     const creditValidation = (any) => {
-        let str = /[^0-9]+/;
-        setCreditvalidation(str.test(any));
-        if (str.test(any)) {
-            setCredit(any)
+        let str =  /(?:\d[ -]*?){16}/;
+        if (str.test(any) || any == "") {
+            setCredit(any);
+            setCreditvalidation(true)
+        }
+        else{
+            setCreditvalidation(false)
         }
     }
     const expireValidation = (any) => {
         let str = /^(0[1-9]|1[0-2])\/\d{2}$/;
-        setExpirevalidation(str.test(any));
-        if (str.test(any)) {
+        if (str.test(any) || any == "") {
             setExpireDate(any);
+            setExpirevalidation(true)
+        }
+        else{
+            setExpirevalidation(false)
         }
     }
     const cvvValidation = (any) => {
         let str = /^[0-9]{3,4}$/;
-        setCvvvalidation(str.test(any));
-        if (str.test(any)) {
+        if (str.test(any) || any == "") {
             setCvv(any);
+            setCvvvalidation(true);
+        }
+        else{
+            setCreditvalidation(false)
         }
     }
     const handleComplete = () =>{

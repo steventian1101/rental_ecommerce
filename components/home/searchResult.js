@@ -38,9 +38,8 @@ const SearchResult = ({ setItemID, searchText }) => {
                 :
                     <div className="flex flex-row flex-wrap justify-center searchResult">
                         {
-                            new Array(20).map(() => (
-                                <ItemcardLoading />
-                            ))
+                            [...Array(20)].map((_, index) => (
+                                <ItemcardLoading key={ index}/>))
                         }
                     </div>
         }

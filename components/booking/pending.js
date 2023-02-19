@@ -10,6 +10,9 @@ import { useState, useEffect } from "react";
 import { collection, serverTimestamp, doc, updateDoc, deleteDoc, addDoc } from "firebase/firestore";
 import { db } from "../../lib/initFirebase";
 import { httpsCallable, getFunctions } from "firebase/functions";
+import Ready from "./ready";
+import date from "date-and-time"
+import Link from "next/link";
 const month = {
     "0": "January",
     "1": "February",
@@ -51,14 +54,41 @@ const time = [
     "11:00 PM",
 ];
 const duration = [1, 2, 3];
-const Pending = ({ setSideBar, id, ownerdata, customerdata, itemdata, booking, setLoading }) => {
+const Pending = ({ setSideBar, id, ownerdata, customerdata, itemdata, booking, setLoading, inbounded }) => {
+    console.log(inbounded)
     const [groupbuttons, setGroupbuttons] = useState(false);
+   
     const { userCredential } = useAuth();
+    const [endtime, setEndtime] = useState(null);
     useEffect(() => {
-        userCredential.email && selectButtons()
+        userCredential.email && selectButtons();
+        getEndDate();
     }, []);
+    const getEndDate = () =>{
+        let end_date = new Date();
+        console.log(itemdata)
+        const start_date = new Date(booking["start_date"] + " " + time[booking["start_time"]]);
+        const duration = Math.abs(Number(booking.result) / (1.35 * Number(itemdata["item_charge"])));
+        if (itemdata.item_charge_rate == "hour") {
+            end_date = date.addHours(start_date, duration);
+        }
+        if (itemdata.item_charge_rate == "day") {
+            end_date = date.addDays(start_date, duration);
+        }
+        if (itemdata.item_charge_rate == "week") {
+            end_date = date.addDays(start_date, Number(duration) * 7);
+        }
+        if (itemdata.item_charge_rate == "month") {
+            end_date = date.addMonths(start_date, duration);
+        }
+        if (itemdata.item_charge_rate == "person") {
+            var temp_date = date.addDays(start_date, 1);
+            end_date = new Date(temp_date.getMonth() + " " + temp_date.getDate() + ", " + temp_date.getFullYear);
+        }
+        setEndtime(end_date)
+    }
     const selectButtons = () => {
-        if (userCredential.email == booking.owner_email) {
+        if (userCredential.email == booking.owner_email && inbounded ) {
             setGroupbuttons(true);
         }
         else {
@@ -79,7 +109,7 @@ const Pending = ({ setSideBar, id, ownerdata, customerdata, itemdata, booking, s
         updateDoc(docRef, newdata)
             .then(() => {
                 setLoading(false);
-                window.location.reload();
+                setSideBar(<Ready setSideBar={setSideBar} id={ booking.item_id} ownerdata={ownerdata} customerdata={ customerdata} itemdata={itemdata} booking={ booking} setLoading={setLoading}/>);
             })
             .catch((error) => {
                 console.log(error);
@@ -132,7 +162,7 @@ const Pending = ({ setSideBar, id, ownerdata, customerdata, itemdata, booking, s
                 <p className="mb-5 text-white font-18 bold">General Info</p>
                 <div style={{ marginBottom: "15px" }}>
                     <p className="text-white font-15">Item Requested</p>
-                    <p className="text-white underline font-15 ellipsis">{itemdata.item_name}</p>
+                    <Link href = {`/item/?id=${id}`}><p className="text-white underline font-15 ellipsis">{itemdata.item_name}</p></Link>
                 </div>
                 <div style={{ marginBottom: "15px" }}>
                     <p className="text-white font-15">Start Date & Time</p>
@@ -147,6 +177,10 @@ const Pending = ({ setSideBar, id, ownerdata, customerdata, itemdata, booking, s
                         <p className="text-white font-15 ellipsis">{Math.abs(booking.result / (itemdata.item_charge * 1.35)) + " " + itemdata.item_charge_rate}</p>
                     </div>
                 }
+                <div style={{ marginBottom: "15px" }}>
+                    <p className="text-white font-15">End Date & Time</p>
+                    <p className="text-white font-15 ellipsis">{endtime && month[ endtime.getMonth()]+ " " + endtime.getDate() + ", " + endtime.getFullYear() + " " + time[endtime.getHours()]}</p>
+                </div>
             </div>
             <div className="line"></div>
             <div>
@@ -154,7 +188,7 @@ const Pending = ({ setSideBar, id, ownerdata, customerdata, itemdata, booking, s
                 {
                     customerdata && customerdata[0].nick_name ? <div style={{ marginBottom: "15px" }} className="flex flex-row items-center justify-between"><div className="flex flex-col">
                         <p className="text-white font-15">Customer's Name</p>
-                        <p className="text-white underline font-15 ellipsis">{customerdata[0].nick_name}</p></div><div className="flex items-center justify-center w-10 h-10" style={{ border: "solid 1px #ffffff4a", borderRadius: "100px" }}><FontAwesomeIcon icon={faCommentDots} className="text-white text-md" /></div>
+                        <Link href={`/rentalOwner?id=${customerdata[0]["nick_name"]}`}><p className="text-white underline font-15 ellipsis">{customerdata[0].nick_name}</p></Link></div><div className="flex items-center justify-center w-10 h-10" style={{ border: "solid 1px #ffffff4a", borderRadius: "100px" }}><FontAwesomeIcon icon={faCommentDots} className="text-white text-md" /></div>
                     </div> : <div style={{ marginBottom: "15px" }} className="flex flex-row items-center justify-between"><div className="flex flex-col">
                         <p className="text-white font-15">Customer's Email</p>
                         <p className="text-white underline font-15 ellipsis">{booking.customer_email}</p></div><div className="flex items-center justify-center w-10 h-10" style={{ border: "solid 1px #ffffff4a", borderRadius: "100px" }}><FontAwesomeIcon icon={faCommentDots} className="text-white text-md" /></div>

@@ -158,7 +158,7 @@ const Register = ({ sideBar, setSideBar }) => {
     useEffect(() => {
         if (imgurl != "" && emailvalidation && passwordvalidation && firstnamevalidation && lastnamevalidation && nicknameValidation && phonevalidation && addressvalidation) {
             uploadCustomer();
-            addDoc(listCollectionRef, { user_email: email, first_name: firstname, profile_img: imgurl, last_name: lastname, nick_name: nickname, user_phone: phone, user_address: address, customer_id:customerID }).then(response => {
+            addDoc(listCollectionRef, { user_email: email, first_name: firstname, profile_img: imgurl, last_name: lastname, nick_name: nickname, user_phone: phone, user_address: address, customer_id: customerID }).then(response => {
                 createUser(auth, email, password);
                 setFile(null);
             }).catch(error => {
@@ -169,18 +169,18 @@ const Register = ({ sideBar, setSideBar }) => {
     const handleGoogle = () => {
         googleAuth(auth, provider)
     }
-    const uploadCustomer = async ()=>{
+    const uploadCustomer = async () => {
         const functions = getFunctions();
         const uploadStripeCustomer = httpsCallable(functions, 'uploadStripeCustomer');
         const detail = {
-            customer_phone:phone,
-            customer_email:email,
-            customer_name:nickname,
-            customer_id:customerID,
+            customer_phone: phone,
+            customer_email: email,
+            customer_name: nickname,
+            customer_id: customerID,
 
         }
-        await uploadStripeCustomer({ data: detail }).then((result)=>{
-            
+        await uploadStripeCustomer({ data: detail }).then((result) => {
+
         });
 
     }
@@ -200,12 +200,12 @@ const Register = ({ sideBar, setSideBar }) => {
             {complete ? <section className="overflow-auto addProfileInfo">
                 <p className="loginText" style={{ marginTop: "60px" }}>Add Your Profile Info.</p>
                 <p className="loginDetail">Explore Sydney's largest rental platform</p>
-                <div className="flex flex-col items-center justify-center w-full" style={{ height: "180px", border: "1px solid #ffffff4a", borderRadius: "8px" }}>
+                <div className="relative flex flex-col items-center justify-center w-full" style={{ height: "180px", border: "1px solid #ffffff4a", borderRadius: "8px" }}>
                     <div className="relative flex flex-col items-center justify-center">
                         <FontAwesomeIcon icon={faPlus} style={{ fontSize: "30px", color: "white" }} />
                         <p className="text-white">Add Profile Photo</p>
-                        <input type="file" className="absolute flex w-full opacity-0 left-4" onChange={(e) => handlefile(e)}></input>
                     </div>
+                    <input type="file" className="absolute flex w-full h-full opacity-0" onChange={(e) => handlefile(e)}></input>
                 </div>
                 {
                     previewImage ? <div className="relative">
@@ -213,16 +213,18 @@ const Register = ({ sideBar, setSideBar }) => {
                     </div> : <></>
                 }
                 <div style={{ marginTop: "30px", marginBottom: "30px", width: "100%", height: "1px", background: "#ffffff4a" }}></div>
-                <AuthInput title={"First Name"} status={firstnamevalidation} placeholder={"E.g.John"} change={firstnameValidation} type={"text"} value={""} name={"firstname"}/>
-                <AuthInput title={"Last Name"} status={lastnamevalidation} placeholder={"E.g.Doe"} change={lastnameValidation} type={"text"} value={""} name={"lastname"}/>
-                <AuthInput title={"SDrop Nickname"} status={nicknamevalidation} placeholder={"E.g.John Doe Rentals"} change={nicknameValidation} type={"text"} value={""} name={"nickname"} />
-                <AuthInput title={"Phone Number"} status={phonevalidation} placeholder={"E.g.+61 488 789"} change={phoneValidation} type={"text"} value={""} />
-                <AuthInput title={"Address"} status={addressvalidation} placeholder={"E.g.20 Echidna Ave, 2035, Australia"} change={addressValidation} type={"text"} value={""} />
+                <form autoComplete="off">
+                    <AuthInput title={"First Name"} status={firstnamevalidation} placeholder={"E.g.John"} change={firstnameValidation} type={"text"} value={""} name={"firstname"} />
+                    <AuthInput title={"Last Name"} status={lastnamevalidation} placeholder={"E.g.Doe"} change={lastnameValidation} type={"text"} value={""} name={"lastname"} />
+                    <AuthInput title={"SDrop Nickname"} status={nicknamevalidation} placeholder={"E.g.John Doe Rentals"} change={nicknameValidation} type={"text"} value={""} name={"nickname"} />
+                    <AuthInput title={"Phone Number"} status={phonevalidation} placeholder={"E.g.+61 488 789"} change={phoneValidation} type={"text"} value={""} />
+                    <AuthInput title={"Address"} status={addressvalidation} placeholder={"E.g.20 Echidna Ave, 2035, Australia"} change={addressValidation} type={"text"} value={""} />
+                </form>
                 <div className="registerButton">
                     <button className="flex items-center justify-center" onClick={() => { handleRegister() }}>COMPLETE</button>
                 </div>
             </section> : <section className="register">
-                <Link href = "/"><div style={{ height: "50px", marginBottom: "10px" }} className="flex flex-row items-center cursor-pointer"><FontAwesomeIcon icon={faArrowLeftLong} className="text-2xl text-white"/></div></Link>
+                <Link href="/"><div style={{ height: "50px", marginBottom: "10px" }} className="flex flex-row items-center cursor-pointer"><FontAwesomeIcon icon={faArrowLeftLong} className="text-2xl text-white" /></div></Link>
                 <p className="loginText">SIGN UP.</p>
                 <div className="registerTextBack"></div>
                 <p className="loginDetail">Login to Sydney's largest rental platform</p>
@@ -232,8 +234,8 @@ const Register = ({ sideBar, setSideBar }) => {
                     <p style={{ fontSize: "15px", fontFamily: "poppins-light", color: "white" }}>OR</p>
                     <div style={{ width: "100px", height: "1px", background: "#ffffff4d" }}></div>
                 </div>
-                <AuthInput title={"Email Address"} status={emailvalidation} placeholder={"E.g.johndoe@gmail.com"} change={emailValidation} type={"text"} value={""} name={"email"}/>
-                <AuthInput title={"Password"} status={passwordvalidation} placeholder={"Min 8 Characters"} change={passwordValidation} type={"password"} value={""} name= {"password"}/>
+                <AuthInput title={"Email Address"} status={emailvalidation} placeholder={"E.g.johndoe@gmail.com"} change={emailValidation} type={"text"} value={""} name={"email"} />
+                <AuthInput title={"Password"} status={passwordvalidation} placeholder={"Min 8 Characters"} change={passwordValidation} type={"password"} value={""} name={"password"} />
                 {/* <div className="flex flex-col loginForm">
                 <p style={{ fontSize: "15px", fontFamily: "poppins-light", lineHeight: "20px" }} className="text-white">Email Address</p>
                 <input type="email" className="w-full emailInput focus:bg-transparent" placeholder="E.g.johndoe@gmail.com" onChange={(e)=>setEmail(e.target.value)}/>

@@ -2,13 +2,9 @@ import { useAuth } from "../../context/useAuth";
 import { useState, useEffect } from "react";
 import { updateDoc, deleteField, doc, collection, addDoc, query, orderBy, where, getDocs } from "firebase/firestore";
 import { db } from "../../lib/initFirebase"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import Link from "next/link";
 import RentalOwnerItem from "./rentalOwnerItem";
-import Detail from "../home/detail";
-import SidebarBack from "../sidebarBack";
 import { getRatingAndReviewNumbersForOwner } from "../../utils/getRatingAndReviewsNumber";
+import { useRouter } from "next/router";
 const RentalOwner = ({ id, setLogin }) => {
     const { userCredential } = useAuth();
     const [ownerImg, setOwnerImg] = useState('');
@@ -19,8 +15,8 @@ const RentalOwner = ({ id, setLogin }) => {
     const [itemID, setItemID] = useState(null);
     const [detail, setDetail] = useState([]);
     const [sideBar, setSideBar] = useState([]);
-    const [payment, setPayment] = useState(null);
     const [reviewNumbers, setReviewNumbers] = useState(null);
+    const router =  useRouter();
     useEffect(() => {
         id && getDetail(id);
     }, [id]);
@@ -51,7 +47,16 @@ const RentalOwner = ({ id, setLogin }) => {
            setReviewNumbers(result)
         }
         )
-    },[tempData])
+    },[tempData]);
+    const handleWebsite = () =>{
+        if(tempData && tempData.length > 0 && tempData[0]["website"]){
+            let url = "https://" +  tempData[0]["website"];
+            router.push(url);
+        }
+        else{
+            return;
+        }
+    }
     return (
         <section className="w-full my-20 bg-black owner">
             {
@@ -71,8 +76,8 @@ const RentalOwner = ({ id, setLogin }) => {
             </div>
             <div className="flex flex-row justify-center" style={{ width: "90vw", margin: "auto" }}>
                 <button className="flex flex-row ownerMessage"><img src="/logo/message.svg" className="fontIcon" /><p style={{ fontSize: "15px", color: "white" }}>Message Us</p></button>
-                <Link href={tempData && tempData.length > 0 ? "https://" + tempData[0]["website"] : ""}>
-                    <button className="flex flex-row ownerMessage ownerWebsite"><img src="/logo/website.svg" className="fontIcon" /><p style={{ fontSize: "15px", color: "white" }}>Website</p></button> </Link>
+                {/* <Link href={tempData && tempData.length > 0 ? "https://" + tempData[0]["website"] : ""}> */}
+                <button className="flex flex-row ownerMessage ownerWebsite"><img src="/logo/website.svg" className="fontIcon" onClick={()=>{ handleWebsite()}}/><p style={{ fontSize: "15px", color: "white" }}>Website</p></button>
                 {
                     reviewNumbers && reviewNumbers.reviewNumber != 0 && <button className="ownerRating">{
                         reviewNumbers.rating +" Star (" + reviewNumbers.reviewNumber+" Reviews)"

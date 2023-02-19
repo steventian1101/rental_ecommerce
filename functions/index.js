@@ -4,6 +4,7 @@ const date = require('date-and-time');
 const stripe = require('stripe')('sk_test_51IH8sJAZAQKiaOfYxdO4oKTRXeX0Nox65R7opwGOcSgxMDeQ42udiV9gvAGp8bH6MKW0mFUAVTlso0mIzZI17kEe00ifqlV1Mi');
 const admin = require("firebase-admin");
 const cors = require("cors")({ origin: true });
+const axios = require("axios")
 const time = [
     "00:00",
     "01:00",
@@ -381,4 +382,21 @@ async function createSetupIn (cus_id, amount) {
         console.error(error);
         return error;
       }
+}
+exports.getDuration = functions.https.onRequest((req, res) => {
+    cors(req, res, () => {
+        var url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" + req.body.data.data.originLat + "%2C" + req.body.data.data.originLng + "&destinations=side_of_road%3A" + req.body.data.data.destinationLat + "%2C" + req.body.data.data.destinationLng + "&key=AIzaSyBLkRbbKO5XGR2VTHUocfd72Fgjy4VNm-0";
+        axios.get(url).then(resp => {
+            res.status(200).send({ result: resp.data })
+        }).catch(function (error) {
+            res.status(200).send({ result: error })
+        });
+    })
+});
+async function getDurationResult (url){
+    await  axios.get(url).then(resp => {
+            return resp;
+    }).catch(function (error) {
+            return error
+    });
 }

@@ -15,6 +15,7 @@ import NavBarBack from "./navBarBack";
 
 export default function Header({ search }) {
   const listCollectionRef = collection(db, "users")
+  const notificationRef =  collection(db, "notifications")
   const { authenticated, userCredential, logOut } = useAuth();
   const [sideBar, setSideBar] = useState(0);
   const [drawbackground, setDrawbackground] = useState(false);
@@ -26,6 +27,7 @@ export default function Header({ search }) {
   const [tempdata, setTempdata] = useState([]);
   const [searchShow, setSearchShow] = useState(false);
   const [notify, setNotify] = useState(false);
+  const [notifications, setNotifications] = useState(null);
   const handleProfileImage = async (email) => {
     let temp = [];
     let q = query(listCollectionRef, where("user_email", "==", email));
@@ -35,8 +37,20 @@ export default function Header({ search }) {
     });
     setTempdata(temp)
   }
+  const getNotification = async (email) => {
+    const temp = [];
+    let q = query(notificationRef, where("to", "==", email), where("show", "==", false), orderBy("time", "desc"));
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+        var tempobject = Object.assign(doc.data(), { objectID: doc.id })
+        temp.push(tempobject)
+    })
+    console.log(temp.length)
+    setNotifications(temp)
+  }
   useEffect(() => {
     userCredential.email && setCredentialEmail(userCredential.email)
+    userCredential.email && getNotification(userCredential.email)
   }, [userCredential?.email])
   useEffect(() => {
     credentialEmail != "" && handleProfileImage(credentialEmail)
@@ -119,8 +133,11 @@ export default function Header({ search }) {
                 <div className="flex items-center justify-center cursor-pointer navbarIcon">
                   <Link href="/booking"><FontAwesomeIcon icon={faCalendarCheck} style={{ color: "white", fontSize: "18px" }} /></Link>
                 </div>
-                <div className="flex items-center justify-center cursor-pointer navbarIcon">
+                <div className="relative flex items-center justify-center cursor-pointer navbarIcon">
                   <FontAwesomeIcon icon={faBell} style={{ color: "white", fontSize: "18px" }} onClick={() => { handleNotify () }} />
+                  {
+                    notifications && notifications.length != 0 ? <div className="absolute flex items-center justify-center bg-yellow-500 top-1 right-1" style={{ width:"15px", height:"15px", borderRadius:"100px"}}><p className="text-black bold" style={{ fontSize:"12px", lineHeight:"15px"}}>{notifications.length}</p></div>:<></>
+                  }
                 </div>
                 <div className="flex items-center justify-center w-10 h-10 mx-2.5" style={{ position: "relative" }} onMouseEnter={() => { handleEnter() }}>
                   {
@@ -137,7 +154,7 @@ export default function Header({ search }) {
                           }
                         </div>
                         <div className="flex flex-col">
-                          <p className="text-white" style={{ fontSize: "15px" }}>{nickname}</p>
+                          <p className="text-white font-15" >{nickname}</p>
                           <Link href='/setting/profile'><p className="text-white underline cursor-pointer" style={{ fontSize: "15px" }}>Edit Profile</p></Link>
                         </div>
                       </div>

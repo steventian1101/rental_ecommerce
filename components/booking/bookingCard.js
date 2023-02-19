@@ -167,7 +167,7 @@ const BookingCard = ({ booking, inbounded, setSideBar,setLoading }) => {
     }
     const handleBookingClick = () =>{
         if(booking.status ==0 ){
-            setSideBar(<Pending setSideBar={setSideBar} id={ booking.item_id} ownerdata={ownerdata} customerdata={ customerdata} itemdata={itemdata} booking={ booking} setLoading={ setLoading}/>);
+            setSideBar(<Pending setSideBar={setSideBar} id={ booking.item_id} ownerdata={ownerdata} customerdata={ customerdata} itemdata={itemdata} booking={ booking} setLoading={ setLoading} inbounded= { inbounded}/>);
         }
         if(booking.status ==1 ){
             setSideBar(<Ready setSideBar={setSideBar} id={ booking.item_id} ownerdata={ownerdata} customerdata={ customerdata} itemdata={itemdata} booking={ booking} setLoading={setLoading}/>);

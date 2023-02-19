@@ -20,6 +20,7 @@ const EditItemInfo = ({ setSideBar, setItemInfo, prevName, prevLocation, prevIte
     const [tempdata, setTempdata] = useState(null);
     const { userCredential} = useAuth();
     const listCollectionRef = collection(db, "users");
+    console.log(prevItemTag)
     
 
     const handleComplete = () => {

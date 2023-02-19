@@ -25,30 +25,42 @@ const Payment = () => {
     console.log(router)
     const fullnameValidation = (any) => {
         let str = /(^[A-Za-z]{3,16})([ ]{0,1})([A-Za-z]{3,16})?([ ]{0,1})?([A-Za-z]{3,16})?([ ]{0,1})?([A-Za-z]{3,16})/;
-        setFullnamevalidation(str.test(any) || any == "")
-        if (str.test(any)) {
+        if (str.test(any) || any == "") {
             setFullname(any)
+            setFullnamevalidation(true)
+        }
+        else{
+            setCreditvalidation(false)
         }
     }
     const creditValidation = (any) => {
         let str =  /(?:\d[ -]*?){16}/;
-        setCreditvalidation(str.test(any) || any == "");
-        if (str.test(any)) {
+        if (str.test(any) || any == "") {
             setCredit(any)
+            setCreditvalidation(true)
+        }
+        else{
+            setCreditvalidation(false)
         }
     }
     const expireValidation = (any) => {
         let str = /^(0[1-9]|1[0-2])\/\d{2}$/;
-        setExpirevalidation(str.test(any) || any == "");
-        if (str.test(any)) {
+        if (str.test(any) || any == "") {
             setExpireDate(any);
+            setExpirevalidation(true)
+        }
+        else{
+            setCreditvalidation(false)
         }
     }
     const cvvValidation = (any) => {
         let str = /^[0-9]{3,4}$/;
-        setCvvvalidation(str.test(any) || any == "");
-        if (str.test(any)) {
+        if (str.test(any) || any == "") {
             setCvv(any);
+            setCvvvalidation(true)
+        }
+        else{
+            setCreditvalidation(false)
         }
     }
     const handleComplete = () => {
@@ -67,7 +79,7 @@ const Payment = () => {
             let url = localStorage.getItem("beforeAddPayment");
             router.push(url);
         } else {
-            router.push('/setting/payment');
+            router.push('/setting');
         }
     }
     const getDetail = async (email) => {
@@ -99,7 +111,6 @@ const Payment = () => {
             cvv: cvv
         }
         console.log(creditPaymentData);
-        createPayment(creditPaymentData);
         setLoading(false);
         const newdata = {
             full_name: fullname,

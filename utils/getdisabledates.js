@@ -71,6 +71,9 @@ const getdisabletimes = async (id, content) => {
             for (let j = 0; j < duration; j++) {
                 if (j == 0) {
                     disabletemp[j]=(new Date(temp[i].start_date + " " + time[temp[i].start_time]));
+                    if(duration == 1){
+                        disabletemp.push(date.addDays(disabletemp[j],1))
+                    }
                 }
                 else {
                     let nextdate = date.addDays(new Date(disabletemp[j - 1]), 1)

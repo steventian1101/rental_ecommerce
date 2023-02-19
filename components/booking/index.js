@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faPlus } from "@fortawesome/free-solid-svg-icons"
+import { faPlus, faWindowRestore } from "@fortawesome/free-solid-svg-icons"
 import { useState, useEffect } from "react"
 import CreateBooking from "./createBooking"
 import Pending from "./pending"
@@ -110,6 +110,11 @@ const Booking = () => {
         setUserDetail(temp);
 
     }
+    useEffect(()=>{
+        if(!sideBar){
+            faWindowRestore.locati
+        }
+    },[sideBar])
     return (
         <>
             {

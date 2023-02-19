@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react'
 import { onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, signInWithPopup } from 'firebase/auth';
 import { auth } from '../lib/initFirebase';
-import { useRouter } from 'next/router';
 import timediff from 'timediff';
 import { db } from '../lib/initFirebase';
 import { collection, addDoc, query, orderBy, where, getDocs } from "firebase/firestore";
+import { useRouter } from 'next/router';
 export default function useFirebaseAuth() {
-    const [authenticated, setAuthenticated] = useState(false);
+    const [authenticated, setAuthenticated] = useState(null);
     const [imageUrl, setImageUrl] = useState('');
     const [userCredential, setUserCredential] = useState([]);
     const [confirmationEmail, setConfirmationEmail] = useState('');
@@ -33,7 +33,12 @@ export default function useFirebaseAuth() {
     const createUser = (auth, email, password) => {
         createUserWithEmailAndPassword(auth, email, password).then((userCredential) => {
             console.log(userCredential.user.uid);
-            router.push('/');
+            if (typeof window !== "undefined" && "localStorage" in window && localStorage.getItem("loginNextUrl")) {
+                let url = localStorage.getItem("loginNextUrl");
+                router.push(url);
+            } else {
+                router.push('/');
+            }
         }).catch((error) => {
             console.log(error.message)
         });
@@ -55,6 +60,12 @@ export default function useFirebaseAuth() {
                 // window.location.reload();
                 setConfirmationEmail(result.user.email)
                 setNewCredential(result.user);
+                if (typeof window !== "undefined" && "localStorage" in window && localStorage.getItem("loginNextUrl")) {
+                    let url = localStorage.getItem("loginNextUrl");
+                    router.push(url);
+                } else {
+                    router.push('/');
+                }
 
                 // ...
             }).catch((error) => {
@@ -108,9 +119,10 @@ export default function useFirebaseAuth() {
 
                 //     setTimeout(() => logOut(auth), millisecondsUntilExpiration);
                 // });
-            } else {
+            } 
+            else 
+            {
                 setAuthenticated(false);
-                router.push('/');
             }
         });
     }, []);
