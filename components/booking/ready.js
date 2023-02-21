@@ -89,9 +89,13 @@ const Ready = ({ setSideBar, id, ownerdata, customerdata, itemdata, booking }) =
             setGroupbuttons(false);
         }
     }
+    const handleSidebar = () =>{
+        setSideBar(null);
+        window.location.reload();
+    }
     return (
         <section className="overflow-auto bookingpending">
-            <div style={{ height: "50px", marginBottom: "10px" }} className="flex flex-row  cursor-pointer mb-2.5 justify-between items-center"><FontAwesomeIcon icon={faArrowLeftLong} className="text-2xl text-white" onClick={() => { setSideBar(null) }} /></div>
+            <div style={{ height: "50px", marginBottom: "10px" }} className="flex flex-row  cursor-pointer mb-2.5 justify-between items-center"><FontAwesomeIcon icon={faArrowLeftLong} className="text-2xl text-white" onClick={() => { handleSidebar() }} /></div>
             <p className="loginText ready">BOOKING READY</p>
             <p className="mb-10 loginDetail ellipsis">Booking Number: <span className="font-15 bold">{booking["booking_id"].toUpperCase()}</span></p>
             <div className="relative">

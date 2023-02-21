@@ -10,7 +10,8 @@ import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
 import Loading from "../auth/loading"
 import Link from "next/link"
 import { useRouter } from "next/router"
-import { updateDoc,deleteField,doc,collection, addDoc, query, orderBy, where, getDocs } from "firebase/firestore";
+import { updateDoc, deleteField, doc, collection, addDoc, query, orderBy, where, getDocs } from "firebase/firestore";
+import { ToggleSlider } from "react-toggle-slider";
 const Profile = () => {
     const [firstname, setFirstname] = useState('');
     const [lastname, setLastname] = useState('');
@@ -32,14 +33,16 @@ const Profile = () => {
     const [imgurl, setImgurl] = useState('');
     const [tempData, setTempdata] = useState([]);
     const { userCredential } = useAuth();
-    const router=  useRouter();
+    const [geo, setGeo] = useState(false);
+    const [geoslider, setGeoslider] = useState(null)
+    const router = useRouter();
     const firstnameValidation = (any) => {
         let str = /([A-Z]{1})\)?([a-z]{1,})$/;
         if (str.test(any) || any == "") {
             setFirstname(any)
             setFirstnamevalidation(true);
         }
-        else { 
+        else {
             setFirstnamevalidation(false)
         }
     }
@@ -81,13 +84,13 @@ const Profile = () => {
             setAddressvalidation(false);
         }
     }
-    const websiteValidation = (any) =>{
-        
-        if(any.indexOf(".") > 0 || any == ""){
+    const websiteValidation = (any) => {
+
+        if (any.indexOf(".") > 0 || any == "") {
             setWebsitevalidation(true);
             setWebsite(any);
         }
-        else{
+        else {
             setWebsitevalidation(false)
         }
     }
@@ -100,11 +103,11 @@ const Profile = () => {
 
     const handleComplete = () => {
         setLoading(true);
-        if (!previewImage  && firstnamevalidation && lastnamevalidation && nicknameValidation && phonevalidation && websitevalidation && email!= ""){
+        if (!previewImage && firstnamevalidation && lastnamevalidation && nicknameValidation && phonevalidation && websitevalidation && email != "") {
             setImgurl(beforeImage)
         }
-        if (file  && firstnamevalidation && lastnamevalidation && nicknameValidation && phonevalidation && websitevalidation && email!= "") {
-           
+        if (file && firstnamevalidation && lastnamevalidation && nicknameValidation && phonevalidation && websitevalidation && email != "") {
+
             const storageRef = ref(storage, `images/${email + ".jpg"}`);
             uploadBytes(storageRef, file).then((snapshot) => {
                 getDownloadURL(storageRef).then((downloadUrl) => {
@@ -117,10 +120,10 @@ const Profile = () => {
         }
 
     }
-    useEffect(()=>{
-       userCredential.email && setEmail(userCredential.email)
-       userCredential.email && getDetail(userCredential.email)
-    },[userCredential])
+    useEffect(() => {
+        userCredential.email && setEmail(userCredential.email)
+        userCredential.email && getDetail(userCredential.email)
+    }, [userCredential])
     useEffect(() => {
         email != "" && getDetailAndUpdate(email);
         // addDoc(listCollectionRef, { user_email: email, first_name: firstname, profile_img:imgurl, last_name:lastname, nick_name:nickname, user_phone:phone, user_address:address }).then(response => {
@@ -129,8 +132,8 @@ const Profile = () => {
         // }).catch(error => {
         //      console.log(error.message)
         //    });
-     }, [imgurl])
-     const getDetail = async (email) =>{
+    }, [imgurl])
+    const getDetail = async (email) => {
         let temp = [];
         const listCollectionRef = collection(db, 'users');
         let q = query(listCollectionRef, where("user_email", "==", email));
@@ -138,11 +141,30 @@ const Profile = () => {
         querySnapshot.forEach((doc) => {
             temp.push(doc.data());
         });
-        setBeforeImage(temp[0]["profile_img"])
+        setBeforeImage(temp[0]["profile_img"]);
+        if(temp[0]["geo"] === true){
+            let tempGeo = []
+            tempGeo.push(<ToggleSlider onToggle={state => setGeo(state)} handleBackgroundColor="#ffffff" handleBackgroundColorActive="#005ce7" barBackgroundColor="#0e0e0e" barBackgroundColorActive="#0e0e0e" barStyles={{ border: "solid 1px #ffffff4d" }} active={true} />)
+            setGeoslider(tempGeo);
+            setGeo(true)
+        }
+        if(temp[0]["geo"] === false){
+            let tempGeo = []
+            tempGeo.push(<ToggleSlider onToggle={state => setGeo(state)} handleBackgroundColor="#ffffff" handleBackgroundColorActive="#005ce7" barBackgroundColor="#0e0e0e" barBackgroundColorActive="#0e0e0e" barStyles={{ border: "solid 1px #ffffff4d" }} active={false} />)
+            setGeoslider(tempGeo);
+            setGeo(false);
+        }
+        if(temp[0]["geo"] === undefined){
+            let tempGeo = []
+            tempGeo.push(<ToggleSlider onToggle={state => setGeo(state)} handleBackgroundColor="#ffffff" handleBackgroundColorActive="#005ce7" barBackgroundColor="#0e0e0e" barBackgroundColorActive="#0e0e0e" barStyles={{ border: "solid 1px #ffffff4d" }} active={false} />)
+            setGeoslider(tempGeo);
+            setGeo(false);
+        }
         setTempdata(temp);
     }
-     const getDetailAndUpdate = async (email) =>{
-        if(!previewImage){
+    const getDetailAndUpdate = async (email) => {
+        localStorage.setItem("geo", geo);
+        if (!previewImage) {
             setLoading(true)
         }
         let docID;
@@ -159,24 +181,23 @@ const Profile = () => {
             nick_name: nickname,
             profile_img: imgurl,
             user_phone: phone,
-            website:website
+            website: website,
+            geo:geo
         };
         updateDoc(docRef, newdata)
             .then(() => {
                 setLoading(false);
                 setFile(null);
-                router.push('/setting')
+                router.push('/setting');
+                window.location.reload();
             })
             .catch((error) => {
                 console.log(error);
             });
-     }
-     useEffect(()=>{
-          console.log(beforeImage)
-     },[beforeImage])
+    }
     return (
         <section className="overflow-auto addProfileInfo">
-           <Link href = '/setting'><div style={{ height: "50px", marginBottom: "10px" }} className="flex flex-row items-center cursor-pointer"><FontAwesomeIcon icon={faArrowLeftLong} className="text-2xl text-white"/></div></Link>
+            <Link href='/setting'><div style={{ height: "50px", marginBottom: "10px" }} className="flex flex-row items-center cursor-pointer"><FontAwesomeIcon icon={faArrowLeftLong} className="text-2xl text-white" /></div></Link>
             <p className="loginText">Add Your Profile Info.</p>
             <p className="loginDetail">Explore Sydney's largest rental platform</p>
             <div className="relative flex flex-col items-center justify-center w-full" style={{ height: "180px", border: "1px solid #ffffff4a", borderRadius: "8px" }}>
@@ -197,15 +218,25 @@ const Profile = () => {
                 </div> : <></>
             }
             <div style={{ marginTop: "30px", marginBottom: "30px", width: "100%", height: "1px", background: "#ffffff4a" }}></div>
-            <AuthInput title={"First Name"} status={firstnamevalidation} placeholder={"E.g.John"} change={firstnameValidation} type={"text"} value={tempData && tempData.length > 0?tempData[0].first_name:''}/>
-            <AuthInput title={"Last Name"} status={lastnamevalidation} placeholder={"E.g.Doe"} change={lastnameValidation} type={"text"} value={tempData && tempData.length > 0?tempData[0].last_name:''}/>
-            <AuthInput title={"SDrop Nickname"} status={nicknamevalidation} placeholder={"E.g.John Doe Rentals"} change={nicknameValidation} type={"text"} value={tempData && tempData.length > 0?tempData[0].nick_name:''}/>
-            <AuthInput title={"Phone Number"} status={phonevalidation} placeholder={"E.g.+61 488 789"} change={phoneValidation} type={"text"} value={tempData && tempData.length > 0?tempData[0].user_phone:''}/>
-            <AuthInput title={"Website"} status={websitevalidation} placeholder={"E.g.johnrental.com"} change={websiteValidation} type={"text"} value={tempData && tempData.length > 0 && tempData[0].website ?tempData[0].website:''}/>
+            <AuthInput title={"First Name"} status={firstnamevalidation} placeholder={"E.g.John"} change={firstnameValidation} type={"text"} value={tempData && tempData.length > 0 ? tempData[0].first_name : ''} />
+            <AuthInput title={"Last Name"} status={lastnamevalidation} placeholder={"E.g.Doe"} change={lastnameValidation} type={"text"} value={tempData && tempData.length > 0 ? tempData[0].last_name : ''} />
+            <AuthInput title={"SDrop Nickname"} status={nicknamevalidation} placeholder={"E.g.John Doe Rentals"} change={nicknameValidation} type={"text"} value={tempData && tempData.length > 0 ? tempData[0].nick_name : ''} />
+            <AuthInput title={"Phone Number"} status={phonevalidation} placeholder={"E.g.+61 488 789"} change={phoneValidation} type={"text"} value={tempData && tempData.length > 0 ? tempData[0].user_phone : ''} />
+            <AuthInput title={"Website"} status={websitevalidation} placeholder={"E.g.johnrental.com"} change={websiteValidation} type={"text"} value={tempData && tempData.length > 0 && tempData[0].website ? tempData[0].website : ''} />
+            <div style={{ marginTop: "30px" }} className="flex flex-row items-center justify-between">
+                <p className="text-white font-15">Add Item geolocation?</p>
+                {
+                    geoslider
+                }
+                {/* {
+                    geo ? <ToggleSlider onToggle={state => setGeo(state)} handleBackgroundColor="#ffffff" handleBackgroundColorActive="#005ce7" barBackgroundColor="#0e0e0e" barBackgroundColorActive="#0e0e0e" barStyles={{ border: "solid 1px #ffffff4d" }} active={geo} />:<ToggleSlider onToggle={state => setGeo(state)} handleBackgroundColor="#ffffff" handleBackgroundColorActive="#005ce7" barBackgroundColor="#0e0e0e" barBackgroundColorActive="#0e0e0e" barStyles={{ border: "solid 1px #ffffff4d" }} active={false} />
+                } */}
+                {/* <ToggleSlider onToggle={state => setGeo(state)} handleBackgroundColor="#ffffff" handleBackgroundColorActive="#005ce7" barBackgroundColor="#0e0e0e" barBackgroundColorActive="#0e0e0e" barStyles={{ border: "solid 1px #ffffff4d" }} active={tempData && tempData.length > 0 && tempData[0]["geo"]? tempData} /> */}
+            </div>
             <div className="loginButton">
-            {
-                loading ? <button className="flex items-center justify-center cursor-wait">Update</button> : <button className="flex items-center justify-center" onClick={() => handleComplete()}>Update</button>
-            }
+                {
+                    loading ? <button className="flex items-center justify-center cursor-wait">Update</button> : <button className="flex items-center justify-center" onClick={() => handleComplete()}>Update</button>
+                }
             </div>
         </section>
     )

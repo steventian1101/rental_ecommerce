@@ -26,13 +26,18 @@ Router.events.on('routeChangeError', progress.finish)
 function MyApp({ Component, pageProps }) {
   const { authenticated } = useAuth();
   const router = useRouter();
-  useEffect(()=>{
-    if(!localStorage.getItem("durationResult") && navigator.geolocation){
-      storeDurationToSessionstorag();
-    } 
-    
-  },[]);
- 
+  useEffect(() => {
+    if (!localStorage.getItem("durationResult") && navigator.geolocation) {
+      if (typeof window !== "undefined" && "localStorage" in window && localStorage.getItem("geo")) {
+        if (localStorage.getItem("geo") == "true") {
+          storeDurationToSessionstorag();
+        }
+        else {
+        }
+      }
+    }
+  }, []);
+
 
   return (
     <AuthUserProvider>

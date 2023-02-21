@@ -18,6 +18,20 @@ const CardCarousel = ({ imgArray, timeduration, id, location }) => {
     const [width, setWidth] = useState(null);
     const [loading, setLoading] = useState(false);
     const [duration, setDuration] = useState('');
+    const [onDuration, setOnDuration] = useState(false);
+    useEffect(()=>{
+        if (typeof window !== "undefined" && "localStorage" in window && localStorage.getItem("geo")) {
+            if(localStorage.getItem("geo") == "true"){
+                setOnDuration(true)
+            }
+            else{
+                setOnDuration(false);
+            }
+           
+        } else {
+            setOnDuration(false)
+        }
+    },[])
     const handleTouchStart = (e) => {
         const touchDown = e.touches[0].clientX
         setTouchPosition(touchDown);
@@ -125,12 +139,6 @@ const CardCarousel = ({ imgArray, timeduration, id, location }) => {
             loading?<Loading/>:<></>
         }
         <div className="relative overflow-hidden cursor-pointer carousel" onTouchStart={(e) => handleTouchStart(e)} onTouchMove={(e) => handleTouchMove(e)} >
-            {
-                timeduration ? <div className="flex flex-row items-center justify-center timestamp">
-                    <img src="https://uploads-ssl.webflow.com/5efdc8a4340de947404995b4/638d826a1f96abf10d6d4a87_runer-silhouette-running-fast.svg" style={{ height: "18px", marginRight: "5px", width: "auto" }} />
-                    <p style={{ fontSize: "14px", fontFamily: "poppins-light", color: "white" }}>{timeduration}</p>
-                </div> : <></>
-            }
             <div className="absolute z-30 flex flex-row justify-center w-full bottom-4">
                 {
                     indicatorPan
@@ -143,9 +151,10 @@ const CardCarousel = ({ imgArray, timeduration, id, location }) => {
            <Link href={`/item?id=${id}`}> <div style={imgStyle} className="flex w-full h-full" >
                 {drawImg}
             </div></Link>
-            <div className="absolute top-2 right-2">
+            {
+                onDuration && <div className="absolute top-2 right-2">
                 {
-                    duration ? <div className="flex flex-row items-center w-auto px-2 py-2 bg-black rounded-md">
+                     duration ? <div className="flex flex-row items-center w-auto px-2 py-2 bg-black rounded-md">
                     <img src = "/logo/runner.svg" className="w-auto h-4 mr-2"/>
                     <p className="text-white font-15">{duration}</p>
                 </div>:<div className="flex flex-row items-center w-auto px-2 py-2 bg-black rounded-md">
@@ -154,7 +163,7 @@ const CardCarousel = ({ imgArray, timeduration, id, location }) => {
                 </div>
                 }
             </div>
-
+            }
         </div>
         </>
     )

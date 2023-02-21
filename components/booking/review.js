@@ -203,7 +203,7 @@ const Review = ({booking, ownerdata, customerdata}) =>{
                 {
                     ratingdiv
                 }
-                 <p className="text-white border-l-2 border-gray-600 font-15 px-2.5">{month[(booking.start_date).split(",")[1]] + ", " + (booking.start_date).split(",")[2]}</p>
+                 <p className="text-white border-l-2 border-gray-600 font-15 px-2.5">{booking.start_date.split(",")[0] + ", " + (booking.start_date).split(",")[2]}</p>
 
             </div>
            {

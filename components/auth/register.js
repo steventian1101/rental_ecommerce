@@ -13,7 +13,8 @@ import { auth } from "../../lib/initFirebase";
 import { GoogleAuthProvider } from "firebase/auth";
 import { getFunctions, httpsCallable } from "firebase/functions"
 import Link from "next/link";
-const Register = ({ sideBar, setSideBar }) => {
+import { ToggleSlider }  from "react-toggle-slider";
+const Register = () => {
     const provider = new GoogleAuthProvider();
     const { createUser, googleAuth } = useAuth();
     const [complete, setComplete] = useState(false);
@@ -38,6 +39,10 @@ const Register = ({ sideBar, setSideBar }) => {
     const [completeLoading, setCompleteLoading] = useState(false);
     const [customerID, setCustomerID] = useState(null);
     const listCollectionRef = collection(db, "users");
+    const [geo, setGeo] = useState(false);
+    useEffect(()=>{
+        console.log(geo)
+    },[geo])
     const emailValidation = (any) => {
         if ((any.indexOf("@") > -1) && (any.indexOf(".") > -1) || any == '') {
             setEmail(any)
@@ -156,9 +161,9 @@ const Register = ({ sideBar, setSideBar }) => {
 
     }
     useEffect(() => {
+        localStorage.setItem("geo", geo);
         if (imgurl != "" && emailvalidation && passwordvalidation && firstnamevalidation && lastnamevalidation && nicknameValidation && phonevalidation && addressvalidation) {
-            uploadCustomer();
-            addDoc(listCollectionRef, { user_email: email, first_name: firstname, profile_img: imgurl, last_name: lastname, nick_name: nickname, user_phone: phone, user_address: address, customer_id: customerID }).then(response => {
+            addDoc(listCollectionRef, { user_email: email, first_name: firstname, profile_img: imgurl, last_name: lastname, nick_name: nickname, user_phone: phone, user_address: address, customer_id: customerID, geo:geo }).then(response => {
                 createUser(auth, email, password);
                 setFile(null);
             }).catch(error => {
@@ -220,6 +225,10 @@ const Register = ({ sideBar, setSideBar }) => {
                     <AuthInput title={"Phone Number"} status={phonevalidation} placeholder={"E.g.+61 488 789"} change={phoneValidation} type={"text"} value={""} />
                     <AuthInput title={"Address"} status={addressvalidation} placeholder={"E.g.20 Echidna Ave, 2035, Australia"} change={addressValidation} type={"text"} value={""} />
                 </form>
+                <div style={{ marginTop: "30px" }} className="flex flex-row items-center justify-between">
+                    <p className="text-white font-15">Add Item geolocation?</p>
+                    <ToggleSlider onToggle={state => setGeo(state)} handleBackgroundColor="#ffffff" handleBackgroundColorActive="#005ce7" barBackgroundColor="#0e0e0e" barBackgroundColorActive="#0e0e0e" barStyles={{ border:"solid 1px #ffffff4d"}}/>
+                </div>
                 <div className="registerButton">
                     <button className="flex items-center justify-center" onClick={() => { handleRegister() }}>COMPLETE</button>
                 </div>

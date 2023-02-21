@@ -62,6 +62,13 @@
   font-family: poppins-black;
   src: url(Poppins-Black.ttf);
 }
+.rounded-circle{
+  border-radius:100px;
+ 
+}
+.general-border{
+  border: solid 1px #ffffff4d;
+}
 
 .font-20{
   font-family: poppins-bold;
@@ -76,6 +83,7 @@
   from {width: 0px;}
   to {width: 100%}
 }
+
 
 .navbar {
   position: relative;

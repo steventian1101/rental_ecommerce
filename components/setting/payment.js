@@ -29,17 +29,18 @@ const Payment = () => {
             setFullname(any)
             setFullnamevalidation(true)
         }
-        else{
-            setCreditvalidation(false)
+        else {
+            setFullnamevalidation(false)
         }
     }
     const creditValidation = (any) => {
-        let str =  /(?:\d[ -]*?){16}/;
+        console.log(any)
+        let str = /(?<=^|[^0-9])[0-9]{16}(?=[^0-9]|$)|[0-9]{4}[-| |_][0-9]{4}[-| |_][0-9]{4}[-| |_][0-9]{4}/;
         if (str.test(any) || any == "") {
             setCredit(any)
             setCreditvalidation(true)
         }
-        else{
+        else {
             setCreditvalidation(false)
         }
     }
@@ -49,8 +50,8 @@ const Payment = () => {
             setExpireDate(any);
             setExpirevalidation(true)
         }
-        else{
-            setCreditvalidation(false)
+        else {
+            setExpirevalidation(false)
         }
     }
     const cvvValidation = (any) => {
@@ -59,8 +60,8 @@ const Payment = () => {
             setCvv(any);
             setCvvvalidation(true)
         }
-        else{
-            setCreditvalidation(false)
+        else {
+            setCvvvalidation(false)
         }
     }
     const handleComplete = () => {
@@ -75,11 +76,13 @@ const Payment = () => {
             setCvvvalidation(false);
             setLoading(false);
         }
-        if (typeof window !== "undefined" && "localStorage" in window && localStorage.getItem("loginNextUrl")) {
+        if (typeof window !== "undefined" && "localStorage" in window && localStorage.getItem("beforeAddPayment")) {
             let url = localStorage.getItem("beforeAddPayment");
             router.push(url);
+            window.location.reload();
         } else {
             router.push('/setting');
+            window.location.reload();
         }
     }
     const getDetail = async (email) => {
@@ -147,11 +150,14 @@ const Payment = () => {
             </Link>
             <p className="loginText">PAYMENT METHOD</p>
             <p className="loginDetail">Add all the customer's information</p>
-            <AuthInput title={"Full Name"} status={fullnamevalidation} placeholder={"E.g.John Doe"} change={fullnameValidation} type={"text"} value={tempData && tempData.length > 0 ? tempData[0].full_name : ''} />
-            <AuthInput title={"Credit Card Number"} status={creditvalidation} placeholder={"Min. 16 characters long"} change={creditValidation} type={"text"} value={tempData && tempData.length > 0 ? tempData[0].credit_card_number : ''} />
-            <AuthInput title={"Expire Date"} status={expirevalidation} placeholder={"Min. MM/YY"} change={expireValidation} type={"text"} value={tempData && tempData.length > 0 ? tempData[0].expire_date : ''} />
-            <AuthInput title={"CVV"} status={cvvvalidation} placeholder={"Back of the card"} change={cvvValidation} type={"text"} value={tempData && tempData.length > 0 ? tempData[0].cvv : ''} />
+            <form autoComplete="off">
+                <AuthInput title={"Full Name"} status={fullnamevalidation} placeholder={"E.g.John Doe"} change={fullnameValidation} type={"text"} value={tempData && tempData.length > 0 ? tempData[0].full_name : ''} />
+                <AuthInput title={"Credit Card Number"} status={creditvalidation} placeholder={"Min. 16 characters long"} change={creditValidation} type={"text"} value={tempData && tempData.length > 0 && tempData[0].credit_card_number?tempData[0].credit_card_number : ''} />
+                <AuthInput title={"Expire Date"} status={expirevalidation} placeholder={"Min. MM/YY"} change={expireValidation} type={"text"} value={tempData && tempData.length > 0 && tempData[0].expire_date ? tempData[0].expire_date: ''} name ={"date"}/>
+                <AuthInput title={"CVV"} status={cvvvalidation} placeholder={"Back of the card"} change={cvvValidation} type={"text"} value={tempData && tempData.length > 0 &&  tempData[0].cvv ? tempData[0].cvv : ''} name={"number"}/>
+            </form>
             <div className="loginButton">
+
                 {
                     loading ? <button className="flex items-center justify-center cursor-wait">Update</button> : <button className="flex items-center justify-center" onClick={() => handleComplete()}>Update</button>
                 }

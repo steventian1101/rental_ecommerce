@@ -42,6 +42,7 @@
     "react-dom": "^18.2.0",
     "react-input-calendar": "^0.5.4",
     "react-instantsearch-hooks-web": "^6.38.2",
+    "react-toggle-slider": "^0.4.0",
     "timediff": "^1.1.1"
   },
   "devDependencies": {

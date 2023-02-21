@@ -28,7 +28,8 @@ const Notification = ({ setDrawbackground, setNotify }) => {
     }
     const handleBack = () => {
         setDrawbackground(false);
-        setNotify(false)
+        setNotify(false);
+        window.location.reload();
     }
     return (
 

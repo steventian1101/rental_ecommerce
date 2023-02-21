@@ -135,8 +135,8 @@ const CardCarousel = ({ imgArray, timeduration, id, location}) => {
                     indicatorPan
                 }
             </div> */}
-            <button id="prev" type="button" style={{ position: "absolute", left: "0px", width: "40px", height: "100%", background: "transparent  ", zIndex: "100" }} onClick={() => { handleNext() }}></button>
-            <button id="next" type="button" style={{ position: "absolute", right: "0px", width: "40px", height: "100%", background: "transparent", zIndex: "100" }} onClick={() => {
+            <button id="prev" type="button" className = "absolute left-0 w-10 h-full bg-transparent " style={{zIndex: "100" }} onClick={() => { handleNext() }}></button>
+            <button id="next" type="button" className = "absolute right-0 w-10 h-full bg-transparent " style={{ zIndex: "100" }} onClick={() => {
                 handlePrev()
             }}></button>
             <div className="flex flex-row itemButtons">

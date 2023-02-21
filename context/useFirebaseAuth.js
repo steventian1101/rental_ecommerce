@@ -36,8 +36,10 @@ export default function useFirebaseAuth() {
             if (typeof window !== "undefined" && "localStorage" in window && localStorage.getItem("loginNextUrl")) {
                 let url = localStorage.getItem("loginNextUrl");
                 router.push(url);
+                window.location.reload();
             } else {
                 router.push('/');
+                window.location.reload();
             }
         }).catch((error) => {
             console.log(error.message)
