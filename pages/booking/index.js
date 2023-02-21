@@ -11,9 +11,6 @@ export default function BookingPage () {
            router.push("/")
        }
    },[authenticated]);
-   useEffect(()=>{
-            console.log(authenticated)
-   },[authenticated])
      return(
         <>
         <Header search={true}/>

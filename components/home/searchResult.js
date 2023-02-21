@@ -22,7 +22,6 @@ const SearchResult = ({ setItemID, searchText }) => {
            hits &&  showMore();
         }
     };
-
     return (
         <>
         {

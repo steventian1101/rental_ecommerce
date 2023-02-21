@@ -32,7 +32,6 @@ export default function useFirebaseAuth() {
     };
     const createUser = (auth, email, password) => {
         createUserWithEmailAndPassword(auth, email, password).then((userCredential) => {
-            console.log(userCredential.user.uid);
             if (typeof window !== "undefined" && "localStorage" in window && localStorage.getItem("loginNextUrl")) {
                 let url = localStorage.getItem("loginNextUrl");
                 router.push(url);
@@ -47,7 +46,6 @@ export default function useFirebaseAuth() {
     };
     const logOut = (auth) => {
         signOut(auth).then(() => {
-            console.log("you are logout");
             router.push("/");
             window.location.reload();
         }).catch((error) => {
@@ -82,13 +80,10 @@ export default function useFirebaseAuth() {
             temp.push(doc.data());
         });
         if (temp.length != 0) {
-            console.log("already")
             router.push('/');
             window.location.reload();
         }
         else {
-            console.log("new")
-            console.log(newCredential);
             addDoc(listCollectionRef, { user_email: newCredential.email, first_name: newCredential.displayName.split(" ")[0], profile_img: newCredential.photoURL, last_name: newCredential.displayName.split(" ")[1], nick_name: newCredential.displayName + " Rentals", user_phone: "", user_address: "" }).then(response => {
                 router.push('/');
                 window.location.reload();
@@ -128,9 +123,6 @@ export default function useFirebaseAuth() {
             }
         });
     }, []);
-    useEffect(() => {
-        console.log(email)
-    }, [userCredential])
     const errorRemove = (error) => {
         setError(error);
     }

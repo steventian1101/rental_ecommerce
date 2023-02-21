@@ -166,7 +166,6 @@ const CreateBooking = ({ setScreenNumber, setNewBooking }) => {
         const sum = datesToday.reduce((accumulator, currentValue) => {
             return accumulator + currentValue;
         }, 0);
-        console.log(sum)
         if (!sum) {
             setStartDate(new Date());
             setStartTime(new Date().getHours() + 1);

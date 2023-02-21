@@ -48,15 +48,11 @@ const CardCarousel = ({ imgArray, timeduration, id, location }) => {
     const getTime = (location) =>{
         let key = JSON.stringify(location);
         let address = localStorage.getItem(key);
-        console.log(address)
         if(address){
             setDuration(address)
         }
         
     }
-    useEffect(()=>{
-          console.log(duration)
-    },[duration])
     const handlePrev = () => {
         if (index == imgArray.length - 1) {
             return;

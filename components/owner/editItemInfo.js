@@ -20,7 +20,6 @@ const EditItemInfo = ({ setSideBar, setItemInfo, prevName, prevLocation, prevIte
     const [tempdata, setTempdata] = useState(null);
     const { userCredential} = useAuth();
     const listCollectionRef = collection(db, "users");
-    console.log(prevItemTag)
     
 
     const handleComplete = () => {
@@ -31,7 +30,6 @@ const EditItemInfo = ({ setSideBar, setItemInfo, prevName, prevLocation, prevIte
                 "itemDesc": itemDesc,
                 "itemTag": itemTag
             }
-            console.log(temp)
             setItemInfo(temp);
             setSideBar(0);
             setInfoUpload(true)

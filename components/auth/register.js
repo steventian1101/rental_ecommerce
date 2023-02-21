@@ -40,9 +40,6 @@ const Register = () => {
     const [customerID, setCustomerID] = useState(null);
     const listCollectionRef = collection(db, "users");
     const [geo, setGeo] = useState(false);
-    useEffect(()=>{
-        console.log(geo)
-    },[geo])
     const emailValidation = (any) => {
         if ((any.indexOf("@") > -1) && (any.indexOf(".") > -1) || any == '') {
             setEmail(any)

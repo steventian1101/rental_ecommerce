@@ -188,8 +188,7 @@ const Profile = () => {
             .then(() => {
                 setLoading(false);
                 setFile(null);
-                router.push('/setting');
-                window.location.reload();
+                router.push('/setting');    
             })
             .catch((error) => {
                 console.log(error);

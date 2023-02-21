@@ -55,7 +55,6 @@ const time = [
 ];
 const duration = [1, 2, 3];
 const Pending = ({ setSideBar, id, ownerdata, customerdata, itemdata, booking, setLoading, inbounded }) => {
-    console.log(inbounded)
     const [groupbuttons, setGroupbuttons] = useState(false);
    
     const { userCredential } = useAuth();
@@ -66,7 +65,6 @@ const Pending = ({ setSideBar, id, ownerdata, customerdata, itemdata, booking, s
     }, []);
     const getEndDate = () =>{
         let end_date = new Date();
-        console.log(itemdata)
         const start_date = new Date(booking["start_date"] + " " + time[booking["start_time"]]);
         const duration = Math.abs(Number(booking.result) / (1.35 * Number(itemdata["item_charge"])));
         if (itemdata.item_charge_rate == "hour") {
@@ -100,7 +98,6 @@ const Pending = ({ setSideBar, id, ownerdata, customerdata, itemdata, booking, s
             amount: booking.result,
             customer_id:customerdata[0].customer_id,
         }
-        console.log(detail);
         const docRef = doc(db, "bookings", booking.booking_id);
         const newdata = {
             status: 1

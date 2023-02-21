@@ -26,12 +26,10 @@ export default function SearchBox({ searchText, setNavbarSearch }) {
     const handleChange = useDebounce((event) => {
         setNavbarSearch(event.target.value)
         let temptext = event.target.value;
-        console.log("localstorage setitem function")
         localStorage.setItem('searchText', temptext);
         refine(event.target.value)
     },500)
     useEffect(()=>{
-        console.log("localstorage setitem useEffect")
          refine(searchText)
          setText(searchText)
          localStorage.setItem('searchText', text);

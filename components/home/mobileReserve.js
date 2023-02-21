@@ -78,7 +78,6 @@ const MobileReserve = ({ content, ownerData, durationIndex, setUpdateMobileSideb
     },[tempValue])
     const getStarttime = () =>{
         if(tempValue.getFullYear() == new Date().getFullYear() && tempValue.getMonth() == new Date().getMonth() && tempValue.getDate() == new Date().getDate()){
-            console.log("hrer is same date")
             setTempStartTime(new Date().getHours()+1);
             setFirstTime(new Date().getHours()+1)
         }else{

@@ -17,9 +17,6 @@ const NotificationItem = ({ notification }) => {
         let notify;
         const currentDate = new Date();
         const offsetInMinutes = currentDate.getTimezoneOffset();
-        console.log(offsetInMinutes);
-
-        console.log(new Date(notification.time.toDate()), new Date());
         const duration = timediff(new Date(notification.time.toDate()), new Date(), 'Hm');
         if (offsetInMinutes == -660) {
             if (duration.hours - 1 == "0") {

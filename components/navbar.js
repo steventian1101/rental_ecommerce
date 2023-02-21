@@ -45,7 +45,6 @@ export default function Header({ search }) {
         var tempobject = Object.assign(doc.data(), { objectID: doc.id })
         temp.push(tempobject)
     })
-    console.log(temp.length)
     setNotifications(temp)
   }
   useEffect(() => {

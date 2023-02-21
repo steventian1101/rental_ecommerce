@@ -56,7 +56,6 @@ const Ready = ({ setSideBar, id, ownerdata, customerdata, itemdata, booking }) =
     const [endtime, setEndtime] = useState(null);
     const getEndDate = () =>{
         let end_date = new Date();
-        console.log(itemdata)
         const start_date = new Date(booking["start_date"] + " " + time[booking["start_time"]]);
         const duration = Math.abs(Number(booking.result) / (1.35 * Number(itemdata["item_charge"])));
         if (itemdata.item_charge_rate == "hour") {

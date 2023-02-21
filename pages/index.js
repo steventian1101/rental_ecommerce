@@ -7,7 +7,6 @@ export default function IndexPage() {
   const router = useRouter();
   const { query } = router.query;
   const link = router.pathname;
-  console.log(router)
   const [search, setSearch] = useState(false);
   const [navbarSearch, setNavbarSearch] = useState('');
   useEffect(() => {

@@ -22,7 +22,6 @@ const Payment = () => {
     const [email, setEmail] = useState(null);
     const [tempData, setTempdata] = useState([]);
     const router = useRouter();
-    console.log(router)
     const fullnameValidation = (any) => {
         let str = /(^[A-Za-z]{3,16})([ ]{0,1})([A-Za-z]{3,16})?([ ]{0,1})?([A-Za-z]{3,16})?([ ]{0,1})?([A-Za-z]{3,16})/;
         if (str.test(any) || any == "") {
@@ -34,7 +33,6 @@ const Payment = () => {
         }
     }
     const creditValidation = (any) => {
-        console.log(any)
         let str = /(?<=^|[^0-9])[0-9]{16}(?=[^0-9]|$)|[0-9]{4}[-| |_][0-9]{4}[-| |_][0-9]{4}[-| |_][0-9]{4}/;
         if (str.test(any) || any == "") {
             setCredit(any)
@@ -82,7 +80,7 @@ const Payment = () => {
             window.location.reload();
         } else {
             router.push('/setting');
-            window.location.reload();
+            window.location.reload();   
         }
     }
     const getDetail = async (email) => {
@@ -113,7 +111,6 @@ const Payment = () => {
             expiry_year: expireDate.split("/")[1],
             cvv: cvv
         }
-        console.log(creditPaymentData);
         setLoading(false);
         const newdata = {
             full_name: fullname,
@@ -138,7 +135,6 @@ const Payment = () => {
         const functions = getFunctions();
         const createPaymentMethod = httpsCallable(functions, 'createPaymentMethod');
         await createPaymentMethod({ data: detail }).then((result) => {
-            console.log(result)
 
         });
 

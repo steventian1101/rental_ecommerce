@@ -116,7 +116,6 @@ const Detail = ({ id }) => {
     const getDuration = (location) =>{
             let key = JSON.stringify(location);
             let address = localStorage.getItem(key);
-            console.log(address)
             if(address){
                 setDuration(address)
             }
@@ -185,7 +184,6 @@ const Detail = ({ id }) => {
         setReserve(true)
     }
     useEffect(() => {
-        console.log(id)
         detailRef.current.scrollTo({ top: 0, behavior: 'smooth' });
         setUserDetail(null);
         setContent(null);
@@ -241,7 +239,6 @@ const Detail = ({ id }) => {
             })
     }, [content]);
     useEffect(()=>{
-        console.log(disabledDates)
              disabledDates && getStart(disabledDates);      
     },[disabledDates]);
     const getStart = (disabledDates) =>{ 
@@ -251,7 +248,6 @@ const Detail = ({ id }) => {
         const sum = datesToday.reduce((accumulator, currentValue) => {
             return accumulator + currentValue;
           }, 0);
-          console.log(sum)
         if(!sum){
             setStartDate(new Date());
             setStartTime(new Date().getHours()+1);
@@ -352,7 +348,6 @@ const Detail = ({ id }) => {
         router.push("/login");
     }
     const handlePayment = () => {
-        console.log("okay")
         let url = router.asPath;
         localStorage.setItem("beforeAddPayment", url);
         router.push("/setting/payment");
