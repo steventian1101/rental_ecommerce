@@ -7,7 +7,7 @@ import { updateDoc, doc } from "firebase/firestore";
 import { db } from "../../lib/initFirebase";
 import { collection, addDoc, query, orderBy, where, getDocs, serverTimestamp } from "firebase/firestore";
 import LeaveAlert from "./leavealert";
-const LeaveReview = ({ booking, customerdata, ownerdata, itemdata, setReviewborder }) => {
+const LeaveReview = ({ booking, customerdata, ownerdata, setReviewborder, inbounded}) => {
     const { userCredential } = useAuth();
     const [leaveRate, setLeaveRate] = useState(null);
     const [star, setStar] = useState(0);
@@ -21,7 +21,7 @@ const LeaveReview = ({ booking, customerdata, ownerdata, itemdata, setReviewbord
         // userCredential.email && getRatingstars();
     }, [userCredential?.email]);
     const getratingtitle = () => {
-        if (userCredential.email == booking.owner_email) {
+        if (userCredential.email == booking.owner_email && inbounded == "true") {
             if (!customerdata[0].nick_name) {
                 setRatingtitle(<p className="mb-1 text-white font-15">Rate {booking.customer_email}</p>)
             }
@@ -29,14 +29,14 @@ const LeaveReview = ({ booking, customerdata, ownerdata, itemdata, setReviewbord
                 setRatingtitle(<p className="mb-1 text-white font-15">Rate {customerdata[0].first_name+" "+customerdata[0].last_name}</p>)
             };
         }
-        if (userCredential.email == booking.customer_email) {
+        if (userCredential.email == booking.customer_email && inbounded == "false") {
 
             setRatingtitle(<p className="mb-1 text-white font-15">Rate {ownerdata[0].nick_name}</p>)
 
         }
     }
     const setreviewtitle = () => {
-        if (userCredential.email == booking.owner_email) {
+        if (userCredential.email == booking.owner_email && inbounded == "true") {
             if (!customerdata[0].nick_name) {
                 setReviewtitle(<p className="my-5 mb-1 text-white font-15">Review {booking.customer_email}</p>)
             }
@@ -44,7 +44,7 @@ const LeaveReview = ({ booking, customerdata, ownerdata, itemdata, setReviewbord
                 setReviewtitle(<p className="my-5 mb-1 text-white font-15">Review {customerdata[0].first_name+" "+customerdata[0].last_name}</p>)
             };
         }
-        if (userCredential.email == booking.customer_email) {
+        if (userCredential.email == booking.customer_email && inbounded == "false") {
 
             setRatingtitle(<p className="mb-1 text-white font-15">Review {ownerdata[0].nick_name}</p>)
         }
@@ -54,7 +54,7 @@ const LeaveReview = ({ booking, customerdata, ownerdata, itemdata, setReviewbord
         userCredential.email && getRatingstars();
     }, [star]);
     const handleRatingandReview = () => {
-        if (userCredential.email == booking.owner_email) {
+        if (userCredential.email == booking.owner_email && inbounded == "true") {
 
             if (star != 0 && text != "") {
                 const docRef = doc(db, "bookings", booking.booking_id);
@@ -82,7 +82,7 @@ const LeaveReview = ({ booking, customerdata, ownerdata, itemdata, setReviewbord
                 });
             }
         }
-        if (userCredential.email == booking.customer_email) {
+        if (userCredential.email == booking.customer_email && inbounded == "false") {
             if (star != 0 && text != "") {
                 const docRef = doc(db, "bookings", booking.booking_id);
                 const data = {

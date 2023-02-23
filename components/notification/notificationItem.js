@@ -12,6 +12,7 @@ const NotificationItem = ({ notification }) => {
     useEffect(() => {
         notification && getTime();
         notification && getBackground();
+        console.log(notification);
     }, []);
     const getTime = () => {
         let notify;
@@ -39,7 +40,7 @@ const NotificationItem = ({ notification }) => {
     }
     const getBackground = () => {
         if (notification.status == "0") {
-            setBackground("#d44e4e");
+            setBackground("#ff9d00");
         }
         if (notification.status == "1") {
             setBackground("#e39457");
@@ -59,10 +60,10 @@ const NotificationItem = ({ notification }) => {
         const newdata = {
             show: true,
         };
+        let url = '/bookingItem?bookingItemId=' + notification.bookingId + '&&inbounded=' + String(notification["inbounded"])
+        router.push(url);
         updateDoc(docRef, newdata)
             .then(() => {
-                router.push('/booking');
-                window.location.reload();
             })
             .catch((error) => {
                 console.log(error);
@@ -71,12 +72,12 @@ const NotificationItem = ({ notification }) => {
     }
 
     return (
-        <div className="flex flex-row items-start cursor-pointer notificationItem" onClick={handleClick}>
+        <div className="flex flex-row items-start cursor-pointer notificationItem" onClick={() => { handleClick() }}>
             <div style={{ width: "30px", height: "30px", background: background, borderRadius: "100px", marginRight: "15px" }} className="flex items-center justify-center">
                 <img src='/logo/blacklogo.svg' />
             </div>
             <div className="flex flex-col" style={{ width: "255px" }}>
-                <p className="text-white" style={{ fontSize: "15px", marginBottom: "5px" }}>{notification && notification.notificationContent}</p>
+                <p className="text-white font-15"  style={{ marginBottom: "5px" }}>{notification && notification.notificationContent}</p>
                 <p className="text-white" style={{ fontSize: "12px", lingHeight: "15px", opacity: "0.7" }}>Sent {time} ago</p>
             </div>
         </div>

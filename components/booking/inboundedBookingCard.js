@@ -48,6 +48,7 @@ const time = [
     "22:00",
     "23:00",
 ];
+import Link from "next/link";
 const InboundedBookingCard = ({ booking, inbounded, setSideBar, setLoading}) => {
     const [itemdata, setItemdata] = useState(null);
     const [ownerdata, setOwnerdata] = useState(null);
@@ -188,7 +189,7 @@ const InboundedBookingCard = ({ booking, inbounded, setSideBar, setLoading}) => 
 
 
     return (
-        ownerdata && customerdata && <div className="booking_card" onClick={()=>{handleBookingClick()}}>
+        ownerdata && customerdata && <Link href = {`/bookingItem?bookingItemId=${booking.booking_id}&&inbounded=true`}><div className="booking_card" onClick={()=>{handleBookingClick()}}>
             <div className="flex flex-row items-center justify-between mb-5">
                 <div className="flex flex-col w-2/3">
                     <p className="text-white font-20 ellipsis"># {String(booking.booking_id).toUpperCase()}</p>
@@ -209,7 +210,7 @@ const InboundedBookingCard = ({ booking, inbounded, setSideBar, setLoading}) => 
                 }
                 <p className="flex text-white">Charge: +${booking.result.toFixed(2)}</p>
             </div>
-        </div>
+        </div></Link>
     )
 
 }

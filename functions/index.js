@@ -163,14 +163,18 @@ exports.updateStatus = functions.pubsub.schedule('every 2 minutes').onRun(async 
                         notificationContent: customer + "'s booking of " + itemname + " has decliend because you did not accept booking request.",
                         time: serverTime,
                         show: false,
-                        status: 0
+                        status: 0, 
+                        bookingId:temp[i]["booking_id"],
+                        inbounded: true
                     });
                     await db.collection('notifications').add({
                         to: temp[i]["customer_email"],
                         notificationContent: owner + " has decliend your bookings of " + itemname,
                         time: serverTime,
                         show: false,
-                        status: 0
+                        status: 0, 
+                        bookingId:temp[i]["booking_id"],
+                        inbounded:false
                     });
 
                 }
@@ -180,7 +184,9 @@ exports.updateStatus = functions.pubsub.schedule('every 2 minutes').onRun(async 
                         notificationContent: temp[i]["customer_email"] + "'s booking of " + itemname + " has decliend because you did not accept booking request.",
                         time: serverTime,
                         show: false,
-                        status: 0
+                        status: 0, 
+                        bookingId:temp[i]["booking_id"],
+                        inbounded:true
                     });
 
                 }
@@ -212,14 +218,18 @@ exports.updateStatus = functions.pubsub.schedule('every 2 minutes').onRun(async 
                         notificationContent: customer + "'s booking of " + itemname + " has started.",
                         time: serverTime,
                         show: false,
-                        status: 3
+                        status: 3, 
+                        bookingId:temp[i]["booking_id"],
+                        inbounded:true
                     });
                     await db.collection('notifications').add({
                         to: temp[i]["customer_email"],
                         notificationContent: "Your booking of the " + itemname + " has started.",
                         time: serverTime,
                         show: false,
-                        status: 3
+                        status: 3, 
+                        bookingId:temp[i]["booking_id"],
+                        inbounded:false
                     });
 
                 }
@@ -229,7 +239,9 @@ exports.updateStatus = functions.pubsub.schedule('every 2 minutes').onRun(async 
                         notificationContent: temp[i]["customer_email"] + "'s booking of " + itemname + " has started.",
                         time: serverTime,
                         show: false,
-                        status: 3
+                        status: 3, 
+                        bookingId:temp[i]["booking_id"],
+                        inbounded:true
                     });
 
                 }
@@ -264,14 +276,18 @@ exports.updateStatus = functions.pubsub.schedule('every 2 minutes').onRun(async 
                     notificationContent: customer + "'s booking of " + itemname + " has been completed.",
                     time: serverTime,
                     show: false,
-                    status: 4
+                    status: 4, 
+                    bookingId:temp[i]["booking_id"],
+                    inbounded:true
                 });
                 await db.collection('notifications').add({
                     to: temp[i]["customer_email"],
                     notificationContent: "Your booking of the " + itemname + " has been completed.",
                     time: serverTime,
                     show: false,
-                    status: 4
+                    status: 4, 
+                    bookingId:temp[i]["booking_id"],
+                    inbounded:false
                 });
 
             }
@@ -281,7 +297,9 @@ exports.updateStatus = functions.pubsub.schedule('every 2 minutes').onRun(async 
                     notificationContent: temp[i]["customer_email"] + "'s booking of " + itemname + " has been completed.",
                     time: serverTime,
                     show: false,
-                    status: 4
+                    status: 4, 
+                    bookingId:temp[i]["booking_id"],
+                    inbounded:true
                 });
 
             }

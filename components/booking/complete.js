@@ -9,9 +9,12 @@ import DetailCarousel from "../home/detailCarousel";
 import { useState, useEffect } from "react";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import LeaveReview from "./leaveReview";
-import Link from "next/link";
 import Review from "./review";
-import date from  "date-and-time"
+import date from "date-and-time"
+import { db } from "../../lib/initFirebase";
+import { query, getDoc, doc, collection, getDocs, where } from "firebase/firestore";
+import Link from "next/link";
+import Loading from "../auth/loading";
 const month = {
     "0": "January",
     "1": "February",
@@ -53,17 +56,76 @@ const time = [
     "11:00 PM",
 ];
 const duration = [1, 2, 3];
-const Complete = ({ setSideBar, id, ownerdata, customerdata, itemdata, booking }) => {
+const Complete = ({ bookingId, inbounded }) => {
+    console.log(inbounded);
+    console.log(bookingId)
     const [groupbuttons, setGroupbuttons] = useState(false);
     const { userCredential } = useAuth();
     const [reviewborder, setReviewBorder] = useState(null);
+    const [ownerdata, setOwnerdata] = useState(null);
+    const [customerdata, setCustomerdata] = useState(null);
+    const [itemdata, setItemdata] = useState(null);
+    const [booking, setBooking] = useState(null);
+    const [id, setId] = useState(null);
     useEffect(() => {
-        userCredential.email && selectButtons();
-        userCredential.email && setreviewborder();
-        getEndDate();
-    }, []);
+        console.log(bookingId)
+        setBooking(null);
+        setCustomerdata(null);
+        setOwnerdata(null);
+        setItemdata(null)
+        setId(null);
+        setReviewBorder(null);
+        bookingId && setId(bookingId);
+    }, [bookingId])
+    useEffect(() => {
+        console.log("here is id", id)
+        id && getBooking(id);
+    }, [id]);
+    const getBooking = async (id) => {
+        let bookingRef = doc(db, "bookings", id);
+        let bookingSnapshot = await getDoc(bookingRef);
+        const tempobject = Object.assign(bookingSnapshot.data(), { booking_id: bookingSnapshot.id })
+        setBooking(tempobject)
+    }
+    useEffect(() => {
+        booking && getCustomterdata(booking.customer_email);
+        booking && getOwnerdata(booking.owner_email);
+        booking && getItemdata(booking.item_id);
+    }, [booking, userCredential.email]);
+    useEffect(() => {
+        itemdata && getEndDate();
+    }, [itemdata]);
+    useEffect(() => {
+        booking && itemdata && customerdata && ownerdata && customerdata.length > 0 && ownerdata.length > 0 && setreviewborder();
+    }, [booking && itemdata && customerdata && ownerdata])
+    const getCustomterdata = async (email) => {
+        let temp = [];
+        const listCollectionRef = collection(db, "users");
+        let q = query(listCollectionRef, where("user_email", "==", email));
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach((doc) => {
+            temp.push(doc.data())
+        })
+        setCustomerdata(temp)
+    }
+    const getOwnerdata = async (email) => {
+        let temp = [];
+        const listCollectionRef = collection(db, "users");
+        let q = query(listCollectionRef, where("user_email", "==", email));
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach((doc) => {
+            temp.push(doc.data())
+        })
+        setOwnerdata(temp)
+    }
+    const getItemdata = async (id) => {
+        const itemRef = doc(db, "rental_items", id);
+        const querySnapshot = await getDoc(itemRef);
+        const tempobject = Object.assign(querySnapshot.data(), { item_id: querySnapshot.id })
+        setItemdata(tempobject);
+    }
     const [endtime, setEndtime] = useState(null);
-    const getEndDate = () =>{
+    const getEndDate = () => {
         let end_date = new Date();
         const start_date = new Date(booking["start_date"] + " " + time[booking["start_time"]]);
         const duration = Math.abs(Number(booking.result) / (1.35 * Number(itemdata["item_charge"])));
@@ -94,116 +156,126 @@ const Complete = ({ setSideBar, id, ownerdata, customerdata, itemdata, booking }
         }
     }
     const setreviewborder = () => {
-        if (userCredential.email == booking.owner_email) {
+        if (userCredential.email == booking.owner_email && inbounded == "true") {
             if (booking.customer_feedback) {
-                setReviewBorder(<>
-                    <Review booking={booking} ownerdata={ownerdata} customerdata={customerdata} itemdata={itemdata} />
-                    <div className="line"></div>
-                    
-                   </>);
+                if(booking.owner_feedback){
+                    setReviewBorder(<>
+                        <Review booking={booking} ownerdata={ownerdata} customerdata={customerdata} itemdata={itemdata} inbounded={ inbounded}/>
+                        <div className="line"></div>
+                    </>);
+                } 
             }
             else {
                 setReviewBorder(<>
-                    <LeaveReview booking={booking} ownerdata={ownerdata} customerdata={customerdata} itemdata={itemdata} setReviewborder={setReviewBorder}/>
+                    <LeaveReview booking={booking} ownerdata={ownerdata} customerdata={customerdata} itemdata={itemdata} setReviewborder={setReviewBorder} inbounded={ inbounded} />
                     <div className="line"></div>
                 </>)
             }
         }
-        if (userCredential.email == booking.customer_email) {
+        if (userCredential.email == booking.customer_email && inbounded == "false") {
             if (booking.owner_feedback) {
-                setReviewBorder(<>
-                    <Review booking={booking} ownerdata={ownerdata} customerdata={customerdata} itemdata={itemdata} />
-                    <div className="line"></div>
-                   </>);
+                if(booking.customer_feedback){
+                    setReviewBorder(<>
+                        <Review booking={booking} ownerdata={ownerdata} customerdata={customerdata} itemdata={itemdata} inbounded={ inbounded}/>
+                        <div className="line"></div>
+                    </>);
+                }
             }
             else {
                 setReviewBorder(<>
-                    <LeaveReview booking={booking} ownerdata={ownerdata} customerdata={customerdata} itemdata={itemdata} setReviewborder={setReviewBorder}/>
+                    <LeaveReview booking={booking} ownerdata={ownerdata} customerdata={customerdata} itemdata={itemdata} setReviewborder={setReviewBorder} inbounded={ inbounded}/>
                     <div className="line"></div>
                 </>)
             }
         }
     }
     return (
-        <section className="overflow-auto bookingpending">
-            <div style={{ height: "50px"}} className="flex flex-row  cursor-pointer mb-2.5 justify-between items-center"><FontAwesomeIcon icon={faArrowLeftLong} className="text-2xl text-white" onClick={() => { setSideBar(null) }} /></div>
-            <p className="loginText complete">BOOKING COMPLETE</p>
-            <p className="mb-10 loginDetail ellipsis">Booking Number: <span className="font-15 bold">{booking["booking_id"].toUpperCase()}</span></p>
-            <div className="relative">
-                <DetailCarousel imgArray={itemdata["item_photos"]} />
-            </div>
-            <div className="line"></div>
-            {
-                reviewborder
-            }
-            <div>
-                <p className="mb-5 text-white font-18 bold">General Info</p>
-                <div style={{ marginBottom: "15px" }}>
-                    <p className="text-white font-15">Item Requested</p>
-                    <Link href = {`/item/?id=${id}`}><p className="text-white underline font-15 ellipsis">{itemdata.item_name}</p></Link>
-                </div>
-                <div style={{ marginBottom: "15px" }}>
-                    <p className="text-white font-15">Start Date & Time</p>
-                    <p className="text-white font-15 ellipsis">{(booking.start_date).split(",")[0] + " " + (booking.start_date).split(",")[1]+ ", " + (booking.start_date).split(",")[2] + " " + time[booking.start_time]}</p>
-                </div>
+        <>
+            <section className="overflow-auto bookingpending">
+                <Link href="/booking">
+                    <div style={{ height: "50px" }} className="flex flex-row  cursor-pointer mb-2.5 justify-between items-center"><FontAwesomeIcon icon={faArrowLeftLong} className="text-2xl text-white" /></div>
+                    <p className="loginText complete">BOOKING COMPLETE</p>
+                </Link>
+                <p className="mb-10 loginDetail ellipsis">Booking Number: <span className="font-15 bold">{booking && booking["booking_id"].toUpperCase()}</span></p>
                 {
-                    itemdata.item_charge_rate == "person" ? <div style={{ marginBottom: "15px" }}>
-                        <p className="text-white font-15">Members</p>
-                        <p className="text-white font-15 ellipsis">{Math.abs(booking.result / (itemdata.item_charge * 1.35))}</p>
-                    </div> : <div style={{ marginBottom: "15px" }}>
-                        <p className="text-white font-15">Duration</p>
-                        <p className="text-white font-15 ellipsis">{Math.abs(booking.result / (itemdata.item_charge * 1.35)) + " " + itemdata.item_charge_rate}</p>
+                    booking && itemdata && <div className="relative">
+                        <DetailCarousel imgArray={itemdata["item_photos"]} />
                     </div>
                 }
-                <div style={{ marginBottom: "15px" }}>
-                    <p className="text-white font-15">End Date & Time</p>
-                    <p className="text-white font-15 ellipsis">{endtime && month[ endtime.getMonth()]+ " " + endtime.getDate() + ", " + endtime.getFullYear() + " " + time[endtime.getHours()]}</p>
-                </div>
-            </div>
-            <div className="line"></div>
-            <div>
-                <p className="mb-5 text-white font-18 bold">Customer's Info</p>
+
+                <div className="line"></div>
                 {
-                    customerdata && customerdata[0].nick_name ? <div style={{ marginBottom: "15px" }} className="flex flex-row items-center justify-between"><div className="flex flex-col">
-                        <p className="text-white font-15">Customer's Name</p>
-                        <Link href={`/rentalOwner?id=${customerdata[0]["nick_name"]}`}><p className="text-white underline font-15 ellipsis">{customerdata[0].nick_name}</p></Link></div><div className="flex items-center justify-center w-10 h-10" style={{ border: "solid 1px #ffffff4a", borderRadius: "100px" }}><FontAwesomeIcon icon={faCommentDots} className="text-white text-md" /></div>
-                    </div> : <div style={{ marginBottom: "15px" }} className="flex flex-row items-center justify-between"><div className="flex flex-col">
-                        <p className="text-white font-15">Customer's Email</p>
-                        <p className="text-white underline font-15 ellipsis">{booking.customer_email}</p></div><div className="flex items-center justify-center w-10 h-10" style={{ border: "solid 1px #ffffff4a", borderRadius: "100px" }}><FontAwesomeIcon icon={faCommentDots} className="text-white text-md" /></div>
-                    </div>
+                    reviewborder
                 }
-                <div style={{ marginBottom: "15px" }}>
-                    <p className="text-white font-15">Customer's Phone Number:</p>
-                    <p className="text-white font-15 ellipsis">{booking.phone_number}</p>
+                <div>
+                    <p className="mb-5 text-white font-18 bold">General Info</p>
+                    <div style={{ marginBottom: "15px" }}>
+                        <p className="text-white font-15">Item Requested</p>
+                        <Link href={`/item/?id=${itemdata && itemdata["item_id"]}`}><p className="text-white underline font-15 ellipsis">{booking && itemdata && itemdata.item_name}</p></Link>
+                    </div>
+                    <div style={{ marginBottom: "15px" }}>
+                        <p className="text-white font-15">Start Date & Time</p>
+                        <p className="text-white font-15 ellipsis">{booking && (booking.start_date).split(",")[0] + " " + (booking.start_date).split(",")[1] + ", " + (booking.start_date).split(",")[2] + " " + time[booking.start_time]}</p>
+                    </div>
+                    {
+                        itemdata && itemdata.item_charge_rate == "person" ? <div style={{ marginBottom: "15px" }}>
+                            <p className="text-white font-15">Members</p>
+                            <p className="text-white font-15 ellipsis">{booking && itemdata && Math.abs(booking.result / (itemdata.item_charge * 1.35))}</p>
+                        </div> : <div style={{ marginBottom: "15px" }}>
+                            <p className="text-white font-15">Duration</p>
+                            <p className="text-white font-15 ellipsis">{booking && itemdata && Math.abs(booking.result / (itemdata.item_charge * 1.35)) + " " + itemdata.item_charge_rate}</p>
+                        </div>
+                    }
+                    <div style={{ marginBottom: "15px" }}>
+                        <p className="text-white font-15">End Date & Time</p>
+                        <p className="text-white font-15 ellipsis">{booking && itemdata && endtime && month[endtime.getMonth()] + " " + endtime.getDate() + ", " + endtime.getFullYear() + " " + time[endtime.getHours()]}</p>
+                    </div>
                 </div>
-                <div style={{ marginBottom: "15px" }}>
-                    <p className="text-white font-15">Item Address:</p>
-                    <p className="text-white font-15 ellipsis">{itemdata.item_location}</p>
-                </div>
+                <div className="line"></div>
+                <div>
+                    <p className="mb-5 text-white font-18 bold">Customer's Info</p>
+                    {
+                        customerdata && customerdata.length > 0 && customerdata[0].nick_name ? <div style={{ marginBottom: "15px" }} className="flex flex-row items-center justify-between"><div className="flex flex-col">
+                            <p className="text-white font-15">Customer's Name</p>
+                            <Link href={`/rentalOwner?id=${customerdata[0]["nick_name"]}`}><p className="text-white underline font-15 ellipsis">{customerdata[0].nick_name}</p></Link></div><div className="flex items-center justify-center w-10 h-10" style={{ border: "solid 1px #ffffff4a", borderRadius: "100px" }}><FontAwesomeIcon icon={faCommentDots} className="text-white text-md" /></div>
+                        </div> : <div style={{ marginBottom: "15px" }} className="flex flex-row items-center justify-between"><div className="flex flex-col">
+                            <p className="text-white font-15">Customer's Email</p>
+                            <p className="text-white underline font-15 ellipsis">{booking && booking.customer_email}</p></div><div className="flex items-center justify-center w-10 h-10" style={{ border: "solid 1px #ffffff4a", borderRadius: "100px" }}><FontAwesomeIcon icon={faCommentDots} className="text-white text-md" /></div>
+                        </div>
+                    }
+                    <div style={{ marginBottom: "15px" }}>
+                        <p className="text-white font-15">Customer's Phone Number:</p>
+                        <p className="text-white font-15 ellipsis">{booking && booking.phone_number}</p>
+                    </div>
+                    <div style={{ marginBottom: "15px" }}>
+                        <p className="text-white font-15">Item Address:</p>
+                        <p className="text-white font-15 ellipsis">{booking && itemdata && itemdata.item_location}</p>
+                    </div>
 
-            </div>
-            <div className="line"></div>
-            <div>
-                <p className="mb-5 text-white font-18 bold">Potential Payment</p>
-                <div style={{ marginBottom: "15px" }}>
-                    <p className="text-white font-15">Total Charge:</p>
-                    <p className="font-20" style={{ color: "#e39457", marginBottom: "30px" }}>${Number(booking.result).toFixed(2)} AUD</p>
-                    <div className="flex flex-row justify-between marginTop-5">
-                        <p className="text-white ">${Number(itemdata.item_charge).toFixed(2)} &times; {Math.abs(booking.result / (1.35 * itemdata.item_charge))} {itemdata.item_charge_rate}</p>
-                        <p className="text-white ">${Number(booking.result / 1.35).toFixed(2)}</p>
-                    </div>
-                    <div className="flex flex-row justify-between marginTop-5">
-                        <p className="text-white">Service Fee</p>
-                        <p className="text-white">${Number((booking.result / 1.35) * 0.2).toFixed(2)}</p>
-                    </div>
-                    <div className="flex flex-row justify-between marginTop-5">
-                        <p className="text-white">GST</p>
-                        <p className="text-white">${Number((booking.result / 1.35) * 0.15).toFixed(2)}</p>
-                    </div>
                 </div>
+                <div className="line"></div>
+                <div>
+                    <p className="mb-5 text-white font-18 bold">Potential Payment</p>
+                    <div style={{ marginBottom: "15px" }}>
+                        <p className="text-white font-15">Total Charge:</p>
+                        <p className="font-20" style={{ color: "#e39457", marginBottom: "30px" }}>${booking && Number(booking.result).toFixed(2)} AUD</p>
+                        <div className="flex flex-row justify-between marginTop-5">
+                            <p className="text-white ">${booking && itemdata && Number(itemdata.item_charge).toFixed(2)} &times; {booking && itemdata && Math.abs(booking.result / (1.35 * itemdata.item_charge))} {booking & itemdata && itemdata.item_charge_rate}</p>
+                            <p className="text-white ">${booking && Number(booking.result / 1.35).toFixed(2)}</p>
+                        </div>
+                        <div className="flex flex-row justify-between marginTop-5">
+                            <p className="text-white">Service Fee</p>
+                            <p className="text-white">${booking && Number((booking.result / 1.35) * 0.2).toFixed(2)}</p>
+                        </div>
+                        <div className="flex flex-row justify-between marginTop-5">
+                            <p className="text-white">GST</p>
+                            <p className="text-white">${booking && Number((booking.result / 1.35) * 0.15).toFixed(2)}</p>
+                        </div>
+                    </div>
 
-            </div>
-        </section>
+                </div>
+            </section>
+        </>
     )
 
 }

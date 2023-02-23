@@ -74,14 +74,6 @@ const Payment = () => {
             setCvvvalidation(false);
             setLoading(false);
         }
-        if (typeof window !== "undefined" && "localStorage" in window && localStorage.getItem("beforeAddPayment")) {
-            let url = localStorage.getItem("beforeAddPayment");
-            router.push(url);
-            window.location.reload();
-        } else {
-            router.push('/setting');
-            window.location.reload();   
-        }
     }
     const getDetail = async (email) => {
         let temp = [];
@@ -120,8 +112,12 @@ const Payment = () => {
         };
         updateDoc(docRef, newdata)
             .then(() => {
-                setLoading(false);
-                setSideBar(0);
+                if (typeof window !== "undefined" && "localStorage" in window && localStorage.getItem("beforeAddPayment")) {
+                    let url = localStorage.getItem("beforeAddPayment");
+                    router.push(url)
+                } else {
+                    router.push('/setting');
+                }
             })
             .catch((error) => {
                 console.log(error);

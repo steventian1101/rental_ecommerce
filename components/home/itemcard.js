@@ -3,8 +3,9 @@ import { db } from "../../lib/initFirebase";
 import { useState, useEffect } from "react";
 import CardCarousel from "./cardCarousel";
 import Link from "next/link";
-const Itemcard = ({ details, setItemID }) => {
+const Itemcard = ({ details }) => {
     const [ownerData, setOwnerData] = useState(null);
+    const [totalNumber, setTotalNumber] = useState(null);
     const getOwnerDetail = async (email) => {
         const temp = [];
         const listCollectionRef = collection(db, "users");
@@ -14,6 +15,15 @@ const Itemcard = ({ details, setItemID }) => {
             temp.push(doc.data());
         });
         setOwnerData(temp)
+    }
+    const getTotalItemsForRenter = async (email) => {
+        const temp = [];
+        const listCollectionRef = collection(db, "rental_items");
+        let q = query(listCollectionRef, where("rental_owner", "==", email));
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach((doc) => {
+            temp.push(doc.data());
+        });
     }
     useEffect(() => {
         details.rental_owner && getOwnerDetail(details.rental_owner);

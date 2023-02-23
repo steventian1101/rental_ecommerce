@@ -94,7 +94,8 @@ const CreateBooking = ({ setScreenNumber, setNewBooking }) => {
         setDisplayTimetable(false)
     }
     useEffect(() => {
-        Id && setContent(Id)
+        Id && setContent(Id);
+        setFirstTime(null)
     }, [Id]);
     useEffect(() => {
         content && content.item_charge_rate != "person" && getTotal(Number(durationIndex));

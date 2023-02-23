@@ -14,6 +14,7 @@
           '/resetPassword': { page: '/[slug]'},
           '/item': { page: '/[slug]' },
           '/booking': { page: '/booking' },
+          '/bookingItem':{ page:'/bookingItem'},
           '/create': { page: '/create' },
           '/edit': { page: '/edit' },
           '/rentalOwner': { page: '/rentalOwner' },
@@ -22,7 +23,6 @@
           '/setting/profile': { page: '/setting/[slug]' },
           '/setting/payment': { page: '/setting/[slug]'},
           '/setting/location': { page: '/setting/[slug]' },
-          '/rentalOwner': { page: '/rentalOwner' },
         }
       },
 }

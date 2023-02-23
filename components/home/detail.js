@@ -158,19 +158,20 @@ const Detail = ({ id }) => {
 
         if (result != 0) {
             const notificationRef = collection(db, "notifications");
-            addDoc(notificationRef, {
-                to: ownerData[0].user_email,
-                notificationContent: userDetail[0].first_name + " " + userDetail[0].last_name + " has requested to rent your " + content["item_name"],
-                show: false,
-                time: serverTimestamp(),
-                status: 0
-            }).then(response => {
-            }).catch(error => {
-                console.log(error)
-            });
-
             const listCollectionRef = collection(db, "bookings")
             addDoc(listCollectionRef, { item_id: id, start_date: month[Number(startdate.getMonth())] + "," + startdate.getDate() + "," + startdate.getFullYear(), start_time: startTime, customer_email: userCredential.email, phone_number: userDetail[0].user_phone, result: result, driving_license: "", full_name: userDetail[0].full_name, credit: userDetail[0].credit_card_number, cvv: userDetail[0].cvv, expireDate: userDetail[0].expire_date, owner_email: content.rental_owner, status: 0, createdTime: serverTimestamp() }).then(response => {
+                addDoc(notificationRef, {
+                    to: ownerData[0].user_email,
+                    notificationContent: userDetail[0].first_name + " " + userDetail[0].last_name + " has requested to rent your " + content["item_name"],
+                    show: false,
+                    time: serverTimestamp(),
+                    status: 0,
+                    bookingId:response.id,
+                    inbounded:true
+                }).then(response => {
+                }).catch(error => {
+                    console.log(error)
+                });
                 setReserve(false);
             }).catch(error => {
             });
@@ -183,6 +184,9 @@ const Detail = ({ id }) => {
             })
         setReserve(true)
     }
+    useEffect(()=>{
+         setUserDetail(null)
+    },[])
     useEffect(() => {
         detailRef.current.scrollTo({ top: 0, behavior: 'smooth' });
         setUserDetail(null);

@@ -1,6 +1,7 @@
 const BookingBack = ({ setSideBar}) =>{
     const handleClick = () =>{
         setSideBar(null);
+        window.location.reload();
     }
     return (
     <section>

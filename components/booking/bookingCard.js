@@ -7,6 +7,7 @@ import Pending from "./pending";
 import Ready from "./ready";
 import Complete from "./complete";
 import Use from "./use";
+import Link from "next/link";
 const month = [
     "January",
     "February",
@@ -186,7 +187,7 @@ const BookingCard = ({ booking, inbounded, setSideBar,setLoading }) => {
     }
 
     return (
-        ownerdata && customerdata && <div className="booking_card" onClick={()=>{ handleBookingClick()}}>
+        ownerdata && customerdata && <Link href = {`/bookingItem?bookingItemId=${booking.booking_id}&&inbounded=false`}><div className="booking_card" onClick={()=>{ handleBookingClick()}}>
             <div className="flex flex-row items-center justify-between mb-5">
                 <div className="flex flex-col w-2/3">
                     <p className="text-white font-20 ellipsis"># {String(booking.booking_id).toUpperCase()}</p>
@@ -205,7 +206,7 @@ const BookingCard = ({ booking, inbounded, setSideBar,setLoading }) => {
                 <p className="flex text-white">End: {enddate && month[enddate.getMonth()] + " " + enddate.getDate() + ", " + enddate.getFullYear() + " " + String(enddate.getHours()).padStart(2, "0") + ":" + String(enddate.getMinutes()).padStart(2, "0")}</p>
 
             </div>
-        </div>
+        </div></Link>
     )
 
 }
