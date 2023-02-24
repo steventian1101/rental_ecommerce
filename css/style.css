@@ -607,6 +607,9 @@ p {
   color: white;
   font-family: poppins-light;
 }
+.itemcardownernameandprice:hover{
+  text-decoration: underline;
+}
 
 .createitembuttonbar {
   position: fixed;

@@ -135,7 +135,7 @@ const EditItem = ({ query }) => {
         }
         if (sideBar == 2) {
             let temp = [];
-            temp.push(<EditItemInfo setSideBar={setSideBar} setItemInfo={setItemInfo} prevName={previousData.item_name} prevLocation={previousData.item_location} prevItemDesc={previousData.item_desc} prevItemTag={previousData.item_search_tag} key={sideBar} setInfoUpload={ setInfoUpload}/>);
+            temp.push(<EditItemInfo setSideBar={setSideBar} setItemInfo={setItemInfo} prevName={previousData.item_name} prevLocation={previousData.item_location} prevItemDesc={previousData.item_desc} prevItemTag={previousData.item_search_tags} key={sideBar} setInfoUpload={ setInfoUpload}/>);
             setDrawSidebar(temp);
         }
         if (sideBar == 3) {
@@ -152,6 +152,7 @@ const EditItem = ({ query }) => {
         let querySnapshot = await getDoc(docRef);
         let tempdata = querySnapshot.data();
         setPreviousImgs(tempdata["item_photos"])
+        console.log(tempdata)
         setPreviousData(tempdata);
     }
     useEffect(() => {

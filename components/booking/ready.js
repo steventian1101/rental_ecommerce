@@ -72,7 +72,6 @@ const Ready = ({ bookingId }) => {
         bookingId && setId(bookingId);
     }, [bookingId])
     useEffect(() => {
-        console.log("here is id", id)
         id && getBooking(id);
     }, [id]);
     const getBooking = async (id) => {

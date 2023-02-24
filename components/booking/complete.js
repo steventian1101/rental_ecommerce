@@ -57,8 +57,6 @@ const time = [
 ];
 const duration = [1, 2, 3];
 const Complete = ({ bookingId, inbounded }) => {
-    console.log(inbounded);
-    console.log(bookingId)
     const [groupbuttons, setGroupbuttons] = useState(false);
     const { userCredential } = useAuth();
     const [reviewborder, setReviewBorder] = useState(null);
@@ -68,7 +66,6 @@ const Complete = ({ bookingId, inbounded }) => {
     const [booking, setBooking] = useState(null);
     const [id, setId] = useState(null);
     useEffect(() => {
-        console.log(bookingId)
         setBooking(null);
         setCustomerdata(null);
         setOwnerdata(null);
@@ -78,7 +75,6 @@ const Complete = ({ bookingId, inbounded }) => {
         bookingId && setId(bookingId);
     }, [bookingId])
     useEffect(() => {
-        console.log("here is id", id)
         id && getBooking(id);
     }, [id]);
     const getBooking = async (id) => {

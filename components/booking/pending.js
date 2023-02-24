@@ -68,7 +68,6 @@ const Pending = ({ bookingId, inbounded }) => {
     const [loading, setLoading] = useState(false);
     const router = useRouter();
     useEffect(() => {
-        console.log(bookingId)
         setBooking(null);
         setCustomerdata(null);
         setOwnerdata(null);
@@ -77,7 +76,6 @@ const Pending = ({ bookingId, inbounded }) => {
         bookingId && setId(bookingId);
     }, [bookingId])
     useEffect(() => {
-        console.log("here is id", id)
         id && getBooking(id);
     }, [id]);
     const getBooking = async (id) => {

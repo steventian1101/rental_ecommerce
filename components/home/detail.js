@@ -231,6 +231,13 @@ const Detail = ({ id }) => {
     }, [startdate, durationIndex])
     useEffect(() => {
         setStartDate(value);
+        if(new Date().getDate() == new Date(value).getDate() && new Date().getMonth() == new Date(value).getMonth() && new Date().getFullYear() == new Date(value).getFullYear()){
+            setStartTime(new Date().getHours()+1);
+            setFirstTime(new Date().getHours()+1);
+        }else{
+            setStartTime(0);
+            setFirstTime(0);
+        }
         setCalendarDisplay(false);
     }, [value]);
     const getTotal = (index) => {

@@ -12,7 +12,6 @@ const NotificationItem = ({ notification }) => {
     useEffect(() => {
         notification && getTime();
         notification && getBackground();
-        console.log(notification);
     }, []);
     const getTime = () => {
         let notify;

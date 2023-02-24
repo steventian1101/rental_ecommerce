@@ -55,6 +55,7 @@ const CreateItem = () => {
         }
     }
     const handleSave = () => {
+        console.log(itemInfo.itemTag)
         addDoc(listCollectionRef, { item_photos: imgArray, item_name: itemInfo.itemname, item_desc: itemInfo.itemDesc, item_location: itemInfo.location, item_search_tags: itemInfo.itemTag, item_charge: chargeRate.price, item_charge_rate: chargeRate.charge_rate_type, item_rating: 0, review_number: 0, item_reviews: "", item_views: 0, insurance: chargeRate.insurance, rental_owner: userCredential.email, createdTime: time }).then(response => {
             router.push("/profile");
         }).catch(error => {
@@ -88,9 +89,6 @@ const CreateItem = () => {
     useEffect(() => {
         last && handleSave();
     }, [last])
-    useEffect(() => {
-        profileImgs && profileImgs && console.log(profileImgs)
-    }, [profileImgs.length])
     return (
         <section className=" setting">
             {

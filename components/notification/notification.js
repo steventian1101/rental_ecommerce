@@ -18,7 +18,7 @@ const Notification = ({ setDrawbackground, setNotify }) => {
     }, []);
     const getNotification = async (email) => {
         const temp = [];
-        let q = query(listCollectionRef, where("to", "==", email), where("show", "==", false), orderBy("time", "desc"));
+        let q = query(listCollectionRef, where("to", "==", email), orderBy("time", "desc"));
         const querySnapshot = await getDocs(q);
         querySnapshot.forEach((doc) => {
             var tempobject = Object.assign(doc.data(), { objectID: doc.id })

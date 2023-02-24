@@ -88,8 +88,6 @@ export default function Header({ search }) {
   const handleNotify = () =>{
     setDrawbackground(true);
     setNotify(true);
-    
-    
   }
 
   return (
@@ -135,7 +133,7 @@ export default function Header({ search }) {
                 <div className="relative flex items-center justify-center cursor-pointer navbarIcon">
                   <FontAwesomeIcon icon={faBell} style={{ color: "white", fontSize: "18px" }} onClick={() => { handleNotify () }} />
                   {
-                    notifications && notifications.length != 0 ? <div className="absolute flex items-center justify-center bg-yellow-500 top-1 right-1" style={{ width:"15px", height:"15px", borderRadius:"100px"}}><p className="text-black bold" style={{ fontSize:"12px", lineHeight:"15px"}}>{notifications.length}</p></div>:<></>
+                    notifications && notifications.length > 0 ? <div className="absolute flex items-center justify-center bg-yellow-500 top-1 right-1" style={{ width:"15px", height:"15px", borderRadius:"100px"}}><p className="text-black bold" style={{ fontSize:"12px", lineHeight:"15px"}}>{notifications.length}</p></div>:<></>
                   }
                 </div>
                 <div className="flex items-center justify-center w-10 h-10 mx-2.5" style={{ position: "relative" }} onMouseEnter={() => { handleEnter() }}>

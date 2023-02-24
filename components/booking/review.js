@@ -43,7 +43,6 @@ const time = [
     "11:00 PM",
 ];
 const Review = ({booking, ownerdata, customerdata, inbounded}) =>{
-    console.log(typeof(inbounded), "here is review", inbounded)
     const [reviewtitle, setReviewtitle] = useState(null);
     const [ratingdiv, setRatingdiv] = useState(null);
     const { userCredential} = useAuth();

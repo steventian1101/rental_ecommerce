@@ -87,6 +87,13 @@ const CreateBooking = ({ setScreenNumber, setNewBooking }) => {
     }
     useEffect(() => {
         setStartDate(value);
+        if(new Date().getDate() == new Date(value).getDate() && new Date().getMonth() == new Date(value).getMonth() && new Date().getFullYear() == new Date(value).getFullYear()){
+            setStartTime(new Date().getHours()+1);
+            setFirstTime(new Date().getHours()+1);
+        }else{
+            setStartTime(0);
+            setFirstTime(0);
+        }   
         setCalendarDisplay(false);
     }, [value]);
     const handleTime = (index) => {
@@ -95,7 +102,7 @@ const CreateBooking = ({ setScreenNumber, setNewBooking }) => {
     }
     useEffect(() => {
         Id && setContent(Id);
-        setFirstTime(null)
+        setFirstTime(0)
     }, [Id]);
     useEffect(() => {
         content && content.item_charge_rate != "person" && getTotal(Number(durationIndex));
@@ -176,7 +183,7 @@ const CreateBooking = ({ setScreenNumber, setNewBooking }) => {
             for (let i = 1; i < 300; i++) { // up to 30 days from today
                 const candidateDate = date.addDays(new Date(), i);
                 if (!disabledDates.some(disabledDate => disabledDate.getFullYear() === candidateDate.getFullYear() && disabledDate.getMonth() === candidateDate.getMonth() && disabledDate.getDate() === candidateDate.getDate())) {
-                    setStartDate(candidateDate)
+                    setStartDate(candidateDate);
                     break;
                 }
             }
