@@ -36,7 +36,7 @@ const Notification = ({ setDrawbackground, setNotify }) => {
         <section className="overflow-auto notification">
             <div style={{ height: "50px", marginBottom: "10px" }} className="flex flex-row items-center cursor-pointer"><FontAwesomeIcon icon={faArrowLeftLong} className="text-2xl text-white" onClick={() => handleBack()} /></div>
             <p className="loginText">NOTIFICATIONS</p>
-            <p className="loginDetail">Get notified on any incoming requeststhat affects you.</p>
+            <p className="loginDetail">Get notified on any incoming requests that affects you.</p>
             <div className="overflow-auto">
                 {
                     notifications && notifications.length > 0 ? notifications.map((notification, index) => (
