@@ -160,6 +160,7 @@ const Register = () => {
     useEffect(() => {
         localStorage.setItem("geo", geo);
         if (imgurl != "" && emailvalidation && passwordvalidation && firstnamevalidation && lastnamevalidation && nicknameValidation && phonevalidation && addressvalidation) {
+            uploadCustomer();
             addDoc(listCollectionRef, { user_email: email, first_name: firstname, profile_img: imgurl, last_name: lastname, nick_name: nickname, user_phone: phone, user_address: address, customer_id: customerID, geo:geo }).then(response => {
                 createUser(auth, email, password);
                 setFile(null);
@@ -190,6 +191,7 @@ const Register = () => {
         const functions = getFunctions();
         const createStripeCustomer = httpsCallable(functions, 'createStripeCustomer');
         await createStripeCustomer().then((result) => {
+            console.log(result.data)
             setCustomerID(result.data);
             setComplete(true);
             setCompleteLoading(false);

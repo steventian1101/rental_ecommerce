@@ -28,6 +28,7 @@ import date from "date-and-time"
 import { getFunctions, httpsCallable } from "firebase/functions";
 import { useRouter } from "next/router";
 import addSubtractDate from "add-subtract-date"
+import { createPi, capturePi } from "../../utils/paymentIntent";
 
 const Detail = ({ id }) => {
     const [content, setContent] = useState(null);
@@ -157,9 +158,19 @@ const Detail = ({ id }) => {
     const handleReserve = async () => {
 
         if (result != 0) {
+            let confirmstatus = await createPi(userDetail[0]["pm_id"], result, userDetail[0]["customer_id"]);
+            console.log(confirmstatus);
+            if(confirmstatus.data.status == "succeeded"){
+                
+            }
+            else{
+                console.log("There is no money in your payment")
+            }
+            return;
             const notificationRef = collection(db, "notifications");
-            const listCollectionRef = collection(db, "bookings")
+            const listCollectionRef = collection(db, "bookings");
             addDoc(listCollectionRef, { item_id: id, start_date: month[Number(startdate.getMonth())] + "," + startdate.getDate() + "," + startdate.getFullYear(), start_time: startTime, customer_email: userCredential.email, phone_number: userDetail[0].user_phone, result: result, driving_license: "", full_name: userDetail[0].full_name, credit: userDetail[0].credit_card_number, cvv: userDetail[0].cvv, expireDate: userDetail[0].expire_date, owner_email: content.rental_owner, status: 0, createdTime: serverTimestamp() }).then(response => {
+                
                 addDoc(notificationRef, {
                     to: ownerData[0].user_email,
                     notificationContent: userDetail[0].first_name + " " + userDetail[0].last_name + " has requested to rent your " + content["item_name"],
@@ -201,7 +212,7 @@ const Detail = ({ id }) => {
         userCredential.email && getUserDetail(userCredential.email);
         id && getRatingAndReviewNumbers(id).then((result) => {
             setReviewNumbers(result)
-        });
+        }); 
     }, [id, userCredential.email])
     useEffect(() => {
         content && setViewnumber(Number(content["item_views"]) + 1);
@@ -269,21 +280,11 @@ const Detail = ({ id }) => {
                 const candidateDate = date.addDays(new Date(),i);
                 if (!disabledDates.some(disabledDate => disabledDate.getFullYear() === candidateDate.getFullYear() && disabledDate.getMonth() === candidateDate.getMonth() && disabledDate.getDate() === candidateDate.getDate())) {
                   setStartDate(candidateDate)
+                  setStartTime(0);
+                  setFirstTime(0);
                   break;
                 }
-        }
-            // setStartDate(null)
-            // let check = false;
-            // let i = 1;
-            // while(check){
-            //     const newdate = date.addDays(new Date(),i);
-            //     i++;
-            //     if(i == 10) {
-            //         check = true;
-            //         console.log(newdate)
-            //     }
-            // }
-            
+        }   
         }
     }
     const handleDisableDates = ({ date, view }) => {

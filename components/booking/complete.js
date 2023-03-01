@@ -256,7 +256,7 @@ const Complete = ({ bookingId, inbounded }) => {
                         <p className="text-white font-15">Total Charge:</p>
                         <p className="font-20" style={{ color: "#e39457", marginBottom: "30px" }}>${booking && Number(booking.result).toFixed(2)} AUD</p>
                         <div className="flex flex-row justify-between marginTop-5">
-                            <p className="text-white ">${booking && itemdata && Number(itemdata.item_charge).toFixed(2)} &times; {booking && itemdata && Math.abs(booking.result / (1.35 * itemdata.item_charge))} {booking & itemdata && itemdata.item_charge_rate}</p>
+                            <p className="text-white ">${booking && itemdata && Number(itemdata.item_charge).toFixed(2)} &times; {booking && itemdata && Math.abs(booking.result / (1.35 * itemdata.item_charge))} {booking && itemdata && itemdata.item_charge_rate}</p>
                             <p className="text-white ">${booking && Number(booking.result / 1.35).toFixed(2)}</p>
                         </div>
                         <div className="flex flex-row justify-between marginTop-5">

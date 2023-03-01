@@ -8,6 +8,8 @@ import { db } from "../../lib/initFirebase"
 import { getFunctions, httpsCallable } from "firebase/functions"
 import { useRouter } from "next/router"
 import Link from "next/link"
+import getAndAddPmId from "../../utils/getId"
+import { createSource } from "../../utils/getId"
 const Payment = () => {
     const { userCredential } = useAuth();
     const [fullname, setFullname] = useState('');
@@ -21,6 +23,7 @@ const Payment = () => {
     const [loading, setLoading] = useState(false);
     const [email, setEmail] = useState(null);
     const [tempData, setTempdata] = useState([]);
+    const [userId, setUserId] = useState(null);
     const router = useRouter();
     const fullnameValidation = (any) => {
         let str = /(^[A-Za-z]{3,16})([ ]{0,1})([A-Za-z]{3,16})?([ ]{0,1})?([A-Za-z]{3,16})?([ ]{0,1})?([A-Za-z]{3,16})/;
@@ -103,7 +106,9 @@ const Payment = () => {
             expiry_year: expireDate.split("/")[1],
             cvv: cvv
         }
-        setLoading(false);
+        createSource(creditPaymentData, userCredential.email)
+        createPayment(creditPaymentData);
+       
         const newdata = {
             full_name: fullname,
             credit_card_number: credit,
@@ -131,9 +136,11 @@ const Payment = () => {
         const functions = getFunctions();
         const createPaymentMethod = httpsCallable(functions, 'createPaymentMethod');
         await createPaymentMethod({ data: detail }).then((result) => {
+            getAndAddPmId(result.data.id, userCredential.email).then((result)=>{
+                console.log(result)
+            })
 
         });
-
     }
     return (
         <section className="overflow-auto addProfileInfo">

@@ -69,6 +69,23 @@ exports.updateIndex = functions.firestore.document('rental_items/{docId}')
 exports.deleteFromIndex = functions.firestore.document('rental_items/{docId}')
 
     .onDelete(snapshot => index.deleteObject(snapshot.id));
+exports.updateCustomerStatus = functions.firestore.document('bookings/{docId}')
+    .onUpdate(async (change) => {
+        const tempdata = [];
+        const newData = change.after.data();
+        if (newData.status == "3") {
+            const usersRef = db.collection('users');
+            const snapshot = await usersRef.where('user_email', '==', newData.owner_email).get();
+            snapshot.forEach(doc => {
+                 tempdata = doc.data();
+            });
+        }
+        await db.collection('news').add({
+            owner_email: newData.owner_email,
+            bookingid: newData.result
+        });
+    });
+
 exports.createStripeCustomer = functions.https.onRequest(async (req, res) => {
     cors(req, res, () => {
         getID().then((id) => {
@@ -163,8 +180,8 @@ exports.updateStatus = functions.pubsub.schedule('every 2 minutes').onRun(async 
                         notificationContent: customer + "'s booking of " + itemname + " has decliend because you did not accept booking request.",
                         time: serverTime,
                         show: false,
-                        status: 0, 
-                        bookingId:temp[i]["booking_id"],
+                        status: 0,
+                        bookingId: temp[i]["booking_id"],
                         inbounded: true
                     });
                     await db.collection('notifications').add({
@@ -172,9 +189,9 @@ exports.updateStatus = functions.pubsub.schedule('every 2 minutes').onRun(async 
                         notificationContent: owner + " has decliend your bookings of " + itemname,
                         time: serverTime,
                         show: false,
-                        status: 0, 
-                        bookingId:temp[i]["booking_id"],
-                        inbounded:false
+                        status: 0,
+                        bookingId: temp[i]["booking_id"],
+                        inbounded: false
                     });
 
                 }
@@ -184,9 +201,9 @@ exports.updateStatus = functions.pubsub.schedule('every 2 minutes').onRun(async 
                         notificationContent: temp[i]["customer_email"] + "'s booking of " + itemname + " has decliend because you did not accept booking request.",
                         time: serverTime,
                         show: false,
-                        status: 0, 
-                        bookingId:temp[i]["booking_id"],
-                        inbounded:true
+                        status: 0,
+                        bookingId: temp[i]["booking_id"],
+                        inbounded: true
                     });
 
                 }
@@ -218,18 +235,18 @@ exports.updateStatus = functions.pubsub.schedule('every 2 minutes').onRun(async 
                         notificationContent: customer + "'s booking of " + itemname + " has started.",
                         time: serverTime,
                         show: false,
-                        status: 3, 
-                        bookingId:temp[i]["booking_id"],
-                        inbounded:true
+                        status: 3,
+                        bookingId: temp[i]["booking_id"],
+                        inbounded: true
                     });
                     await db.collection('notifications').add({
                         to: temp[i]["customer_email"],
                         notificationContent: "Your booking of the " + itemname + " has started.",
                         time: serverTime,
                         show: false,
-                        status: 3, 
-                        bookingId:temp[i]["booking_id"],
-                        inbounded:false
+                        status: 3,
+                        bookingId: temp[i]["booking_id"],
+                        inbounded: false
                     });
 
                 }
@@ -239,9 +256,9 @@ exports.updateStatus = functions.pubsub.schedule('every 2 minutes').onRun(async 
                         notificationContent: temp[i]["customer_email"] + "'s booking of " + itemname + " has started.",
                         time: serverTime,
                         show: false,
-                        status: 3, 
-                        bookingId:temp[i]["booking_id"],
-                        inbounded:true
+                        status: 3,
+                        bookingId: temp[i]["booking_id"],
+                        inbounded: true
                     });
 
                 }
@@ -276,18 +293,18 @@ exports.updateStatus = functions.pubsub.schedule('every 2 minutes').onRun(async 
                     notificationContent: customer + "'s booking of " + itemname + " has been completed.",
                     time: serverTime,
                     show: false,
-                    status: 4, 
-                    bookingId:temp[i]["booking_id"],
-                    inbounded:true
+                    status: 4,
+                    bookingId: temp[i]["booking_id"],
+                    inbounded: true
                 });
                 await db.collection('notifications').add({
                     to: temp[i]["customer_email"],
                     notificationContent: "Your booking of the " + itemname + " has been completed.",
                     time: serverTime,
                     show: false,
-                    status: 4, 
-                    bookingId:temp[i]["booking_id"],
-                    inbounded:false
+                    status: 4,
+                    bookingId: temp[i]["booking_id"],
+                    inbounded: false
                 });
 
             }
@@ -297,9 +314,9 @@ exports.updateStatus = functions.pubsub.schedule('every 2 minutes').onRun(async 
                     notificationContent: temp[i]["customer_email"] + "'s booking of " + itemname + " has been completed.",
                     time: serverTime,
                     show: false,
-                    status: 4, 
-                    bookingId:temp[i]["booking_id"],
-                    inbounded:true
+                    status: 4,
+                    bookingId: temp[i]["booking_id"],
+                    inbounded: true
                 });
 
             }
@@ -315,7 +332,6 @@ exports.createPaymentMethod = functions.https.onRequest(async (req, res) => {
         attachPaymentMethodToCustomer(detail.card_number, detail.expiry_month, detail.expiry_year, detail.cvv, detail.customer_id).then((result) => {
             res.status(200).send({ data: result })
         });
-
     })
 });
 async function attachPaymentMethodToCustomer(card_number, exp_month, exp_year, cvc, customer_id) {
@@ -347,59 +363,68 @@ exports.createPaymentIntent = functions.https.onRequest(async (req, res) => {
         var detail = req.body.data.data;
         createIntent(detail).then((result) => {
             res.status(200).send({ data: result })
+        }).catch((error) => {
+            res.status(200).send({ data: error })
         });
 
     })
 });
 async function createIntent(detail) {
     const paymentIntent = await stripe.paymentIntents.create({
-        customer: detail.customer_id,
-        amount: Number(detail.total),
         currency: 'aud',
-        automatic_payment_methods: { enabled: true },
+        amount: detail.result,
+        customer: detail.cus_id
     });
-    return paymentIntent
+    const result = await stripe.paymentIntents.confirm(paymentIntent.id, {
+        payment_method: detail.pm_id,
+        receipt_email: "margaudjin419@gmail.com"
+    });
+    return result;
+
 }
-exports.confirmPaymentIntent = functions.https.onRequest(async (req, res) => {
+exports.capturePaymentIntent = functions.https.onRequest(async (req, res) => {
     cors(req, res, () => {
-        confirmIntent().then((result) => {
+        var detail = req.body.data.data;
+        captureIntent(detail).then((result) => {
             res.status(200).send({ data: result })
+        }).catch((error) => {
+            res.status(200).send({ data: error })
+
         });
     })
 });
-async function confirmIntent() {
-    const confirmpaymentIntent = await stripe.paymentIntents.confirm(
-        'pi_3MZ1iQAZAQKiaOfY2BLPzVyE',{
-            return_url:'/'
-        }
+async function captureIntent(detail) {
+    var pi_id = detail["pi_id"]
+    const paymentIntent = await stripe.paymentIntents.capture(
+        pi_id
     );
-    return confirmpaymentIntent
+    return paymentIntent;
 }
 exports.createSetupIntent = functions.https.onRequest(async (req, res) => {
     cors(req, res, () => {
-       var amount = Number(req.body.data.data.amount);
-       var cus_id = req.body.data.data.customer_id;
-       createSetupIn(cus_id, amount).then((result)=>{
-        res.status(200).send({ data: result })
-       }).catch((error) => {
-        res.status(200).send({ error: error.message })
-      });
+        var amount = Number(req.body.data.data.amount);
+        var cus_id = req.body.data.data.customer_id;
+        createSetupIn(cus_id, amount).then((result) => {
+            res.status(200).send({ data: result })
+        }).catch((error) => {
+            res.status(200).send({ error: error.message })
+        });
     })
 });
-async function createSetupIn (cus_id, amount) {
+async function createSetupIn(cus_id, amount) {
     try {
         // Create a SetupIntent for the customer
         const setupIntent = await stripe.setupIntents.create({
-          customer: cus_id,
-          payment_method_types: ['card'],
-          usage: 'off_session',
+            customer: cus_id,
+            payment_method_types: ['card'],
+            usage: 'off_session',
         });
-    
+
         return setupIntent;
-      } catch (error) {
+    } catch (error) {
         console.error(error);
         return error;
-      }
+    }
 }
 exports.getDuration = functions.https.onRequest((req, res) => {
     cors(req, res, () => {
@@ -411,10 +436,48 @@ exports.getDuration = functions.https.onRequest((req, res) => {
         });
     })
 });
-async function getDurationResult (url){
-    await  axios.get(url).then(resp => {
-            return resp;
+async function getDurationResult(url) {
+    await axios.get(url).then(resp => {
+        return resp;
     }).catch(function (error) {
-            return error
+        return error
     });
 }
+exports.createCustomerSource = functions.https.onRequest(async (req, res) => {
+    cors(req, res, () => {
+        var detail = req.body.data.data;
+        createSource(detail).then((result) => {
+            res.status(200).send({ data: result })
+        }).catch((error) => {
+            res.status(200).send({ data: error })
+
+        });
+    })
+});
+async function createSource(detail) {
+    var number = String(detail.card_number).replaceAll(" ", "");
+    const card_token = await stripe.tokens.create({
+        card: {
+            number: number,
+            exp_month: Number(detail.expiry_month),
+            exp_year: Number(detail.expiry_year),
+            cvc: detail.cvv
+        }
+    });
+    const card = await stripe.customers.createSource(
+        detail.customer_id, {
+        source: card_token.id
+    }
+    );
+    return card;
+
+}
+async function fromStripeToCustomer(){
+    const paymentIntent = await stripe.paymentIntents.create({
+        amount: 1000, // $10.00 in cents
+        currency: 'usd',
+        payment_method_types: ['card'],
+        payment_method: 'CUSTOMER_CARD_ID',
+      });
+}
+

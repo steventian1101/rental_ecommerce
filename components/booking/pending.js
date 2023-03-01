@@ -12,7 +12,7 @@ import Ready from "./ready";
 import date from "date-and-time"
 import Link from "next/link";
 import { db } from "../../lib/initFirebase";
-import { query, getDoc, doc, collection, getDocs, where, updateDoc, addDoc, serverTimestamp } from "firebase/firestore";
+import { query, getDoc, doc, collection, getDocs, where, updateDoc, addDoc, serverTimestamp, deleteDoc } from "firebase/firestore";
 import { useRouter } from "next/router";
 import Loading from "../auth/loading";
 const month = {
@@ -150,6 +150,7 @@ const Pending = ({ bookingId, inbounded }) => {
         }
     }
     const handleAccept = async () => {
+        setLoading(true)
         const detail = {
             amount: booking.result,
             customer_id: customerdata[0].customer_id,
@@ -184,7 +185,7 @@ const Pending = ({ bookingId, inbounded }) => {
 
     }
     const handleDecline = async () => {
-
+        setLoading(true)
         const notificationRef = collection(db, "notifications");
         addDoc(notificationRef, {
             to: booking.customer_email,
@@ -194,13 +195,15 @@ const Pending = ({ bookingId, inbounded }) => {
             status: 0,
 
         });
-        setLoading(true)
         await deleteDoc(doc(db, "bookings", booking.booking_id));
         router.push("/booking")
 
     }
     return (
         <>
+            {
+                loading? <Loading/>:<></>
+            }
             <section className="overflow-auto bookingpending">
                 <Link href="/booking">
                     <div style={{ height: "50px", marginBottom: "10px" }} className="flex flex-row  cursor-pointer mb-2.5 justify-between items-center"><FontAwesomeIcon icon={faArrowLeftLong} className="text-2xl text-white" /></div>

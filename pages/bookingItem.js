@@ -25,28 +25,33 @@ const Page = () => {
   useEffect(() => {
     console.log()
     bookingItemId && bookingItemId && setBookingId(bookingItemId)
-  }, [ bookingItemId])
+  }, [bookingItemId])
   useEffect(() => {
-    console.log(bookingId)
     bookingId && getBooking(bookingId, inbounded);
   }, [bookingId, inbounded]);
   const getBooking = async (id, inbounded) => {
     const docRef = doc(db, "bookings", id);
     let querySnapshot = await getDoc(docRef);
     let tempdata = querySnapshot.data();
-    if (tempdata.status == "0") {
-      setSideBar(<Pending bookingId={id} inbounded={inbounded} />)
+    if (!tempdata) {
+      router.push("/booking")
     }
-    if (tempdata.status == "1") {
-      setSideBar(<Ready bookingId={id} inbounded={inbounded} />)
+    else {
+      if (tempdata.status == "0") {
+        setSideBar(<Pending bookingId={id} inbounded={inbounded} />)
+      }
+      if (tempdata.status == "1") {
+        setSideBar(<Ready bookingId={id} inbounded={inbounded} />)
+      }
+      if (tempdata.status == "2") {
+        setSideBar(<Use bookingId={id} inbounded={inbounded} />)
+      }
+      if (tempdata.status == "3") {
+        console.log("here is status 3 ", bookingId)
+        setSideBar(<Complete bookingId={id} inbounded={inbounded} />)
+      }
     }
-    if (tempdata.status == "2") {
-      setSideBar(<Use bookingId={id} inbounded={inbounded} />)
-    }
-    if (tempdata.status == "3") {
-      console.log("here is status 3 ", bookingId)
-      setSideBar(<Complete bookingId={id} inbounded={inbounded} />)
-    }
+
   }
 
   return (
