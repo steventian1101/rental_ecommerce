@@ -6,7 +6,8 @@
     "shell": "firebase functions:shell",
     "start": "npm run shell",
     "deploy": "firebase deploy --only functions",
-    "logs": "firebase functions:log"
+    "logs": "firebase functions:log",
+    "create":"firebase functions:delete createCustomerSource && firebase deploy --only functions:createCustomerSource"
   },
   "engines": {
     "node": "16"
@@ -19,7 +20,12 @@
     "date-and-time": "^2.4.2",
     "firebase-admin": "^11.4.1",
     "firebase-functions": "^3.18.0",
+    "formidable": "^2.1.1",
+    "fs": "^0.0.1-security",
+    "http": "^0.0.1-security",
+    "https": "^1.0.0",
     "node-fetch": "^3.3.0",
+    "path": "^0.12.7",
     "stripe": "^11.9.1",
     "timediff": "^1.1.1"
   },

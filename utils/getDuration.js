@@ -87,5 +87,4 @@ const duration = async (geodata) => {
     const getDuration = httpsCallable(functions, 'getDuration');
     const temp = await getDuration({ data: geodata });
     return temp;
-
 }

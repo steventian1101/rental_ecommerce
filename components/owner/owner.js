@@ -7,7 +7,7 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
 import OwnerItemcard from "./ownerItemcard";
 import { getRatingAndReviewNumbersForOwner } from "../../utils/getRatingAndReviewsNumber";
-const Owner = () => {
+const   Owner = () => {
     const { userCredential } = useAuth();
     const [ownerImg, setOwnerImg] = useState('');
     const [tempData, setTempdata] = useState([]);

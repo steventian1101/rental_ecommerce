@@ -4,7 +4,10 @@ const date = require('date-and-time');
 const stripe = require('stripe')('sk_test_51IH8sJAZAQKiaOfYxdO4oKTRXeX0Nox65R7opwGOcSgxMDeQ42udiV9gvAGp8bH6MKW0mFUAVTlso0mIzZI17kEe00ifqlV1Mi');
 const admin = require("firebase-admin");
 const cors = require("cors")({ origin: true });
-const axios = require("axios")
+const axios = require("axios");
+const fs = require("fs");
+const formidable = require("formidable");
+const https = require("https");
 const time = [
     "00:00",
     "01:00",
@@ -77,7 +80,7 @@ exports.updateCustomerStatus = functions.firestore.document('bookings/{docId}')
             const usersRef = db.collection('users');
             const snapshot = await usersRef.where('user_email', '==', newData.owner_email).get();
             snapshot.forEach(doc => {
-                 tempdata = doc.data();
+                tempdata = doc.data();
             });
         }
         await db.collection('news').add({
@@ -455,29 +458,174 @@ exports.createCustomerSource = functions.https.onRequest(async (req, res) => {
     })
 });
 async function createSource(detail) {
-    var number = String(detail.card_number).replaceAll(" ", "");
-    const card_token = await stripe.tokens.create({
-        card: {
-            number: number,
-            exp_month: Number(detail.expiry_month),
-            exp_year: Number(detail.expiry_year),
-            cvc: detail.cvv
+    var account_number = String(detail.accountnumber).replaceAll(" ", "");
+    var bsb_number = String(detail.bsb).replaceAll(" ", "");
+    var first_name = detail.accountname.split(" ")[0];
+    var last_name = detail.accountname.split(" ")[1];
+    const bankAccount = {
+        country: 'AU',
+        currency: 'aud',
+        account_holder_name: detail.accountname,
+        account_holder_type: 'individual',
+        routing_number: bsb_number,
+        account_number: account_number,
+        usage: 'source',
+    };
+    const bank_token = await stripe.tokens.create({ bank_account: bankAccount });
+    const account = await stripe.accounts.create({
+        type: 'custom',
+        country: 'AU',
+        email: detail.email,
+        business_type: "individual",
+        capabilities: {
+            card_payments: { requested: true },
+            transfers: { requested: true },
         }
     });
-    const card = await stripe.customers.createSource(
-        detail.customer_id, {
-        source: card_token.id
-    }
+    const externalAccount = await stripe.accounts.createExternalAccount(
+        account.id,
+        {
+            external_account: bank_token.id
+        }
     );
-    return card;
+    const serviceaccount = await stripe.accounts.update(
+        account.id,
+        { tos_acceptance: { date: bank_token.created, ip: bank_token.client_ip } },
+    );
+    const person = await stripe.accounts.update(
+        account.id,
+        {
+            individual: {
+                first_name: first_name,
+                last_name: last_name,
+                address: {
+                    city: detail.city,
+                    line1: detail.line1,
+                    postal_code: detail.postal_code,
+                    state: detail.state
+                },
+                dob: {
+                    day: detail.dob_day,
+                    month: detail.dob_month,
+                    year: detail.dob_year
 
+                },
+                email: detail.email,
+                phone: detail.phone
+            }
+        }
+    );
+    const business = await stripe.accounts.update(
+        account.id,
+        {
+            business_profile: {
+                mcc: detail.mcc,
+                url: detail.url
+            }
+        }
+    );
+
+    const frontfile = await stripe.files.create({
+        purpose: 'identity_document',
+        file: {
+            data: fs.readFileSync('./path/to/a/success.png'),
+            name: 'success.png',
+            type: 'application/octet-stream',
+        },
+    });
+    const backfile = await stripe.files.create({
+        purpose: 'identity_document',
+        file: {
+            data: fs.readFileSync('./path/to/a/success.png'),
+            name: 'success.png',
+            type: 'application/octet-stream',
+        },
+    });
+    const verifiedaccount = await stripe.accounts.update(
+        account.id,
+        {
+            individual: {
+                verification:
+                {
+                    document:
+                    {
+                        back: backfile.id,
+                        front: frontfile.id
+                    }
+                }
+            }
+        }
+    );
+
+    return verifiedaccount;
 }
-async function fromStripeToCustomer(){
+async function fromStripeToCustomer() {
     const paymentIntent = await stripe.paymentIntents.create({
         amount: 1000, // $10.00 in cents
         currency: 'usd',
         payment_method_types: ['card'],
         payment_method: 'CUSTOMER_CARD_ID',
-      });
+    });
 }
+exports.retriveAccount = functions.https.onRequest(async (req, res) => {
+    cors(req, res, () => {
+        var acc_id = req.body.data.data;
+        retriveAccountFunction(detail).then((result) => {
+            res.status(200).send({ data: result })
+        }).catch((error) => {
+            res.status(200).send({ data: error })
+        })
+    })
+});
+async function retriveAccountFunction(acc_id) {
+    const account = await stripe.accounts.retrieve(
+        acc_id
+    );
+    res.status(200).send({ data: account })
+
+}
+async function fileDownload(detail) {
+    const url = "https://www.tutorialspoint.com/cg/images/cgbanner.jpg";
+
+    https.get(url, (res) => {
+        const path = "downloaded-image.jpg";
+        const writeStream = fs.createWriteStream(path);
+        res.pipe(writeStream);
+        writeStream.on("finish", () => {
+            writeStream.close();
+            console.log("Download Completed!");
+        })
+    })
+    return "success";
+
+}
+
+const p3 = new Promise((resolve, reject) => {
+    const url = "https://www.tutorialspoint.com/cg/images/cgbanner.jpg";
+    console.log("here")
+    https.get(url, (res) => {
+        const path = "downloaded-image.jpg";
+        const writeStream = fs.createWriteStream(path);
+        res.pipe(writeStream);
+        writeStream.on("finish", () => {
+            writeStream.close();
+            resolve("success")
+        })
+    })
+});
+exports.download = functions.https.onRequest(async (req, res) => {
+    cors(req, res, () => {
+        var temp;
+        const url = "https://www.tutorialspoint.com/cg/images/cgbanner.jpg";
+        https.get(url, (result) => {
+           temp = result;
+        //    const path = "downloaded-image.jpg";
+        //    const writeStream = fs.createWriteStream(path);
+        //    res.pipe(writeStream);
+        //    writeStream.on("finish", () => {
+        //       writeStream.close();
+        //    })
+        })
+    })
+});
 

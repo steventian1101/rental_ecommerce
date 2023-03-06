@@ -68,7 +68,7 @@ const getdisabletimes = async (id, content) => {
         for (let i in temp) {
             let disabletemp = [];
             const duration = Math.abs(Number(temp[i].result) / (1.35 * Number(content.item_charge)));
-            for (let j = 0; j < duration; j++) {
+            for (let j = 0; j <= duration; j++) {
                 if (j == 0) {
                     disabletemp[j]=(new Date(temp[i].start_date + " " + time[temp[i].start_time]));
                     if(duration == 1){

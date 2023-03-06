@@ -18,6 +18,7 @@ const Profile = () => {
     const [nickname, setNickname] = useState('');
     const [phone, setPhone] = useState('');
     const [address, setAddress] = useState('');
+    const [birth, setBirth] = useState('');
     const [file, setFile] = useState(null);
     const [firstnamevalidation, setFirstnamevalidation] = useState(true);
     const [lastnamevalidation, setLastnamevalidation] = useState(true);
@@ -25,6 +26,7 @@ const Profile = () => {
     const [phonevalidation, setPhonevalidation] = useState(true);
     const [addressvalidation, setAddressvalidation] = useState(true);
     const [websitevalidation, setWebsitevalidation] = useState(true);
+    const [birthvalidation, setBirthvalidation] = useState(true)
     const [website, setWebsite] = useState('');
     const [previewImage, setPreviewImage] = useState(null);
     const [beforeImage, setBeforeImage] = useState(null);
@@ -92,6 +94,15 @@ const Profile = () => {
         }
         else {
             setWebsitevalidation(false)
+        }
+    }
+    const birthValidation = (any) => {
+        let str = /^(0[1-9]|[12]\d|3[01])[/\\](0[1-9]|1[012])[/\\](19|20)\d\d$/;
+        if (str.test(any) || any == '') {
+            setBirth(any)
+            setBirthvalidation(true);
+        } else {
+            setBirthvalidation(false);
         }
     }
     const handlefile = (e) => {
@@ -182,7 +193,8 @@ const Profile = () => {
             profile_img: imgurl,
             user_phone: phone,
             website: website,
-            geo:geo
+            geo:geo,
+            birth:birth
         };
         updateDoc(docRef, newdata)
             .then(() => {
@@ -221,6 +233,7 @@ const Profile = () => {
             <AuthInput title={"Last Name"} status={lastnamevalidation} placeholder={"E.g.Doe"} change={lastnameValidation} type={"text"} value={tempData && tempData.length > 0 ? tempData[0].last_name : ''} />
             <AuthInput title={"SDrop Nickname"} status={nicknamevalidation} placeholder={"E.g.John Doe Rentals"} change={nicknameValidation} type={"text"} value={tempData && tempData.length > 0 ? tempData[0].nick_name : ''} />
             <AuthInput title={"Phone Number"} status={phonevalidation} placeholder={"E.g.+61 488 789"} change={phoneValidation} type={"text"} value={tempData && tempData.length > 0 ? tempData[0].user_phone : ''} />
+            <AuthInput title={"Date of Birth"} status={birthvalidation} placeholder={"E.g.31/07/1985"} change={birthValidation} type={"text"} value={tempData && tempData.length > 0 && tempData[0].birth ? tempData[0].birth : ''} />
             <AuthInput title={"Website"} status={websitevalidation} placeholder={"E.g.johnrental.com"} change={websiteValidation} type={"text"} value={tempData && tempData.length > 0 && tempData[0].website ? tempData[0].website : ''} />
             <div style={{ marginTop: "30px" }} className="flex flex-row items-center justify-between">
                 <p className="text-white font-15">Add Item geolocation?</p>

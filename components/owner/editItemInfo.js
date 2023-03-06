@@ -9,7 +9,6 @@ import Textarea from "./textarea"
 import back from "../../utils/handleBack"
 
 const EditItemInfo = ({ setSideBar, setItemInfo, prevName, prevLocation, prevItemDesc, prevItemTag, setInfoUpload}) => {
-    console.log(prevItemTag)
     const [itemnamevalidation, setItemnamevalidation] = useState(true);
     const [itemname, setItemname] = useState('');
     const [location, setLocation] = useState('');

@@ -158,15 +158,14 @@ const Detail = ({ id }) => {
     const handleReserve = async () => {
 
         if (result != 0) {
-            let confirmstatus = await createPi(userDetail[0]["pm_id"], result, userDetail[0]["customer_id"]);
-            console.log(confirmstatus);
-            if(confirmstatus.data.status == "succeeded"){
+            // let confirmstatus = await createPi(userDetail[0]["pm_id"], result, userDetail[0]["customer_id"]);
+            // console.log(confirmstatus);
+            // if(confirmstatus.data.status == "succeeded"){
                 
-            }
-            else{
-                console.log("There is no money in your payment")
-            }
-            return;
+            // }
+            // else{
+            //     console.log("There is no money in your payment")
+            // }
             const notificationRef = collection(db, "notifications");
             const listCollectionRef = collection(db, "bookings");
             addDoc(listCollectionRef, { item_id: id, start_date: month[Number(startdate.getMonth())] + "," + startdate.getDate() + "," + startdate.getFullYear(), start_time: startTime, customer_email: userCredential.email, phone_number: userDetail[0].user_phone, result: result, driving_license: "", full_name: userDetail[0].full_name, credit: userDetail[0].credit_card_number, cvv: userDetail[0].cvv, expireDate: userDetail[0].expire_date, owner_email: content.rental_owner, status: 0, createdTime: serverTimestamp() }).then(response => {
@@ -364,6 +363,9 @@ const Detail = ({ id }) => {
         localStorage.setItem("beforeAddPayment", url);
         router.push("/setting/payment");
     }
+    useEffect(()=>{
+        console.log(disabledDates)
+    },[disabledDates])
     return (
         <section className="fixed top-0 right-0 z-50 bg-white detail" ref={detailRef}>
             <div className="relative">

@@ -26,6 +26,7 @@ const Register = () => {
     const [nickname, setNickname] = useState('');
     const [phone, setPhone] = useState('');
     const [address, setAddress] = useState('');
+    const [birth, setBirth] = useState('');
     const [imgurl, setImgurl] = useState('');
     const [loading, setLoading] = useState(false);
     const [emailvalidation, setEmailvalidation] = useState(true);
@@ -35,6 +36,7 @@ const Register = () => {
     const [nicknamevalidation, setNicknamevalidation] = useState(true);
     const [phonevalidation, setPhonevalidation] = useState(true);
     const [addressvalidation, setAddressvalidation] = useState(true);
+    const [birthvalidation, setBirthvalidation] = useState(true)
     const [previewImage, setPreviewImage] = useState('');
     const [completeLoading, setCompleteLoading] = useState(false);
     const [customerID, setCustomerID] = useState(null);
@@ -106,6 +108,15 @@ const Register = () => {
             setAddressvalidation(false);
         }
     }
+    const birthValidation = (any) => {
+        let str = /^(0[1-9]|[12]\d|3[01])[/\\](0[1-9]|1[012])[/\\](19|20)\d\d$/;
+        if (str.test(any) || any == '') {
+            setBirth(any)
+            setBirthvalidation(true);
+        } else {
+            setBirthvalidation(false);
+        }
+    }
     const handleComplete = async () => {
         setCompleteLoading(true)
         if (emailvalidation && passwordvalidation) {
@@ -121,9 +132,9 @@ const Register = () => {
                 return;
             }
             else {
-                getCustomerID();
-                // setComplete(true)
-                // setCompleteLoading(false)
+                // getCustomerID();
+                setComplete(true)
+                setCompleteLoading(false)
             }
         }
         else {
@@ -159,9 +170,9 @@ const Register = () => {
     }
     useEffect(() => {
         localStorage.setItem("geo", geo);
-        if (imgurl != "" && emailvalidation && passwordvalidation && firstnamevalidation && lastnamevalidation && nicknameValidation && phonevalidation && addressvalidation) {
-            uploadCustomer();
-            addDoc(listCollectionRef, { user_email: email, first_name: firstname, profile_img: imgurl, last_name: lastname, nick_name: nickname, user_phone: phone, user_address: address, customer_id: customerID, geo:geo }).then(response => {
+        if (imgurl != "" && emailvalidation && passwordvalidation && firstnamevalidation && lastnamevalidation && nicknameValidation && phonevalidation && addressvalidation && birthvalidation) {
+            // uploadCustomer();
+            addDoc(listCollectionRef, { user_email: email, first_name: firstname, profile_img: imgurl, last_name: lastname, nick_name: nickname, user_phone: phone, user_address: address, customer_id: customerID, geo:geo, birth:birth }).then(response => {
                 createUser(auth, email, password);
                 setFile(null);
             }).catch(error => {
@@ -193,8 +204,6 @@ const Register = () => {
         await createStripeCustomer().then((result) => {
             console.log(result.data)
             setCustomerID(result.data);
-            setComplete(true);
-            setCompleteLoading(false);
         })
     }
     return (
@@ -222,6 +231,7 @@ const Register = () => {
                     <AuthInput title={"Last Name"} status={lastnamevalidation} placeholder={"E.g.Doe"} change={lastnameValidation} type={"text"} value={""} name={"lastname"} />
                     <AuthInput title={"SDrop Nickname"} status={nicknamevalidation} placeholder={"E.g.John Doe Rentals"} change={nicknameValidation} type={"text"} value={""} name={"nickname"} />
                     <AuthInput title={"Phone Number"} status={phonevalidation} placeholder={"E.g.+61 488 789"} change={phoneValidation} type={"text"} value={""} />
+                    <AuthInput title={"Date of Birth"} status={birthvalidation} placeholder={"E.g.31/07/1985"} change={birthValidation} type={"text"} value={""} />
                     <AuthInput title={"Address"} status={addressvalidation} placeholder={"E.g.20 Echidna Ave, 2035, Australia"} change={addressValidation} type={"text"} value={""} />
                 </form>
                 <div style={{ marginTop: "30px" }} className="flex flex-row items-center justify-between">

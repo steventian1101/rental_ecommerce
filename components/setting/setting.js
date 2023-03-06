@@ -41,7 +41,7 @@ const Setting = () => {
     return (
         <>
         {
-            sideBar != 0?<NavBarBack setSideBar={setSideBar}/>:<></>
+            sideBar != 0?<NavBarBack/>:<></>
         }
         <section className="setting">
             <div className="flex items-center justify-start w-full">
@@ -49,20 +49,26 @@ const Setting = () => {
             </div>
             <p className="loginText settingTitle">Settings</p>
             <p className="loginDetail" style={{ marginBottom: "30px" }}>Complete the sections below to add your item to the platform.</p>
-            <div className="flex flex-row w-full setting_box_pan">
+            <div className="flex flex-row flex-wrap w-full setting_box_pan">
                 <Link href='/setting/profile'><div className="flex flex-col setting_box">
                     <img src='/logo/person.svg' className="settingItemImg" />
                     <p className="text-white">Profile Info</p>
                 </div></Link>
                 <Link href='/setting/payment'>
-                <div className="flex flex-col setting_box" onClick={()=>{ setSideBar(2)}}>
+                <div className="flex flex-col setting_box" >
                     <img src='/logo/money.svg' className="settingItemImg" />
                     <p className="text-white">Payment</p>
                 </div></Link>
                 <Link href='/setting/location'>
-                <div className="flex flex-col setting_box" onClick={()=>{ setSideBar(3)}}>
+                <div className="flex flex-col setting_box">
                     <FontAwesomeIcon icon={ faLocationDot} className="settingLocationImg"/>
                     <p className="text-white">Add Location</p>
+                </div>
+                </Link>
+                <Link href='/setting/bank'>
+                <div className="flex flex-col setting_box" >
+                    <img src='/logo/bank.svg' className="settingItemImg" />
+                    <p className="text-white">Bank Account</p>
                 </div>
                 </Link>
             </div>

@@ -6,6 +6,7 @@ import Header from '../../components/navbar';
 import Setting from '../../components/setting/setting';
 import Location from '../../components/setting/location';
 import Profile from '../../components/setting/profile';
+import Bank from '../../components/setting/bank';
 import { useAuth } from '../../context/useAuth';
 const Page = () => {
     const [sideBar, setSideBar] = useState(null)
@@ -26,6 +27,9 @@ const Page = () => {
         }
         if (slug == "location") {
             setSideBar(<Location />);
+        }
+        if (slug == "bank") {
+            setSideBar(<Bank/>);
         }
 
     }, [slug])
