@@ -62,6 +62,11 @@
   font-family: poppins-black;
   src: url(Poppins-Black.ttf);
 }
+.bottomborder{
+  height: 180px;
+  border:1px solid #ffffff4a
+
+}
 .rounded-circle{
   border-radius:100px;
  

@@ -132,9 +132,9 @@ const Register = () => {
                 return;
             }
             else {
-                // getCustomerID();
-                setComplete(true)
-                setCompleteLoading(false)
+                getCustomerID();
+                // setComplete(true)
+                // setCompleteLoading(false)
             }
         }
         else {
@@ -171,7 +171,7 @@ const Register = () => {
     useEffect(() => {
         localStorage.setItem("geo", geo);
         if (imgurl != "" && emailvalidation && passwordvalidation && firstnamevalidation && lastnamevalidation && nicknameValidation && phonevalidation && addressvalidation && birthvalidation) {
-            // uploadCustomer();
+            uploadCustomer();
             addDoc(listCollectionRef, { user_email: email, first_name: firstname, profile_img: imgurl, last_name: lastname, nick_name: nickname, user_phone: phone, user_address: address, customer_id: customerID, geo:geo, birth:birth }).then(response => {
                 createUser(auth, email, password);
                 setFile(null);

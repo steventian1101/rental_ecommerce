@@ -1,22 +1,7 @@
-const fs = require("fs");
-const https = require("https");
+const stripe = require('stripe')('sk_test_51IH8sJAZAQKiaOfYxdO4oKTRXeX0Nox65R7opwGOcSgxMDeQ42udiV9gvAGp8bH6MKW0mFUAVTlso0mIzZI17kEe00ifqlV1Mi');
 
-exports.download = () =>  {
-    return new Promise((resolve, reject) => {
-        const url = "https://www.tutorialspoint.com/cg/images/cgbanner.jpg";
-        console.log("here")
-        https.get(url, (res) => {
-           const path = "downloaded-image.jpg";
-           const writeStream = fs.createWriteStream(path);
-           res.pipe(writeStream);
-           writeStream.on("finish", () => {
-              writeStream.close();
-              resolve(path);
-           })
-           writeStream.on("error", (err) => {
-                writeStream.close();
-                reject(err);
-            })
-        })
-    })
+async function balance(){
+   const balance = await stripe.balance.retrieve();
+   console.log(balance)
 }
+balance()

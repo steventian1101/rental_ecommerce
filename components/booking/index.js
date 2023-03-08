@@ -11,7 +11,9 @@ import Loading from "../auth/loading"
 import { useAuth } from "../../context/useAuth"
 import BookingCard from "./bookingCard"
 import InboundedBookingCard from "./inboundedBookingCard"
-import { setLazyProp } from "next/dist/server/api-utils"
+import { getCustomerID } from "../../utils/getId"
+import { createPayment } from "../../utils/getId"
+
 const Booking = () => {
     const [inbounded, setInbounded] = useState(true);
     const [screenNumber, setScreenNumber] = useState(0);
@@ -41,30 +43,43 @@ const Booking = () => {
     useEffect(() => {
         newPayment && newBooking && saveBooking();
     }, [newPayment]);
-    const saveBooking = () => {
-        const listCollectionRef = collection(db, "bookings");
-        const notificationRef = collection(db,"notifications");
-        if (newPayment && newBooking) {
-            setLoading(true)
-            addDoc(listCollectionRef, { item_id: newBooking.item_id, start_date: newBooking.start_date, start_time: newBooking.start_time, customer_email: newBooking.email, phone_number: newBooking.phone_number, result: newBooking.result, driving_license: newBooking.driving_license, full_name: newPayment.full_name, credit: newPayment.credit, cvv: newPayment.cvv, expireDate: newPayment.expireDate, owner_email:userCredential.email, status:1, createdTime:serverTimestamp()}).then(response => {
-                setLoading(false);
-                addDoc(notificationRef, { 
-                    to:newBooking.email,
-                    notificationContent:userDetail[0].nick_name +" has accepted your booking of " + newBooking["item_name"],
-                    show:false,
-                    time:serverTimestamp(),
-                    status:2,
-                    bookingId:response.id,
-                    inbounded:false
-                }).then(response => {
-                }).catch(error => {
-                    console.log(error)
-                });
-                window.location.reload();
-            }).catch(error => {
-            });
-            
+    const saveBooking = async () => {
+        let customerId = await getCustomerID();
+
+        const creditPaymentData = {
+            customer_id: customerId,
+            card_number: newPayment.credit,
+            expiry_month:  newPayment.expireDate.split("/")[0],
+            expiry_year:  newPayment.expireDate.split("/")[1],
+            cvv: newPayment.cvv
         }
+        let result = await createPayment(creditPaymentData, newBooking.result, userCredential.email);
+        console.log(result.data)
+        if(result.data.status == "succeeded"){
+            const listCollectionRef = collection(db, "bookings");
+            const notificationRef = collection(db,"notifications");
+            if (newPayment && newBooking) {
+                setLoading(true)
+                addDoc(listCollectionRef, { item_id: newBooking.item_id, start_date: newBooking.start_date, start_time: newBooking.start_time, customer_email: newBooking.email, phone_number: newBooking.phone_number, result: newBooking.result, driving_license: newBooking.driving_license, full_name: newPayment.full_name, credit: newPayment.credit, cvv: newPayment.cvv, expireDate: newPayment.expireDate, owner_email:userCredential.email, status:1, createdTime:serverTimestamp()}).then(response => {
+                    setLoading(false);
+                    addDoc(notificationRef, { 
+                        to:newBooking.email,
+                        notificationContent:userDetail[0].nick_name +" has accepted your booking of " + newBooking["item_name"],
+                        show:false,
+                        time:serverTimestamp(),
+                        status:2,
+                        bookingId:response.id,
+                        inbounded:false
+                    }).then(response => {
+                    }).catch(error => {
+                        console.log(error)
+                    });
+                    window.location.reload();
+                }).catch(error => {
+                });
+                
+            }
+        }   
     }
     const getallinboundedbooking  = async (email) =>{
         let temp = [];

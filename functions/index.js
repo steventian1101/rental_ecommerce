@@ -1,13 +1,16 @@
 const functions = require("firebase-functions");
 const { getFirestore, Timestamp, FieldValue } = require('firebase-admin/firestore');
+const { getStorage } = require('firebase-admin/storage')
 const date = require('date-and-time');
-const stripe = require('stripe')('sk_test_51IH8sJAZAQKiaOfYxdO4oKTRXeX0Nox65R7opwGOcSgxMDeQ42udiV9gvAGp8bH6MKW0mFUAVTlso0mIzZI17kEe00ifqlV1Mi');
+const initStripe = require('stripe');
 const admin = require("firebase-admin");
 const cors = require("cors")({ origin: true });
 const axios = require("axios");
 const fs = require("fs");
 const formidable = require("formidable");
 const https = require("https");
+const os = require('os');
+const path = require('path');
 const time = [
     "00:00",
     "01:00",
@@ -34,6 +37,10 @@ const time = [
     "22:00",
     "23:00",
 ]
+
+const stripe = initStripe(
+    'sk_test_51IH8sJAZAQKiaOfYxdO4oKTRXeX0Nox65R7opwGOcSgxMDeQ42udiV9gvAGp8bH6MKW0mFUAVTlso0mIzZI17kEe00ifqlV1Mi'
+)
 // Create and deploy your first functions
 // https://firebase.google.com/docs/functions/get-started
 
@@ -44,9 +51,11 @@ const time = [
 var serviceAccount = require("./path/to/serviceAccountKey.json");
 
 admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount)
+    credential: admin.credential.cert(serviceAccount),
+    storageBucket: 'version2-3284e.appspot.com'
 });
 const db = getFirestore();
+const storage = getStorage();
 
 const algoliasearch = require('algoliasearch');
 const APP_ID = functions.config().algolia.app;
@@ -72,21 +81,35 @@ exports.updateIndex = functions.firestore.document('rental_items/{docId}')
 exports.deleteFromIndex = functions.firestore.document('rental_items/{docId}')
 
     .onDelete(snapshot => index.deleteObject(snapshot.id));
+exports.deleteBooking = functions.firestore.document('bookings/{docId}')
+
+    .onDelete(async (snapshot) => {
+        const data = snapshot.data();
+        if (data.status == "0") {
+            const pi_id = data["pi_id"];
+            const refund = await stripe.refunds.create({ payment_intent: pi_id });
+            console.log(refund)
+        }
+    });
 exports.updateCustomerStatus = functions.firestore.document('bookings/{docId}')
     .onUpdate(async (change) => {
-        const tempdata = [];
         const newData = change.after.data();
         if (newData.status == "3") {
+            const tempdata = [];
             const usersRef = db.collection('users');
             const snapshot = await usersRef.where('user_email', '==', newData.owner_email).get();
+            let amount = (Number(newData.result) / 1.35) * 100;
             snapshot.forEach(doc => {
-                tempdata = doc.data();
+                tempdata.push(doc.data());
+            });
+            let acc_id = tempdata[0]["account_id"]
+            await createTransfer(amount, acc_id);
+            await db.collection('news').add({
+                amonut: amount,
+                bank_id: bank_id,
             });
         }
-        await db.collection('news').add({
-            owner_email: newData.owner_email,
-            bookingid: newData.result
-        });
+
     });
 
 exports.createStripeCustomer = functions.https.onRequest(async (req, res) => {
@@ -524,23 +547,6 @@ async function createSource(detail) {
             }
         }
     );
-
-    const frontfile = await stripe.files.create({
-        purpose: 'identity_document',
-        file: {
-            data: fs.readFileSync('./path/to/a/success.png'),
-            name: 'success.png',
-            type: 'application/octet-stream',
-        },
-    });
-    const backfile = await stripe.files.create({
-        purpose: 'identity_document',
-        file: {
-            data: fs.readFileSync('./path/to/a/success.png'),
-            name: 'success.png',
-            type: 'application/octet-stream',
-        },
-    });
     const verifiedaccount = await stripe.accounts.update(
         account.id,
         {
@@ -549,8 +555,8 @@ async function createSource(detail) {
                 {
                     document:
                     {
-                        back: backfile.id,
-                        front: frontfile.id
+                        back: detail.backImage,
+                        front: detail.frontImage
                     }
                 }
             }
@@ -570,10 +576,10 @@ async function fromStripeToCustomer() {
 exports.retriveAccount = functions.https.onRequest(async (req, res) => {
     cors(req, res, () => {
         var acc_id = req.body.data.data;
-        retriveAccountFunction(detail).then((result) => {
+        retriveAccountFunction(acc_id).then((result) => {
             res.status(200).send({ data: result })
         }).catch((error) => {
-            res.status(200).send({ data: error })
+            res.status(500).send({ data: error })
         })
     })
 });
@@ -581,51 +587,60 @@ async function retriveAccountFunction(acc_id) {
     const account = await stripe.accounts.retrieve(
         acc_id
     );
-    res.status(200).send({ data: account })
+    return account;
 
 }
-async function fileDownload(detail) {
-    const url = "https://www.tutorialspoint.com/cg/images/cgbanner.jpg";
-
-    https.get(url, (res) => {
-        const path = "downloaded-image.jpg";
-        const writeStream = fs.createWriteStream(path);
-        res.pipe(writeStream);
-        writeStream.on("finish", () => {
-            writeStream.close();
-            console.log("Download Completed!");
-        })
-    })
-    return "success";
-
-}
-
-const p3 = new Promise((resolve, reject) => {
-    const url = "https://www.tutorialspoint.com/cg/images/cgbanner.jpg";
-    console.log("here")
-    https.get(url, (res) => {
-        const path = "downloaded-image.jpg";
-        const writeStream = fs.createWriteStream(path);
-        res.pipe(writeStream);
-        writeStream.on("finish", () => {
-            writeStream.close();
-            resolve("success")
-        })
-    })
-});
 exports.download = functions.https.onRequest(async (req, res) => {
     cors(req, res, () => {
-        var temp;
-        const url = "https://www.tutorialspoint.com/cg/images/cgbanner.jpg";
-        https.get(url, (result) => {
-           temp = result;
-        //    const path = "downloaded-image.jpg";
-        //    const writeStream = fs.createWriteStream(path);
-        //    res.pipe(writeStream);
-        //    writeStream.on("finish", () => {
-        //       writeStream.close();
-        //    })
+        var path = req.body.data.data
+        const bucket = getStorage().bucket().file(path)
+            .download(async (err, data) => {
+                try {
+                    console.log({ data })
+                    if (!err) {
+                        let result = await createFileToken(data);
+                        res.status(200).send({ data: result });
+                    }
+                    else {
+                        throw err;
+                    }
+                } catch (error) {
+                    res.status(500).send({ data: err })
+                }
+            });
+    })
+});
+async function createFileToken(data) {
+    return await stripe.files.create({
+        purpose: 'identity_document',
+        file: {
+            data: data,
+            name: 'success.png',
+            type: 'application/octet-stream',
+        },
+    });
+}
+exports.refund = functions.https.onRequest(async (req, res) => {
+    cors(req, res, () => {
+        var pi_id = req.body.data.data;
+        refundPayment(pi_id).then((result) => {
+            res.status(200).send({ data: result })
+        }).catch((error) => {
+            res.status(500).send({ data: error })
         })
     })
 });
+async function refundPayment(pi_id) {
+    const refund = await stripe.refunds.create({ payment_intent: pi_id });
+    return refund;
+}
+async function createTransfer(result, bank_id) {
+    const transfer = await stripe.transfers.create({
+        amount: result,
+        currency: 'aud',
+        destination: bank_id,
+    });
+}
+
+
 

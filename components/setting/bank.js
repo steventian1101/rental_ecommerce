@@ -19,6 +19,7 @@ import { getState } from "../../utils/getCorrectAddress"
 import { faPlus } from "@fortawesome/free-solid-svg-icons"
 import { storage } from "../../lib/initFirebase";
 import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
+import Loading from "../auth/loading"
 const Bank = () => {
     const { userCredential } = useAuth();
     const [accountname, setAccountname] = useState(null);
@@ -40,6 +41,10 @@ const Bank = () => {
     const [backFile, setBackFile] = useState(null);
     const [frontFileUrl, setFrontFileUrl] = useState(null);
     const [backFileUrl, setBackFileUrl] = useState(null);
+    const [frontToken, setFrontToken] = useState(null);
+    const [backToken, setBackToken] = useState(null);
+    const [frontDownloadUrl, setFrontDownloadUrl] = useState(null)
+    const [backDownloadUrl, setBackDownloadUrl] = useState(null);
     const accountnameValidation = (any) => {
         let str = /(^[A-Za-z]{3,16})([ ]{0,1})([A-Za-z]{3,16})?([ ]{0,1})?([A-Za-z]{3,16})?([ ]{0,1})?([A-Za-z]{3,16})/;
         if (str.test(any) || any == "") {
@@ -71,19 +76,23 @@ const Bank = () => {
         }
     }
     const handleComplete = () => {
-        // setLoading(true)
+        setLoading(true)
         if (email && accountnamevalidation && bsbvalidation && accountnumbervalidation && accountname != "" && bsb != "" && accountnumber != "" && frontFile && backFile) {
-         
-            const storageFrontRef = ref(storage, `dreiverLicense/${Math.floor(Math.random() * 100000000000000) + ".jpg"}`);
+            let frontpath = 'driverLicense/' + Math.floor(Math.random() * 100000000000000) + ".jpg";
+            const storageFrontRef = ref(storage, frontpath);
             uploadBytes(storageFrontRef, frontFile).then((snapshot) => {
                 getDownloadURL(storageFrontRef).then((downloadUrl) => {
-                    setFrontFileUrl(downloadUrl);
+                    setFrontFileUrl(frontpath);
+                    setFrontDownloadUrl(downloadUrl);
                 });
-            })
-            const storageBackRef = ref(storage, `dreiverLicense/${Math.floor(Math.random() * 100000000000000) + ".jpg"}`);
+            });
+
+            let backpath = 'driverLicense/' + Math.floor(Math.random() * 100000000000000) + ".jpg";
+            const storageBackRef = ref(storage, backpath);
             uploadBytes(storageBackRef, backFile).then((snapshot) => {
                 getDownloadURL(storageBackRef).then((downloadUrl) => {
-                    setBackFileUrl(downloadUrl);
+                    setBackFileUrl(backpath);
+                    setBackDownloadUrl(downloadUrl);
                 });
             })
         }
@@ -94,6 +103,7 @@ const Bank = () => {
         }
     }
     const getDetail = async (email) => {
+        setLoading(true);
         let temp = [];
         const listCollectionRef = collection(db, 'users');
         let q = query(listCollectionRef, where("user_email", "==", email));
@@ -101,6 +111,13 @@ const Bank = () => {
         querySnapshot.forEach((doc) => {
             temp.push(doc.data());
         });
+        if (temp[0]["account_id"]) {
+            const functions = getFunctions();
+            const download = httpsCallable(functions, 'retriveAccount');
+            const retriveAccount = await download({ data: temp[0]["account_id"] });
+            console.log(retriveAccount)
+
+        }
         if (temp[0]["stripePolicy"] === true) {
             let tempGeo = []
             tempGeo.push(<ToggleSlider onToggle={state => setStripePolicy(state)} handleBackgroundColor="#ffffff" handleBackgroundColorActive="#005ce7" barBackgroundColor="#0e0e0e" barBackgroundColorActive="#0e0e0e" barStyles={{ border: "solid 1px #ffffff4d" }} active={true} key={"1"} />)
@@ -119,7 +136,14 @@ const Bank = () => {
             setStripePolicyAgree(tempGeo);
             setStripePolicy(true);
         }
+        if (temp[0]["stripe_customer_data"] && temp[0]["stripe_customer_data"]["backDownloadUrl"]) {
+            setPreviewBackImage(temp[0]["stripe_customer_data"]["backDownloadUrl"]);
+        }
+        if (temp[0]["stripe_customer_data"] && temp[0]["stripe_customer_data"]["frontDownloadUrl"]) {
+            setPreviewFrontImage(temp[0]["stripe_customer_data"]["frontDownloadUrl"]);
+        }
         setTempdata(temp);
+        setLoading(false)
     }
     const getDetailAndUpdate = async (email) => {
         let docID;
@@ -167,95 +191,109 @@ const Bank = () => {
             accountname: accountname,
             bsb: bsb,
             accountnumber: accountnumber,
-            frontImage:frontFileUrl,
-            backImage:backFileUrl,
+            frontImage: frontToken,
+            backImage: backToken,
+            frontDownloadUrl: frontDownloadUrl,
+            backDownloadUrl: backDownloadUrl
         }
-        console.log(dataForValid)
-        const functions = getFunctions();
-        const uploadStripeCustomer = httpsCallable(functions, 'download');
-        await uploadStripeCustomer({ data: dataForValid }).then((result) => {
-                 console.log(result)
-        });
-        return;
+        console.log(dataForValid);
         createSource(dataForValid);
     }
     useEffect(() => {
         userCredential.email && setEmail(userCredential.email);
         userCredential.email && getDetail(userCredential.email);
     }, [userCredential]);
-    const handleFrontFile = async (e) =>{
+    const handleFrontFile = async (e) => {
         var src = URL.createObjectURL(e.target.files[0]);
         setPreviewFrontImage(src)
         setFrontFile(e.target.files[0]);
     }
-    const handleBackFile = async (e) =>{
+    const handleBackFile = async (e) => {
         var src = URL.createObjectURL(e.target.files[0]);
         setPreviewBackImage(src)
         setBackFile(e.target.files[0]);
     }
-    useEffect(()=>{
-        email && getDetailAndUpdate(email);
-    },[frontFileUrl && backFileUrl])
-
+    const getFrontFileToken = async (url) => {
+        const functions = getFunctions();
+        const download = httpsCallable(functions, 'download');
+        const result = await download({ data: url });
+        setFrontToken(result.data.id);
+    }
+    useEffect(() => {
+        frontFileUrl && getFrontFileToken(frontFileUrl);
+    }, [frontFileUrl])
+    const getBackFileToken = async (url) => {
+        const functions = getFunctions();
+        const download = httpsCallable(functions, 'download');
+        const result = await download({ data: url });
+        setBackToken(result.data.id);
+    }
+    useEffect(() => {
+        frontFileUrl && backFileUrl && getBackFileToken(frontFileUrl);
+    }, [backFileUrl]);
+    useEffect(() => {
+        backToken && frontToken && getDetailAndUpdate(userCredential.email)
+    }, [backToken && frontToken])
     return (
-        <section className="overflow-auto addProfileInfo">
-            <Link href='/setting'>
-                <div style={{ height: "50px", marginBottom: "10px" }} className="flex flex-row items-center cursor-pointer"><FontAwesomeIcon icon={faArrowLeftLong} className="text-2xl text-white" /></div>
-            </Link>
-            <p className="loginText">BANK ACCOUNT</p>
-            <p className="loginDetail">Add bank account details</p>
-            <form autoComplete="off">
-                <AuthInput title={"Account Name"} status={accountnamevalidation} placeholder={"E.g.John Doe"} change={accountnameValidation} type={"text"} value={tempData && tempData.length > 0 ? tempData[0].bank_account_name : ''} />
-                <AuthInput title={"BSB"} status={bsbvalidation} placeholder={"Requeires 6 digits"} change={bsbValidation} type={"text"} value={tempData && tempData.length > 0 && tempData[0].credit_card_number ? tempData[0].bank_bsb_number : ''} />
-                <AuthInput title={"Account Number"} status={accountnumbervalidation} placeholder={"Requeires 8 digits"} change={accountnumberValidation} type={"text"} value={tempData && tempData.length > 0 && tempData[0].expire_date ? tempData[0].bank_account_number : ''} name={"date"} />
-            </form>
-            <div>
-                <p className="text-white font-15 mb-2.5">
-                    Driver's License - Front
-                </p>
-                <div className="relative flex flex-col items-center justify-center w-full" style={{ height: "180px", border: "1px solid #ffffff4a", borderRadius: "8px" }}>
-                    <div className="relative flex flex-col items-center justify-center">
-                        <FontAwesomeIcon icon={faPlus} style={{ fontSize: "30px", color: "white" }} />
-                        <p className="text-white">Add Photos here</p>
+        <>{
+            loading ? <Loading /> : <></>
+        }
+            <section className="overflow-auto addProfileInfo">
+                <Link href='/setting'>
+                    <div style={{ height: "50px", marginBottom: "10px" }} className="flex flex-row items-center cursor-pointer"><FontAwesomeIcon icon={faArrowLeftLong} className="text-2xl text-white" /></div>
+                </Link>
+                <p className="loginText">BANK ACCOUNT</p>
+                <p className="loginDetail">Add bank account details</p>
+                <form autoComplete="off">
+                    <AuthInput title={"Account Name"} status={accountnamevalidation} placeholder={"E.g.John Doe"} change={accountnameValidation} type={"text"} value={tempData && tempData.length > 0 && tempData[0]["stripe_customer_data"] && tempData[0]["stripe_customer_data"]["accountname"] ? tempData[0]["stripe_customer_data"]["accountname"] : ''} />
+                    <AuthInput title={"BSB"} status={bsbvalidation} placeholder={"Requeires 6 digits"} change={bsbValidation} type={"text"} value={tempData && tempData.length > 0 && tempData[0]["stripe_customer_data"] && tempData[0]["stripe_customer_data"]["bsb"] ? tempData[0]["stripe_customer_data"]["bsb"] : ''} />
+                    <AuthInput title={"Account Number"} status={accountnumbervalidation} placeholder={"Requeires 8 digits"} change={accountnumberValidation} type={"text"} value={tempData && tempData.length > 0 && tempData[0]["stripe_customer_data"] && tempData[0]["stripe_customer_data"]["accountnumber"] ? tempData[0]["stripe_customer_data"]["accountnumber"] : ''} name={"date"} />
+                </form>
+                <div>
+                    <p className="text-white font-15 mb-2.5">
+                        Driver's License - Front
+                    </p>
+                    <div className="relative flex flex-col items-center justify-center w-full" style={{ height: "180px", border: "1px solid #ffffff4a", borderRadius: "8px" }}>
+                        <div className="relative flex flex-col items-center justify-center">
+                            <FontAwesomeIcon icon={faPlus} style={{ fontSize: "30px", color: "white" }} />
+                            <p className="text-white">Add Photos here</p>
+                        </div>
+                        <input type="file" className="absolute flex w-full h-full opacity-0" onChange={(e) => { handleFrontFile(e) }}></input>
                     </div>
-                    <input type="file" className="absolute flex w-full h-full opacity-0" onChange={(e)=>{handleFrontFile(e)}}></input>
                 </div>
-            </div>
-            {
-                previewFrontImage ? <div className="relative">
-                    <img src={previewFrontImage} style={{ width: "100%", height: "180px", borderRadius: "8px", marginTop: "30px", objectFit: "cover" }} />
-                </div> : <></>
-            }
-            <div className="mt-8">
-                <p className="text-white font-15 mb-2.5">
-                    Driver's License - Back
-                </p>
-                <div className="relative flex flex-col items-center justify-center w-full" style={{ height: "180px", border: "1px solid #ffffff4a", borderRadius: "8px" }}>
-                    <div className="relative flex flex-col items-center justify-center">
-                        <FontAwesomeIcon icon={faPlus} style={{ fontSize: "30px", color: "white" }} />
-                        <p className="text-white">Add Photos here</p>
+                {
+                    previewFrontImage ? <div className="relative">
+                        <img src={previewFrontImage} style={{ width: "100%", height: "180px", borderRadius: "8px", marginTop: "30px", objectFit: "cover" }} />
+                    </div> : <></>
+                }
+                <div className="mt-8">
+                    <p className="text-white font-15 mb-2.5">
+                        Driver's License - Back
+                    </p>
+                    <div className="relative flex flex-col items-center justify-center w-full" style={{ height: "180px", border: "1px solid #ffffff4a", borderRadius: "8px" }}>
+                        <div className="relative flex flex-col items-center justify-center">
+                            <FontAwesomeIcon icon={faPlus} style={{ fontSize: "30px", color: "white" }} />
+                            <p className="text-white">Add Photos here</p>
+                        </div>
+                        <input type="file" className="absolute flex w-full h-full opacity-0" onChange={(e) => { handleBackFile(e) }}></input>
                     </div>
-                    <input type="file" className="absolute flex w-full h-full opacity-0" onChange={(e)=>{handleBackFile(e)}}></input>
                 </div>
-            </div>
-            {
-                previewBackImage ? <div className="relative">
-                    <img src={previewBackImage} style={{ width: "100%", height: "180px", borderRadius: "8px", marginTop: "30px", objectFit: "cover" }} />
-                </div> : <></>
-            }
-            <div style={{ marginTop: "30px" }} className="flex flex-row items-center justify-between">
-                <p className="text-white font-15">Do you accept Stripe's Term of Service?</p>
                 {
-                    stripePolicyAgree
+                    previewBackImage ? <div className="relative">
+                        <img src={previewBackImage} style={{ width: "100%", height: "180px", borderRadius: "8px", marginTop: "30px", objectFit: "cover" }} />
+                    </div> : <></>
                 }
-            </div>
-            <div className="loginButton">
-
-                {
-                    loading ? <button className="flex items-center justify-center cursor-wait">Update</button> : <button className="flex items-center justify-center" onClick={() => handleComplete()}>Update</button>
-                }
-            </div>
-        </section>
+                <div style={{ marginTop: "30px" }} className="flex flex-row items-center justify-between">
+                    <p className="text-white font-15">Do you accept Stripe's Term of Service?</p>
+                    {
+                        stripePolicyAgree
+                    }
+                </div>
+                <div className="loginButton">
+                    <button className="flex items-center justify-center" onClick={() => handleComplete()}>Update</button>
+                </div>
+            </section>
+        </>
     )
 
 }

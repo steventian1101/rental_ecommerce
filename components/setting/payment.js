@@ -106,7 +106,7 @@ const Payment = () => {
             expiry_year: expireDate.split("/")[1],
             cvv: cvv
         }
-        // createPayment(creditPaymentData);
+        createPayment(creditPaymentData);
         const newdata = {
             full_name: fullname,
             credit_card_number: credit,

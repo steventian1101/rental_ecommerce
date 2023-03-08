@@ -184,7 +184,7 @@ const InputProfileInfo = ({ setSideBar }) => {
            <Link href = '/setting'><div style={{ height: "50px", marginBottom: "10px" }} className="flex flex-row items-center cursor-pointer"><FontAwesomeIcon icon={faArrowLeftLong} className="text-2xl text-white"/></div></Link>
             <p className="loginText">Add Your Profile Info.</p>
             <p className="loginDetail">Explore Sydney's largest rental platform</p>
-            <div className="flex flex-col items-center justify-center w-full" style={{ height: "180px", border: "1px solid #ffffff4a", borderRadius: "8px" }}>
+            <div className="flex flex-col items-center justify-center w-full rounded-lg bottomborder" >
                 <div className="relative flex flex-col items-center justify-center">
                     <FontAwesomeIcon icon={faPlus} style={{ fontSize: "30px", color: "white" }} />
                     <p className="text-white">Add Profile Photo</p>
@@ -196,7 +196,7 @@ const InputProfileInfo = ({ setSideBar }) => {
                     <img src={previewImage} style={{ width: "100%", height: "180px", borderRadius: "8px", marginTop: "30px", objectFit: "cover" }} />
                 </div> : <></>
             }
-            <div style={{ marginTop: "30px", marginBottom: "30px", width: "100%", height: "1px", background: "#ffffff4a" }}></div>
+            <div style={{ marginTop: "30px", marginBottom: "30px", height: "1px", background: "#ffffff4a" }} className="w-full bottomborder"></div>
             <AuthInput title={"First Name"} status={firstnamevalidation} placeholder={"E.g.John"} change={firstnameValidation} type={"text"} value={tempData && tempData.length > 0?tempData[0].first_name:''}/>
             <AuthInput title={"Last Name"} status={lastnamevalidation} placeholder={"E.g.Doe"} change={lastnameValidation} type={"text"} value={tempData && tempData.length > 0?tempData[0].last_name:''}/>
             <AuthInput title={"SDrop Nickname"} status={nicknamevalidation} placeholder={"E.g.John Doe Rentals"} change={nicknameValidation} type={"text"} value={tempData && tempData.length > 0?tempData[0].nick_name:''}/>

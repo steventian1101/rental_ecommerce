@@ -15,6 +15,7 @@ import { db } from "../../lib/initFirebase";
 import { query, getDoc, doc, collection, getDocs, where, updateDoc, addDoc, serverTimestamp, deleteDoc } from "firebase/firestore";
 import { useRouter } from "next/router";
 import Loading from "../auth/loading";
+import { refund } from "../../utils/paymentIntent";
 const month = {
     "0": "January",
     "1": "February",
@@ -195,6 +196,7 @@ const Pending = ({ bookingId, inbounded }) => {
             status: 0,
 
         });
+        await refund(booking.pi_id);
         await deleteDoc(doc(db, "bookings", booking.booking_id));
         router.push("/booking")
 

@@ -114,12 +114,12 @@ const Detail = ({ id }) => {
         setOwner(tempdata.rental_owner);
         getDuration(tempdata.item_location)
     }
-    const getDuration = (location) =>{
-            let key = JSON.stringify(location);
-            let address = localStorage.getItem(key);
-            if(address){
-                setDuration(address)
-            }
+    const getDuration = (location) => {
+        let key = JSON.stringify(location);
+        let address = localStorage.getItem(key);
+        if (address) {
+            setDuration(address)
+        }
     }
     const ownerDetail = async (owner) => {
         const temp = [];
@@ -158,33 +158,34 @@ const Detail = ({ id }) => {
     const handleReserve = async () => {
 
         if (result != 0) {
-            // let confirmstatus = await createPi(userDetail[0]["pm_id"], result, userDetail[0]["customer_id"]);
-            // console.log(confirmstatus);
-            // if(confirmstatus.data.status == "succeeded"){
-                
-            // }
-            // else{
-            //     console.log("There is no money in your payment")
-            // }
-            const notificationRef = collection(db, "notifications");
-            const listCollectionRef = collection(db, "bookings");
-            addDoc(listCollectionRef, { item_id: id, start_date: month[Number(startdate.getMonth())] + "," + startdate.getDate() + "," + startdate.getFullYear(), start_time: startTime, customer_email: userCredential.email, phone_number: userDetail[0].user_phone, result: result, driving_license: "", full_name: userDetail[0].full_name, credit: userDetail[0].credit_card_number, cvv: userDetail[0].cvv, expireDate: userDetail[0].expire_date, owner_email: content.rental_owner, status: 0, createdTime: serverTimestamp() }).then(response => {
-                
-                addDoc(notificationRef, {
-                    to: ownerData[0].user_email,
-                    notificationContent: userDetail[0].first_name + " " + userDetail[0].last_name + " has requested to rent your " + content["item_name"],
-                    show: false,
-                    time: serverTimestamp(),
-                    status: 0,
-                    bookingId:response.id,
-                    inbounded:true
-                }).then(response => {
+            let confirmstatus = await createPi(userDetail[0]["pm_id"], result, userDetail[0]["customer_id"]);
+            console.log(confirmstatus);
+            if (confirmstatus.data.status == "succeeded") {
+                console.log("here")
+                const notificationRef = collection(db, "notifications");
+                const listCollectionRef = collection(db, "bookings");
+                addDoc(listCollectionRef, { item_id: id, start_date: month[Number(startdate.getMonth())] + "," + startdate.getDate() + "," + startdate.getFullYear(), start_time: startTime, customer_email: userCredential.email, phone_number: userDetail[0].user_phone, result: result, driving_license: "", full_name: userDetail[0].full_name, credit: userDetail[0].credit_card_number, cvv: userDetail[0].cvv, expireDate: userDetail[0].expire_date, owner_email: content.rental_owner, status: 0, createdTime: serverTimestamp(), pi_id: confirmstatus.data.id }).then(response => {
+                    addDoc(notificationRef, {
+                        to: ownerData[0].user_email,
+                        notificationContent: userDetail[0].first_name + " " + userDetail[0].last_name + " has requested to rent your " + content["item_name"],
+                        show: false,
+                        time: serverTimestamp(),
+                        status: 0,
+                        bookingId: response.id,
+                        inbounded: true
+                    }).then(response => {
+                    }).catch(error => {
+                        console.log(error)
+                    });
+                    setReserve(false);
                 }).catch(error => {
-                    console.log(error)
                 });
-                setReserve(false);
-            }).catch(error => {
-            });
+
+            }
+            else {
+                console.log("There is no money in your payment")
+            }
+           
         }
     }
     const handlefinish = () => {
@@ -194,9 +195,9 @@ const Detail = ({ id }) => {
             })
         setReserve(true)
     }
-    useEffect(()=>{
-         setUserDetail(null)
-    },[])
+    useEffect(() => {
+        setUserDetail(null)
+    }, [])
     useEffect(() => {
         detailRef.current.scrollTo({ top: 0, behavior: 'smooth' });
         setUserDetail(null);
@@ -211,7 +212,7 @@ const Detail = ({ id }) => {
         userCredential.email && getUserDetail(userCredential.email);
         id && getRatingAndReviewNumbers(id).then((result) => {
             setReviewNumbers(result)
-        }); 
+        });
     }, [id, userCredential.email])
     useEffect(() => {
         content && setViewnumber(Number(content["item_views"]) + 1);
@@ -241,10 +242,10 @@ const Detail = ({ id }) => {
     }, [startdate, durationIndex])
     useEffect(() => {
         setStartDate(value);
-        if(new Date().getDate() == new Date(value).getDate() && new Date().getMonth() == new Date(value).getMonth() && new Date().getFullYear() == new Date(value).getFullYear()){
-            setStartTime(new Date().getHours()+1);
-            setFirstTime(new Date().getHours()+1);
-        }else{
+        if (new Date().getDate() == new Date(value).getDate() && new Date().getMonth() == new Date(value).getMonth() && new Date().getFullYear() == new Date(value).getFullYear()) {
+            setStartTime(new Date().getHours() + 1);
+            setFirstTime(new Date().getHours() + 1);
+        } else {
             setStartTime(0);
             setFirstTime(0);
         }
@@ -259,31 +260,31 @@ const Detail = ({ id }) => {
                 setDisabledates(data)
             })
     }, [content]);
-    useEffect(()=>{
-             disabledDates && getStart(disabledDates);      
-    },[disabledDates]);
-    const getStart = (disabledDates) =>{ 
+    useEffect(() => {
+        disabledDates && getStart(disabledDates);
+    }, [disabledDates]);
+    const getStart = (disabledDates) => {
         const datesToday = disabledDates.map((disabledate) => {
-            return disabledate.getFullYear() == new Date().getFullYear() && disabledate.getMonth() == new Date().getMonth() && disabledate.getDate() == new Date().getDate() ;
+            return disabledate.getFullYear() == new Date().getFullYear() && disabledate.getMonth() == new Date().getMonth() && disabledate.getDate() == new Date().getDate();
         });
         const sum = datesToday.reduce((accumulator, currentValue) => {
             return accumulator + currentValue;
-          }, 0);
-        if(!sum){
+        }, 0);
+        if (!sum) {
             setStartDate(new Date());
-            setStartTime(new Date().getHours()+1);
-            setFirstTime(new Date().getHours()+1);
+            setStartTime(new Date().getHours() + 1);
+            setFirstTime(new Date().getHours() + 1);
         }
-        if(sum){
+        if (sum) {
             for (let i = 1; i < 300; i++) { // up to 30 days from today
-                const candidateDate = date.addDays(new Date(),i);
+                const candidateDate = date.addDays(new Date(), i);
                 if (!disabledDates.some(disabledDate => disabledDate.getFullYear() === candidateDate.getFullYear() && disabledDate.getMonth() === candidateDate.getMonth() && disabledDate.getDate() === candidateDate.getDate())) {
-                  setStartDate(candidateDate)
-                  setStartTime(0);
-                  setFirstTime(0);
-                  break;
+                    setStartDate(candidateDate)
+                    setStartTime(0);
+                    setFirstTime(0);
+                    break;
                 }
-        }   
+            }
         }
     }
     const handleDisableDates = ({ date, view }) => {
@@ -292,10 +293,10 @@ const Detail = ({ id }) => {
                 (date.getFullYear() === disabledDate.getFullYear() &&
                     date.getMonth() === disabledDate.getMonth() &&
                     date.getDate() === disabledDate.getDate()) || date < addSubtractDate.subtract(new Date(), 1, "day")
-                    )
-                }
-        if(view === 'month' && disabledDates.length == 0){
-            return  date < addSubtractDate.subtract(new Date(), 1, "day")
+            )
+        }
+        if (view === 'month' && disabledDates.length == 0) {
+            return date < addSubtractDate.subtract(new Date(), 1, "day")
         }
     }
     useEffect(() => {
@@ -320,7 +321,7 @@ const Detail = ({ id }) => {
         setUpdateMobileSidebar(true)
     }
     const getenddate = (type, duration) => {
-        if(!startdate){
+        if (!startdate) {
             return;
         }
         const start_time = new Date(startdate.getDate() + " " + month[`${startdate.getMonth()}`] + ", " + startdate.getFullYear() + " " + time[startTime]);
@@ -363,26 +364,27 @@ const Detail = ({ id }) => {
         localStorage.setItem("beforeAddPayment", url);
         router.push("/setting/payment");
     }
-    useEffect(()=>{
+    useEffect(() => {
         console.log(disabledDates)
-    },[disabledDates])
+    }, [disabledDates])
     return (
         <section className="fixed top-0 right-0 z-50 bg-white detail" ref={detailRef}>
             <div className="relative">
                 <div style={{ height: "50px", marginBottom: "10px" }} className="flex flex-row items-center cursor-pointer"><FontAwesomeIcon icon={faArrowLeftLong} className="text-2xl text-white" onClick={() => { handleback() }} /></div>
                 {
-                    content ? <DetailCarousel imgArray={content["item_photos"]} id={id} />:<div className="w-full rounded-lg h-72 carousel sidebar-loading"></div>
+                    content ? <DetailCarousel imgArray={content["item_photos"]} id={id} /> : <div className="w-full rounded-lg h-72 carousel sidebar-loading"></div>
                 }
                 <div className="flex flex-row flex-wrap justify-between pb-12" style={{ borderBottom: "solid 1px #ffffff1a" }}>
                     <div className="flex flex-col flex-wrap detailpart">
                         {
-                            content ? <p className="text-white detailTitle">{content["item_name"]}</p>:<div className="h-8 w-72 sidebar-loading detailTitle" style={{ marginBottom:"15px"}}></div>
+                            content ? <p className="text-white detailTitle">{content["item_name"]}</p> : <div className="h-8 w-72 sidebar-loading detailTitle" style={{ marginBottom: "15px" }}></div>
                         }
                         <div className="flex flex-row flex-wrap">
                             <p className="text-white font-15 mb-2.5 flex flex-row justify-center items-center" style={{ borderRight: "solid 1px #ffffff4d", padding: "0px 10px 0px 0px", marginRight: "10px" }}><FontAwesomeIcon icon={faStar} className="mr-2.5 text-sm text-white" />{reviewNumbers && reviewNumbers.reviewNumber != "0" ? reviewNumbers["rating"] + ' - ' + reviewNumbers["reviewNumber"] + " Reviews" : "0.0 - 0 Reviews"}</p>
-                            <p className="text-white font-15 mb-2.5" style={{ borderRight: "solid 1px #ffffff4d", padding: "0px 10px 0px 0px", marginRight: "10px" }}>{duration ? duration: "Not working"}</p>
+                            <p className="text-white font-15 mb-2.5" style={{ borderRight: "solid 1px #ffffff4d", padding: "0px 10px 0px 0px", marginRight: "10px" }}>{duration ? duration : "Not working"}</p>
                             {
-                                content ? <p className="text-white font-15 mb-2.5 flex flex-row justify-center items-center" style={{ borderRight: "solid 0px #ffffff4d", padding: "0px 10px 0px 0px", marginRight: "10px" }}><FontAwesomeIcon icon={faEye} className="mr-2.5 text-sm text-white" />{(Number(content["item_views"]) + 1) + " views "}</p>:<div style={{borderRight: "solid 0px #ffffff4d", padding: "0px 10px 0px 0px", marginRight: "10px"
+                                content ? <p className="text-white font-15 mb-2.5 flex flex-row justify-center items-center" style={{ borderRight: "solid 0px #ffffff4d", padding: "0px 10px 0px 0px", marginRight: "10px" }}><FontAwesomeIcon icon={faEye} className="mr-2.5 text-sm text-white" />{(Number(content["item_views"]) + 1) + " views "}</p> : <div style={{
+                                    borderRight: "solid 0px #ffffff4d", padding: "0px 10px 0px 0px", marginRight: "10px"
                                 }} className="w-24 h-5 sidebar-loading"></div>
                             }
                             {/* <p className="text-white font-15 mb-2.5 flex flex-row justify-center items-center" style={{ borderRight: "solid 0px #ffffff4d", padding: "0px 10px 0px 0px", marginRight: "10px" }}><FontAwesomeIcon icon={faEye} className="mr-2.5 text-sm text-white" />{(Number(content["item_views"]) + 1) + " views "}</p> */}
@@ -392,9 +394,9 @@ const Detail = ({ id }) => {
                             <p className="w-full text-white font-15 bold" style={{ marginBottom: "15px" }}>Description</p>
                             {content ? content["item_desc"].split("<br>").map((i, index) => {
                                 return i.trim() == "" ? <br /> : <p className="text-white font-15" key={index}>{i}</p>
-                            }): [...Array(6)].map((_, index) => (
-                                <div className = "w-full h-5 mb-2 sidebar-loading" key={index} ></div>
-                              ))}
+                            }) : [...Array(6)].map((_, index) => (
+                                <div className="w-full h-5 mb-2 sidebar-loading" key={index} ></div>
+                            ))}
                         </div>
                         <div className="line"></div>
                         {
@@ -415,7 +417,7 @@ const Detail = ({ id }) => {
                         <div className="flex flex-col mb-2.5">
                             <p className="w-full text-white font-15 bold" style={{ marginBottom: "15px" }}>Item Location</p>
                             {
-                                content ? <p className="flex flex-row items-center justify-start text-white font-15"><FontAwesomeIcon icon={faLocationDot} className="mr-2.5 text-sm text-white" /> {content["item_location"]}</p>:<div className="w-full h-5 sidebar-loading"></div>
+                                content ? <p className="flex flex-row items-center justify-start text-white font-15"><FontAwesomeIcon icon={faLocationDot} className="mr-2.5 text-sm text-white" /> {content["item_location"]}</p> : <div className="w-full h-5 sidebar-loading"></div>
                             }
                         </div>
                     </div>
@@ -432,7 +434,7 @@ const Detail = ({ id }) => {
                                             <div className="relative flex flex-row items-center justify-between py-2" style={{ borderBottom: "solid 1px #ffffff1a" }} onClick={() => { setCalendarDisplay(true) }}>
                                                 {/* <p className="text-white font-15">{startdate && startdate.getDate() + " " + month[`${startdate.getMonth()}`] + ", " + startdate.getFullYear()}</p> */}
                                                 {
-                                                    startdate ? <p className="text-white font-15">{startdate.getDate() + " " + month[`${startdate.getMonth()}`] + ", " + startdate.getFullYear()}</p>:<div className="w-48 h-6 sidebar-loading"></div>
+                                                    startdate ? <p className="text-white font-15">{startdate.getDate() + " " + month[`${startdate.getMonth()}`] + ", " + startdate.getFullYear()}</p> : <div className="w-48 h-6 sidebar-loading"></div>
                                                 }
                                                 <FontAwesomeIcon icon={faCalendar} className="text-lg text-white" />
                                             </div>
@@ -446,7 +448,7 @@ const Detail = ({ id }) => {
                                             <p className="font-15 ">Start Time</p>
                                             <div className="relative flex flex-row items-center justify-between py-2" style={{ borderBottom: "solid 1px #ffffff1a" }} onClick={() => { setDisplayTimetable(true) }}>
                                                 {
-                                                    startdate ?  <p className="text-white font-15">{time[startTime]}</p>:<div className="w-48 h-6 sidebar-loading"></div>
+                                                    startdate ? <p className="text-white font-15">{time[startTime]}</p> : <div className="w-48 h-6 sidebar-loading"></div>
                                                 }
                                                 <FontAwesomeIcon icon={faClock} className="text-lg text-white" />
                                             </div>
@@ -454,7 +456,7 @@ const Detail = ({ id }) => {
                                                 displayTimetable && <div className="flex flex-col bg-white" style={{ background: "#ffffff1a" }}>
                                                     {
                                                         time.map((time, index) => (
-                                                          index+1 > firstTime && <p className="w-full px-2 py-1 text-white time" onClick={() => { handleTime(index) }} key={index}>{time}</p>
+                                                            index + 1 > firstTime && <p className="w-full px-2 py-1 text-white time" onClick={() => { handleTime(index) }} key={index}>{time}</p>
                                                         ))
                                                     }
 
@@ -529,13 +531,13 @@ const Detail = ({ id }) => {
                     <div className="flex flex-row items-center" style={{ marginBottom: "30px" }}>
                         <div className="flex">
                             {
-                                ownerData && ownerData.length > 0 ?<img src={ownerData && ownerData[0]["profile_img"]} style={{ height: "50px", width: "50px", marginRight: "15px", borderRadius: "100px" }} className="object-cover " />:<div style={{ height: "50px", width: "50px", marginRight: "15px", borderRadius: "100px" }} className="sidebar-loading"></div>
+                                ownerData && ownerData.length > 0 ? <img src={ownerData && ownerData[0]["profile_img"]} style={{ height: "50px", width: "50px", marginRight: "15px", borderRadius: "100px" }} className="object-cover " /> : <div style={{ height: "50px", width: "50px", marginRight: "15px", borderRadius: "100px" }} className="sidebar-loading"></div>
                             }
                             {/* <img src={ownerData && ownerData[0]["profile_img"]} style={{ height: "50px", width: "50px", marginRight: "15px", borderRadius: "100px" }} className="object-cover " /> */}
                         </div>
                         <div className="flex flex-col">
                             {
-                                ownerData && ownerData.length > 0 ? <Link href={`/rentalOwner?id=${ownerData && ownerData.length > 0 && ownerData[0]["nick_name"]}`}><p className="text-white underline font-18 bold">{ownerData && ownerData[0].nick_name}</p></Link>:<div className="w-56 h-6 mb-2 sidebar-loading"></div>
+                                ownerData && ownerData.length > 0 ? <Link href={`/rentalOwner?id=${ownerData && ownerData.length > 0 && ownerData[0]["nick_name"]}`}><p className="text-white underline font-18 bold">{ownerData && ownerData[0].nick_name}</p></Link> : <div className="w-56 h-6 mb-2 sidebar-loading"></div>
                             }
                             <p className="text-white">4.97 Google Ratings (52)</p>
                         </div>
@@ -552,9 +554,9 @@ const Detail = ({ id }) => {
                     <div className="flex flex-col">
                         <div className="flex flex-row items-center" onClick={() => { handleUpdateSidebar() }}>
                             {
-                                startdate && enddate ?  <p className="flex flex-row items-center text-white underline bg-black cursor-pointer font-14">{startdate && startdate.getDate() + " " + month[startdate.getMonth()] + "-" + enddate.getDate() + " " + month[enddate.getMonth()]}</p>:<div className="h-5 detail-loading w-36"></div>
+                                startdate && enddate ? <p className="flex flex-row items-center text-white underline bg-black cursor-pointer font-14">{startdate && startdate.getDate() + " " + month[startdate.getMonth()] + "-" + enddate.getDate() + " " + month[enddate.getMonth()]}</p> : <div className="h-5 detail-loading w-36"></div>
                             }
-                           
+
                             <FontAwesomeIcon icon={faPencil} className="text-base text-white" style={{ marginLeft: "7px" }} />
                         </div>
                         <p className="font-15 bold">${result && Number(result).toFixed(2)} Total</p>
@@ -567,7 +569,7 @@ const Detail = ({ id }) => {
                     }
                 </div>
                 {
-                    updateMobileSideBar && <MobileReserve content={content} ownerData={ownerData} date={startdate} startTime={startTime} durationIndex={durationIndex} setUpdateMobileSidebar={setUpdateMobileSidebar} value={value} setValue={setValue} disabledDates={disabledDates} setDate={setStartDate} setDurationIndex={setDurationIndex} setStartTime={setStartTime} tempDuration={tempDuration} setTempDuration={setTempDuration} firstTime={ firstTime}/>
+                    updateMobileSideBar && <MobileReserve content={content} ownerData={ownerData} date={startdate} startTime={startTime} durationIndex={durationIndex} setUpdateMobileSidebar={setUpdateMobileSidebar} value={value} setValue={setValue} disabledDates={disabledDates} setDate={setStartDate} setDurationIndex={setDurationIndex} setStartTime={setStartTime} tempDuration={tempDuration} setTempDuration={setTempDuration} firstTime={firstTime} />
                 }
                 {
                     !reserve ? <MobileSuccessNotification handlefinish={handlefinish} /> : <></>
