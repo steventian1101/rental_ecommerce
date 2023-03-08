@@ -54,7 +54,6 @@ const Booking = () => {
             cvv: newPayment.cvv
         }
         let result = await createPayment(creditPaymentData, newBooking.result, userCredential.email);
-        console.log(result.data)
         if(result.data.status == "succeeded"){
             const listCollectionRef = collection(db, "bookings");
             const notificationRef = collection(db,"notifications");
