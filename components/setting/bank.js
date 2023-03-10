@@ -97,9 +97,7 @@ const Bank = () => {
             })
         }
         else {
-            setAccountnamevalidation(false);
-            setAccountnumbervalidation(false);
-            setBsbvalidation(false)
+            setLoading(false)
         }
     }
     const getDetail = async (email) => {
@@ -229,11 +227,11 @@ const Bank = () => {
         setBackToken(result.data.id);
     }
     useEffect(() => {
-        frontFileUrl && backFileUrl && getBackFileToken(frontFileUrl);
-    }, [backFileUrl]);
+        frontToken && getBackFileToken(frontFileUrl);
+    }, [frontToken]);
     useEffect(() => {
-        backToken && frontToken && getDetailAndUpdate(userCredential.email)
-    }, [backToken && frontToken])
+        backToken && getDetailAndUpdate(userCredential.email)
+    }, [backToken])
     return (
         <>{
             loading ? <Loading /> : <></>
@@ -280,7 +278,7 @@ const Bank = () => {
                 </div>
                 {
                     previewBackImage ? <div className="relative">
-                        <img src={previewBackImage} style={{ width: "100%", height: "180px", borderRadius: "8px", marginTop: "30px", objectFit: "cover" }} />
+                        <img src={previewBackImage} style={{marginTop: "30px"}} className="object-cover w-full h-full rounded-lg"/>
                     </div> : <></>
                 }
                 <div style={{ marginTop: "30px" }} className="flex flex-row items-center justify-between">

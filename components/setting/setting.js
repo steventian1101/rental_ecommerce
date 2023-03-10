@@ -1,48 +1,17 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faArrowLeftLong } from "@fortawesome/free-solid-svg-icons"
 import { faLocationDot } from "@fortawesome/free-solid-svg-icons"
-import InputProfileInfo from "../auth/inputProfileInfo"
 import { useState, useEffect } from "react"
-import Payment from "./payment"
-import Location from "./location"
 import { useRouter } from "next/router"
-import NavBarBack from "../navBarBack"
 import back from "../../utils/handleBack"
 import Link from "next/link"
 const Setting = () => {
-    const [sideBar, setSideBar]= useState(0);
-    const [drawSidebar, setDrawSidebar] = useState([]);
     const router = useRouter();
-    useEffect(()=>{
-       if(sideBar == 1){
-        let temp = [];
-        temp.push(<InputProfileInfo setSideBar={ setSideBar } key={sideBar}/>);
-        setDrawSidebar(temp);
-       }
-       if(sideBar == 2){
-        let temp = [];
-        temp.push(<Payment setSideBar={ setSideBar } key={sideBar}/>);
-        setDrawSidebar(temp);
-       }
-       if(sideBar == 3){
-        let temp = [];
-        temp.push(<Location setSideBar={ setSideBar } key={sideBar}/>);
-        setDrawSidebar(temp);
-       }
-       if(sideBar == 0){
-        let temp = [];
-        temp.push(<></>);
-        setDrawSidebar(temp);
-       }
-    },[sideBar])
     useEffect(()=>{
        router.query.query == "payment" && setSideBar(2)
     },[router.query?.query])
     return (
         <>
-        {
-            sideBar != 0?<NavBarBack/>:<></>
-        }
         <section className="setting">
             <div className="flex items-center justify-start w-full">
                 <div style={{ height: "70px" }} className="flex flex-row items-center cursor-pointer" onClick={back}><FontAwesomeIcon icon={faArrowLeftLong} className="text-2xl text-white" /></div>
@@ -73,9 +42,6 @@ const Setting = () => {
                 </Link>
             </div>
         </section>
-        {
-            drawSidebar
-        }
         </>
     )
 

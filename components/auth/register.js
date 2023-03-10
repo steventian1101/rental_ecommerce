@@ -13,7 +13,7 @@ import { auth } from "../../lib/initFirebase";
 import { GoogleAuthProvider } from "firebase/auth";
 import { getFunctions, httpsCallable } from "firebase/functions"
 import Link from "next/link";
-import { ToggleSlider }  from "react-toggle-slider";
+import { ToggleSlider } from "react-toggle-slider";
 const Register = () => {
     const provider = new GoogleAuthProvider();
     const { createUser, googleAuth } = useAuth();
@@ -133,8 +133,7 @@ const Register = () => {
             }
             else {
                 getCustomerID();
-                // setComplete(true)
-                // setCompleteLoading(false)
+
             }
         }
         else {
@@ -172,7 +171,7 @@ const Register = () => {
         localStorage.setItem("geo", geo);
         if (imgurl != "" && emailvalidation && passwordvalidation && firstnamevalidation && lastnamevalidation && nicknameValidation && phonevalidation && addressvalidation && birthvalidation) {
             uploadCustomer();
-            addDoc(listCollectionRef, { user_email: email, first_name: firstname, profile_img: imgurl, last_name: lastname, nick_name: nickname, user_phone: phone, user_address: address, customer_id: customerID, geo:geo, birth:birth }).then(response => {
+            addDoc(listCollectionRef, { user_email: email, first_name: firstname, profile_img: imgurl, last_name: lastname, nick_name: nickname, user_phone: phone, user_address: address, customer_id: customerID, geo: geo, birth: birth }).then(response => {
                 createUser(auth, email, password);
                 setFile(null);
             }).catch(error => {
@@ -204,6 +203,8 @@ const Register = () => {
         await createStripeCustomer().then((result) => {
             console.log(result.data)
             setCustomerID(result.data);
+            setComplete(true)
+            setCompleteLoading(false)
         })
     }
     return (
@@ -236,7 +237,7 @@ const Register = () => {
                 </form>
                 <div style={{ marginTop: "30px" }} className="flex flex-row items-center justify-between">
                     <p className="text-white font-15">Add Item geolocation?</p>
-                    <ToggleSlider onToggle={state => setGeo(state)} handleBackgroundColor="#ffffff" handleBackgroundColorActive="#005ce7" barBackgroundColor="#0e0e0e" barBackgroundColorActive="#0e0e0e" barStyles={{ border:"solid 1px #ffffff4d"}}/>
+                    <ToggleSlider onToggle={state => setGeo(state)} handleBackgroundColor="#ffffff" handleBackgroundColorActive="#005ce7" barBackgroundColor="#0e0e0e" barBackgroundColorActive="#0e0e0e" barStyles={{ border: "solid 1px #ffffff4d" }} />
                 </div>
                 <div className="registerButton">
                     <button className="flex items-center justify-center" onClick={() => { handleRegister() }}>COMPLETE</button>
