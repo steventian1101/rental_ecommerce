@@ -453,7 +453,8 @@ async function createSetupIn(cus_id, amount) {
 }
 exports.getDuration = functions.https.onRequest((req, res) => {
     cors(req, res, () => {
-        var url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" + req.body.data.data.originLat + "%2C" + req.body.data.data.originLng + "&destinations=side_of_road%3A" + req.body.data.data.destinationLat + "%2C" + req.body.data.data.destinationLng + "&key=AIzaSyBLkRbbKO5XGR2VTHUocfd72Fgjy4VNm-0";
+        var url = "https://maps.google
+        s.com/maps/api/distancematrix/json?origins=" + req.body.data.data.originLat + "%2C" + req.body.data.data.originLng + "&destinations=side_of_road%3A" + req.body.data.data.destinationLat + "%2C" + req.body.data.data.destinationLng + "&key=0";
         axios.get(url).then(resp => {
             res.status(200).send({ result: resp.data })
         }).catch(function (error) {
