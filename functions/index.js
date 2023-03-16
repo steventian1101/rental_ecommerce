@@ -39,7 +39,7 @@ const time = [
 ]
 
 const stripe = initStripe(
-    'sk_test_51IH8sJAZAQKiaOfYxdO4oKTRXeX0Nox65R7opwGOcSgxMDeQ42udiV9gvAGp8bH6MKW0mFUAVTlso0mIzZI17kEe00ifqlV1Mi'
+    ''
 )
 // Create and deploy your first functions
 // https://firebase.google.com/docs/functions/get-started
