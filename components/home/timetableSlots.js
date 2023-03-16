@@ -29,7 +29,6 @@ import { useState, useEffect } from "react";
 const TimetableSlots = ({ firstTime, handleTime}) =>{
    const [start, setStart] = useState(0)
    useEffect(()=>{
-      console.log(firstTime)
        setStart(firstTime)
    },[firstTime])
    return(

@@ -113,7 +113,6 @@ const Bank = () => {
             const functions = getFunctions();
             const download = httpsCallable(functions, 'retriveAccount');
             const retriveAccount = await download({ data: temp[0]["account_id"] });
-            console.log(retriveAccount)
 
         }
         if (temp[0]["stripePolicy"] === true) {
@@ -159,13 +158,10 @@ const Bank = () => {
             customerID = doc.data()["customer_id"];
             userLocation = doc.data()["user_address"];
         });
-        console.log(userLocation)
         if (typeof (userLocation) == "string") {
-            console.log("string")
             userLocation = userLocation
         }
         if (typeof (userLocation) == "object") {
-            console.log("array")
             userLocation = userLocation[0]
         }
         const addressComponent = await getAddress(userLocation);
@@ -173,7 +169,6 @@ const Bank = () => {
         line1 = await getLine1(addressComponent);
         postal_code = await getPostalCode(addressComponent);
         state = await getState(addressComponent);
-        console.log(accountname)
         const dataForValid = {
             url: "https://version2-3284e.web.app/rentalOwner/?id=" + tempData[0].nick_name.replace(" ", "%20"),
             mcc: "5399",
@@ -194,7 +189,6 @@ const Bank = () => {
             frontDownloadUrl: frontDownloadUrl,
             backDownloadUrl: backDownloadUrl
         }
-        console.log(dataForValid);
         createSource(dataForValid);
     }
     useEffect(() => {

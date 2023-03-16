@@ -30,22 +30,18 @@ export async function createSource(detail) {
   const functions = getFunctions();
   const createCustomerSource = httpsCallable(functions, 'createCustomerSource');
   const result = await createCustomerSource({ data: detail });
-  console.log(result);
   const listCollectionRef = collection(db, 'users');
   let q = query(listCollectionRef, where("user_email", "==", detail.email));
   const querySnapshot = await getDocs(q);
   querySnapshot.forEach((doc) => {
     docID = doc.id;
-    console.log(doc.id)
   });
   const docRef = doc(db, "users", docID);
-  console.log(result)
   const data = {
     account_id: result.data.id,
     stripe_customer_data: detail,
     stripePolicy:true
   };
-  console.log(data) 
   await updateDoc(docRef,data)
     .then((result) => {
       window.location.reload();

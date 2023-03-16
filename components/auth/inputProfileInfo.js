@@ -181,7 +181,7 @@ const InputProfileInfo = ({ setSideBar }) => {
      }
     return (
         <section className="overflow-auto addProfileInfo">
-           <Link href = '/setting'><div style={{ height: "50px", marginBottom: "10px" }} className="flex flex-row items-center cursor-pointer"><FontAwesomeIcon icon={faArrowLeftLong} className="text-2xl text-white"/></div></Link>
+           <Link href = '/setting'><div className="flex flex-row items-center cursor-pointer height-50 mb-2.5"><FontAwesomeIcon icon={faArrowLeftLong} className="text-2xl text-white"/></div></Link>
             <p className="loginText">Add Your Profile Info.</p>
             <p className="loginDetail">Explore Sydney's largest rental platform</p>
             <div className="flex flex-col items-center justify-center w-full rounded-lg bottomborder" >
@@ -193,10 +193,10 @@ const InputProfileInfo = ({ setSideBar }) => {
             </div>
             {
                 previewImage ? <div className="relative">
-                    <img src={previewImage} style={{ width: "100%", height: "180px", borderRadius: "8px", marginTop: "30px", objectFit: "cover" }} />
+                    <img src={previewImage} style={{ width: "100%", heighst: "180px", borderRadius: "8px", marginTop: "30px", objectFit: "cover" }} />
                 </div> : <></>
             }
-            <div style={{ marginTop: "30px", marginBottom: "30px", height: "1px", background: "#ffffff4a" }} className="w-full bottomborder"></div>
+            <div className="w-full bottomborder margin-top-30 margin-bottom-30"></div>
             <AuthInput title={"First Name"} status={firstnamevalidation} placeholder={"E.g.John"} change={firstnameValidation} type={"text"} value={tempData && tempData.length > 0?tempData[0].first_name:''}/>
             <AuthInput title={"Last Name"} status={lastnamevalidation} placeholder={"E.g.Doe"} change={lastnameValidation} type={"text"} value={tempData && tempData.length > 0?tempData[0].last_name:''}/>
             <AuthInput title={"SDrop Nickname"} status={nicknamevalidation} placeholder={"E.g.John Doe Rentals"} change={nicknameValidation} type={"text"} value={tempData && tempData.length > 0?tempData[0].nick_name:''}/>

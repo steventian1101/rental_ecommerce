@@ -47,7 +47,6 @@ const Page = () => {
         setSideBar(<Use bookingId={id} inbounded={inbounded} />)
       }
       if (tempdata.status == "3") {
-        console.log("here is status 3 ", bookingId)
         setSideBar(<Complete bookingId={id} inbounded={inbounded} />)
       }
     }

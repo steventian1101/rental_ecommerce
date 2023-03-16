@@ -43,11 +43,16 @@ function MyApp({ Component, pageProps }) {
     <AuthUserProvider>
       <Layout>
         <Head>
-          <title>Sdrop</title>
+          <title>Sdrop - Rent anything, anywhere</title>
           <meta
             name="Description"
             content="Sydney Rental"
           />
+          
+          <meta property="og:image" content="/logo/site_preview_img.png" />
+          <meta property="og:image:width" content="1200" />
+          <meta property="og:image:height" content="600" />
+          <meta property="og:image:type" content="image/jpeg" />
         </Head>
         <Component {...pageProps} />
       </Layout>

@@ -13,20 +13,16 @@ export async function createPi(pm_id, budget, customer_id) {
     return result;
 }
 export async function capturePi(pi_id){
-    console.log(pi_id)
     const functions = getFunctions();
     const capturePaymentIntent = httpsCallable(functions, 'capturePaymentIntent');
     const detail = {
         pi_id:pi_id,
     }
     let result = await capturePaymentIntent({ data: detail })
-    console.log(result)
 }
 export async function refund(pi_id){
-    console.log(pi_id)
     const functions = getFunctions();
     const refund = httpsCallable(functions, 'refund');
     let result = await refund({ data: pi_id });
-    console.log(result)
 
 }

@@ -88,7 +88,6 @@ exports.deleteBooking = functions.firestore.document('bookings/{docId}')
         if (data.status == "0") {
             const pi_id = data["pi_id"];
             const refund = await stripe.refunds.create({ payment_intent: pi_id });
-            console.log(refund)
         }
     });
 exports.updateCustomerStatus = functions.firestore.document('bookings/{docId}')

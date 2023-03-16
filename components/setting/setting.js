@@ -34,12 +34,12 @@ const Setting = () => {
                     <p className="text-white">Add Location</p>
                 </div>
                 </Link>
-                <Link href='/setting/bank'>
+                {/* <Link href='/setting/bank'>
                 <div className="flex flex-col setting_box" >
                     <img src='/logo/bank.svg' className="settingItemImg" />
                     <p className="text-white">Bank Account</p>
                 </div>
-                </Link>
+                </Link> */}
             </div>
         </section>
         </>

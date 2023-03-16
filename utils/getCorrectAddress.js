@@ -1,12 +1,10 @@
 import axios from "axios"
 export async function getAddress(address) {
-    console.log(address)
     let returnAddress;
     let validaddress = address;
     let url = "https://maps.googleapis.com/maps/api/geocode/json?address=" + validaddress + "&key=" + process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY;
     await axios.get(url)
         .then(response => {
-            console.log(response.data)
             returnAddress = response.data
         })
         .catch(error => {
@@ -15,7 +13,6 @@ export async function getAddress(address) {
     return returnAddress; 
 }
 export async function getCity(addressComponent) {
-    console.log(addressComponent)
     if (addressComponent.status === "OK") {
         const addressComponents = addressComponent.results[0].address_components;
         const city = addressComponents.find(component => component.types.includes("administrative_area_level_2")).long_name;
@@ -25,7 +22,6 @@ export async function getCity(addressComponent) {
     }
 }
 export async function getLine1(addressComponent) {
-    console.log(addressComponent)
     if (addressComponent.status === "OK") {
         const addressComponents = addressComponent.results[0].address_components;
         const street = addressComponents.find(component => component.types.includes("route")).short_name;
@@ -36,7 +32,6 @@ export async function getLine1(addressComponent) {
     }
 }
 export async function getPostalCode(addressComponent) {
-    console.log(addressComponent)
     if (addressComponent.status === "OK") {
         const addressComponents = addressComponent.results[0].address_components;
         const postal_code = addressComponents.find(component => component.types.includes("postal_code")).short_name;
@@ -46,7 +41,6 @@ export async function getPostalCode(addressComponent) {
     }
 }
 export async function getState(addressComponent) {
-    console.log(addressComponent)
     if (addressComponent.status === "OK") {
         const addressComponents = addressComponent.results[0].address_components;
         const state = addressComponents.find(component => component.types.includes("administrative_area_level_1")).short_name;

@@ -15,7 +15,6 @@ const Page = () => {
     const { id } = router.query;
     const [sideBar, setSideBar] = useState(null);
     useEffect(() => {
-        console.log(slug)
         if (slug == 'login') {
             setSideBar(<Login />)
         }

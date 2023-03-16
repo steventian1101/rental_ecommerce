@@ -96,17 +96,17 @@ const Payment = () => {
         const querySnapshot = await getDocs(q);
         querySnapshot.forEach((doc) => {
             docID = doc.id;
-            customerID = doc.data()["customer_id"];
+            // customerID = doc.data()["customer_id"];
         });
         const docRef = doc(db, "users", docID);
-        const creditPaymentData = {
-            customer_id: customerID,
-            card_number: credit,
-            expiry_month: expireDate.split("/")[0],
-            expiry_year: expireDate.split("/")[1],
-            cvv: cvv
-        }
-        createPayment(creditPaymentData);
+        // const creditPaymentData = {
+        //     customer_id: customerID,
+        //     card_number: credit,
+        //     expiry_month: expireDate.split("/")[0],
+        //     expiry_year: expireDate.split("/")[1],
+        //     cvv: cvv
+        // }
+        // createPayment(creditPaymentData);
         const newdata = {
             full_name: fullname,
             credit_card_number: credit,
@@ -131,15 +131,11 @@ const Payment = () => {
         userCredential.email && getDetail(userCredential.email);
     }, [userCredential]);
     const createPayment = async (detail) => {
-        console.log(detail);
         const functions = getFunctions();
         const createPaymentMethod = httpsCallable(functions, 'createPaymentMethod');
         await createPaymentMethod({ data: detail }).then((result) => {
-            console.log(result.data)
             getAndAddPmId(result.data.id, userCredential.email).then((result)=>{
-                console.log(result)
             })
-
         });
     }
     return (

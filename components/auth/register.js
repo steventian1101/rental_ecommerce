@@ -132,7 +132,9 @@ const Register = () => {
                 return;
             }
             else {
-                getCustomerID();
+                // getCustomerID();
+                setComplete(true)
+                setCompleteLoading(false)
 
             }
         }
@@ -170,13 +172,19 @@ const Register = () => {
     useEffect(() => {
         localStorage.setItem("geo", geo);
         if (imgurl != "" && emailvalidation && passwordvalidation && firstnamevalidation && lastnamevalidation && nicknameValidation && phonevalidation && addressvalidation && birthvalidation) {
-            uploadCustomer();
-            addDoc(listCollectionRef, { user_email: email, first_name: firstname, profile_img: imgurl, last_name: lastname, nick_name: nickname, user_phone: phone, user_address: address, customer_id: customerID, geo: geo, birth: birth }).then(response => {
+            // uploadCustomer();
+            addDoc(listCollectionRef, { user_email: email, first_name: firstname, profile_img: imgurl, last_name: lastname, nick_name: nickname, user_phone: phone, user_address: address, geo: geo, birth: birth }).then(response => {
                 createUser(auth, email, password);
                 setFile(null);
             }).catch(error => {
                 console.log(error.message)
             });
+            // addDoc(listCollectionRef, { user_email: email, first_name: firstname, profile_img: imgurl, last_name: lastname, nick_name: nickname, user_phone: phone, user_address: address, customer_id: customerID, geo: geo, birth: birth }).then(response => {
+            //     createUser(auth, email, password);
+            //     setFile(null);
+            // }).catch(error => {
+            //     console.log(error.message)
+            // });
         }
     }, [imgurl])
     const handleGoogle = () => {
@@ -201,7 +209,6 @@ const Register = () => {
         const functions = getFunctions();
         const createStripeCustomer = httpsCallable(functions, 'createStripeCustomer');
         await createStripeCustomer().then((result) => {
-            console.log(result.data)
             setCustomerID(result.data);
             setComplete(true)
             setCompleteLoading(false)
@@ -214,7 +221,7 @@ const Register = () => {
             {complete ? <section className="overflow-auto addProfileInfo">
                 <p className="loginText" style={{ marginTop: "60px" }}>Add Your Profile Info.</p>
                 <p className="loginDetail">Explore Sydney's largest rental platform</p>
-                <div className="relative flex flex-col items-center justify-center w-full" style={{ height: "180px", border: "1px solid #ffffff4a", borderRadius: "8px" }}>
+                <div className="relative flex flex-col items-center justify-center w-full rounded-lg height-180 bottomborder">
                     <div className="relative flex flex-col items-center justify-center">
                         <FontAwesomeIcon icon={faPlus} style={{ fontSize: "30px", color: "white" }} />
                         <p className="text-white">Add Profile Photo</p>

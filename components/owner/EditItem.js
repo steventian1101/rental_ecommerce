@@ -152,7 +152,6 @@ const EditItem = ({ query }) => {
         let querySnapshot = await getDoc(docRef);
         let tempdata = querySnapshot.data();
         setPreviousImgs(tempdata["item_photos"])
-        console.log(tempdata)
         setPreviousData(tempdata);
     }
     useEffect(() => {
